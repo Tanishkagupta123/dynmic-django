@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Show Data</title>
+{% endblock title %}
+
+{% block content %}
+
+{{data}}
+
+<table class="table table-bordered table-striped w-75 mx-auto mt-4 text-center">
+  <thead class="table-dark">
+    <tr>
+      <th>S.No.</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Contact</th>
+      <th>Gender</th>
+      <th>Qualification</th>
+      <th>State</th>
+    </tr>
+  </thead>
+
+<tbody>
+    {% for i in data %}
+    <tr>
+      <td>{{ forloop.counter }}</td>
+      <td>{{ i.name }}</td>
+      <td>{{ i.email }}</td>
+      <td>{{ i.contact }}</td>
+      <td>{{ i.gender }}</td>
+      <td>{{ i.qualification }}</td>
+      <td>{{ i.state }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+{% endblock content %}
+
+    
+
+{% comment %} {% block content %}
+
+{{data}} <br>
+{{data.name}} <br>
+{{data.email}} <br>
+{{data.contact}}
+
+
+{% endblock content %}
+   {% endcomment %}
+  

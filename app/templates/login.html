@@ -1,0 +1,87 @@
+
+{% load static %}
+
+
+{% block title %}
+
+<title>login</title>
+    
+{% endblock title %}
+
+
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <title>Login Page</title>
+
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background-image: url("{% static 'images/login-background-1920x1080-22718.jpg' %}");
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+        }
+
+        .login-card {
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.4); /* Transparent */
+            backdrop-filter: blur(10px); /* Thoda blur effect peeche ka */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container d-flex justify-content-center align-items-center h-100">
+    <div class="card login-card shadow p-4" style="width: 350px;">
+
+        {% if pqr %}
+        <h1> {{ pqr }} </h1> 
+        {% endif %}
+        <h3 class="text-center mb-4">Login</h3>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <!-- Email -->
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" placeholder="Enter email" name="email">
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label class="form-label">Password</label>
+                <input type="password" class="form-control" placeholder="Enter password" name="password">
+            </div>
+
+            <!-- Remember Me -->
+            <div class="form-check mb-3">
+                <input class="form-check-input" type="checkbox">
+                <label class="form-check-label">Remember me</label>
+            </div>
+
+            <!-- Button -->
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+        </form>
+
+        <p class="text-center mt-3">
+            Don't have an account? <a href="{% url 'registration' %}">Register</a>
+        </p>
+    </div>
+</div>
+
+</body>
+</html>
+
+{% endblock content %}
+

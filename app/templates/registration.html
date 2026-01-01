@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+
+             {% if msg %}
+              <h1 class="text-center text-danger">{{ msg }}</h1> 
+             {% endif %}
+
+             {% if xyz %}
+              <h1 class="text-center text-danger">{{ xyz }}</h1> 
+             {% endif %}
+
+             {% if signup %}
+              <h1 class="text-center text-danger">{{ signup }}</h1> 
+             {% endif %}
+
+            <div class="card shadow-lg" style="border-radius: 25px; background: linear-gradient(to bottom right, #ffffff, #f0f0f0); padding: 40px;">
+
+                <h3 class="text-center mb-4" style="color:#4a4a4a; font-weight:700;">Registration Form</h3>
+
+                <form action="{% url 'registration' %}" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+
+                    <!-- Name -->
+                    <div class="mb-3">
+                        <label class="form-label">Full Name</label>
+                        <input type="text" class="form-control rounded-pill" placeholder="Enter your name" name="name">
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label class="form-label">Email Address</label>
+                        <input type="email" class="form-control rounded-pill" placeholder="Enter your email" name="email">
+                    </div>
+
+                    <!-- Contact -->
+                    <div class="mb-3">
+                        <label class="form-label">Contact Number</label>
+                        <input type="tel" class="form-control rounded-pill" placeholder="Enter contact number" name="contact">
+                    </div>
+                    
+                    <!-- Gender -->
+                    <div class="mb-3">
+                        <label class="form-label d-block">Gender</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" value="Male">
+                            <label class="form-check-label">Male</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" value="Female">
+                            <label class="form-check-label">Female</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="gender" value="Other">
+                            <label class="form-check-label">Other</label>
+                        </div>
+                    </div>
+
+                    <!-- Qualification -->
+                    <div class="mb-3">
+                        <label class="form-label d-block">Qualification</label>
+                        <div class="form-check">
+                            <input class="form-check-input" name="qualification" type="checkbox">
+                            <label class="form-check-label">10th</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="qualification" type="checkbox">
+                            <label class="form-check-label">12th</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="qualification" type="checkbox">
+                            <label class="form-check-label">Graduation</label>
+                        </div>
+                        <div class="form-check">
+                            <input class="form-check-input" name="qualification" type="checkbox">
+                            <label class="form-check-label">Post Graduation</label>
+                        </div>
+                    </div>
+
+                    <!-- State -->
+                    <div class="mb-3">
+                        <label class="form-label">State</label>
+                        <select class="form-select rounded-pill" name="state">
+                            <option selected disabled>Select State</option>
+                            <option>Delhi</option>
+                            <option>Maharashtra</option>
+                            <option>Uttar Pradesh</option>
+                            <option>Madhya Pradesh</option>
+                            <option>Gujarat</option>
+                        </select>
+                    </div>
+
+                    <!-- File Uploads -->
+                    <div class="mb-3">
+                        <label class="form-label">Upload Image</label>
+                        <input type="file" name="image" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Upload Audio</label>
+                        <input type="file" name="audio" class="form-control">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Upload Video</label>
+                        <input type="file" name="video" class="form-control">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Upload Resume</label>
+                        <input type="file" name="resume" class="form-control">
+                    </div>
+                    
+                    <!-- Passwords -->
+                    <div class="mb-4">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control rounded-pill" placeholder="Enter your password">
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label">Confirm password</label>
+                        <input type="password" name="cpassword" class="form-control rounded-pill" placeholder="Enter your confirm password">
+                    </div>
+
+                    <!-- Button -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg rounded-pill" style="background: linear-gradient(to right, #764ba2, #667eea); border:none;">
+                            Register
+                        </button>
+                    </div>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card:hover {
+        transform: translateY(-5px);
+        transition: 0.3s;
+    }
+    .form-control:focus {
+        border-color: #764ba2;
+        box-shadow: 0 0 0 0.2rem rgba(118, 75, 162, 0.25);
+    }
+</style>
+
+{% endblock content %}
+
