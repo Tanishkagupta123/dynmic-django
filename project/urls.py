@@ -29,7 +29,13 @@ urlpatterns = [
     path('show_data/',show_data,name="show_data"),
     path('login/',login,name='login'),
     path('dashboard/',dashboard,name='dashboard'),
-    path('logout/',logout,name='logout'),
+    path('dashboard/add_emp/',add_emp,name='add_emp'),
+    path('dashboard/add_dep/',add_dep,name='add_dep'),
+    path('dashboard/all_dep/',all_dep,name='all_dep'),
+    path('dashboard/all_emp/',all_emp,name='all_emp'),
+    path('logout/',logout,name='logout')
+
+
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

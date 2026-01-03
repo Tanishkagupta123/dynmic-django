@@ -25,7 +25,7 @@
            background-image: url("{% static 'images/newdashboard.jpg' %}");
         }
         .sidebar {
-            height: 100vh;
+            height: 140vh;
             background-color: #68a0a5;
         }
         .sidebar a {
@@ -52,10 +52,10 @@
         <div class="col-md-3 col-lg-2 sidebar p-0">
             <h4 class="text-center text-white py-3 border-bottom">Admin</h4>
 
-            <a href="#">Add Department</a>
-            <a href="#">Add Employee</a>
-            <a href="#">Show All Dept</a>
-            <a href="#">Show All Emp</a>
+            <a href="{% url 'add_dep' %}">Add Department</a>
+            <a href="{% url 'add_emp' %}">Add Employee</a>
+            <a href="{% url 'all_dep' %}">Show All Dept</a>
+            <a href="{% url 'all_emp' %}">Show All Emp</a>
             <a href="#">Show Emp Query</a><br><br><br><br><br>
 
             <div class="text-center mt-4">
@@ -68,12 +68,220 @@
         <div class="col-md-9 col-lg-10 content">
             <h2>Welcome Admin Tanishka</h2>
             <hr>
+            
+            <!-- add employee -->
 
 
-            <p>
-                <!-- Yahan aapka main content aayega <br>
-                (Add / Show / Update / Delete) -->
-            </p>
+        {% if add_emp %}
+                      
+           <div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow p-4">
+        <h3 class="text-center mb-4">Add Employee</h3>
+
+        {% if message %}
+<div class="alert alert-info mt-2">{{ message }}</div>
+{% endif %}
+
+
+     <form action="" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Employee Name</label>
+            <input type="text" class="form-control" name="name" placeholder="Enter name">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Employee Email</label>
+            <input type="email" class="form-control" name="email" placeholder="Enter email">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Employee Contact</label>
+            <input type="text" class="form-control" name="contact" placeholder="Enter contact number">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Profile Picture</label>
+            <input type="file" class="form-control" name="image">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" name="password" placeholder="Enter password">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" name="cpassword" placeholder="Confirm password">
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">
+              Add Employee
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>     
+         {% endif %}
+
+      <!-- add department -->
+
+      {% if add_dep %}
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow p-4">
+        <h3 class="text-center mb-4">Add Department</h3>
+
+        <form method="post">
+          {% csrf_token %}
+
+          <!-- Department Name -->
+          <div class="mb-3">
+            <label class="form-label">Department Name</label>
+            <input type="text" class="form-control" name="name"
+                   placeholder="e.g. Human Resources" required>
+          </div>
+
+          <!-- Department Head -->
+          <div class="mb-3">
+            <label class="form-label">Department Head</label>
+            <input type="text" class="form-control" name="head"
+                   placeholder="Department head name">
+          </div>
+
+          <!-- Department Description -->
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" name="description"
+                      rows="3" placeholder="About department"></textarea>
+          </div>
+
+          <!-- Status -->
+          <div class="mb-3">
+            <label class="form-label">Status</label>
+            <select class="form-select" name="status">
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">
+              Add Department
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+<!-- all department -->
+
+{% if all_dep %}
+
+<div class="container mt-5">
+  <div class="card shadow p-4">
+    <h3 class="mb-4 text-center">All Departments</h3>
+
+    <table class="table table-bordered table-hover text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Department Name</th>
+          <th>Head</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for dept in departments %}
+        <tr>
+          <td>{{ dept.id }}</td>
+          <td>{{ dept.name }}</td>
+          <td>{{ dept.head }}</td>
+          <td>
+            {% if dept.status == 'active' %}
+              <span class="badge bg-success">Active</span>
+            {% else %}
+              <span class="badge bg-danger">Inactive</span>
+            {% endif %}
+          </td>
+          <td>
+            <a href="{% url 'edit_department' dept.id %}" class="btn btn-sm btn-warning">Edit</a>
+            <a href="{% url 'delete_department' dept.id %}" class="btn btn-sm btn-danger"
+               onclick="return confirm('Are you sure?')">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+{% endif %}
+
+<!-- all employee -->
+
+{% if all_emp %}
+
+<div class="container mt-5">
+  <div class="card shadow p-4">
+    <h3 class="mb-4 text-center">All Employees</h3>
+
+    <table class="table table-bordered table-hover text-center align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>ID</th>
+          <th>Profile</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Contact</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for emp in employees %}
+        <tr>
+          <td>{{ emp.id }}</td>
+
+          <td>
+            {% if emp.image %}
+              <img src="{{ emp.image.url }}" width="50" height="50" class="rounded-circle">
+            {% else %}
+              <span class="text-muted">No Image</span>
+            {% endif %}
+          </td>
+
+          <td>{{ emp.name }}</td>
+          <td>{{ emp.email }}</td>
+          <td>{{ emp.contact }}</td>
+
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endif %}
+
+
+          
+        
         </div>
 
     </div>

@@ -25,3 +25,12 @@ class Employee(models.Model):
     # return f"{self.name}"
 
 
+class AddEmployee(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+    contact = models.CharField(max_length=15)
+    image = models.ImageField(upload_to='employee_images/', blank=True, null=True)
+    password = models.CharField(max_length=128)
+
+    def __str__(self):
+        return self.name
