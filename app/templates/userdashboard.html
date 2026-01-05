@@ -79,7 +79,12 @@
 <!-- SIDEBAR -->
 <div class="sidebar glass shadow-lg">
     <div class="text-center mb-4">
-        <img src="{{ data.image.url }}" class="profile-img mb-2">
+        {% if data.image %}
+            <img src="{{ data.image.url }}" class="profile-img mb-2">
+        {% else %}
+            <!-- Placeholder circle agar image nahi hai -->
+            <div class="profile-img mb-2 mx-auto" style="background-color:#ccc;"></div>
+        {% endif %}
         <h5>{{ data.name }}</h5>
         <p>{{ data.email }}</p>
     </div>

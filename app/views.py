@@ -190,10 +190,15 @@ def add_emp(req):
             p = req.POST.get('password')
             cp = req.POST.get('cpassword')
             img = req.FILES.get('image')
-            dep = req.POST.get('department')
+            dept = req.POST.get('department')
+            dept_data=dep.objects.get(id=dept)
+            d_name=dept_data.name
+            d_code=dept_data.code
+            d_des=dept_data.description
 
 
-            print(n, e, c, p, dep)
+
+            print(n, e, c, p, dept,dept_data, d_name, d_code, d_des)
 
             user = new.objects.filter(email=e)
 
@@ -208,7 +213,9 @@ def add_emp(req):
                         contact=c,
                         password=p,
                         image=img,
-                        department=dep
+                        department=d_name,
+                        d_code=d_code,
+                        d_des=d_des
                     )
                     send_mail("User id and Password from admin",
                               f'your user_id is {e} and password is {p}',
@@ -224,7 +231,7 @@ def add_emp(req):
         
         msg = req.session.pop('msg', None)
         message = req.session.pop('message', None)
-        # all_dep = dep.objects.all()
+        all_dep = dep.objects.all()
         return render(req, 'admindashboard.html', {
             'data': data,
             'add_emp': True,
@@ -255,13 +262,13 @@ def add_dep(req):
                 req.session['data']='Department created successfully'
                 return redirect('add_dep')
         msg = req.session.pop('msg', None)
-        all_dep=dep.objects.all()
+        # all_dep=dep.objects.all()
         data = req.session.pop('data', None)
             
         return render(req,'admindashboard.html',{'add_dep':True,
                                                  'msg':msg,
                                                  'data':data,
-                                                 'all_dep':all_dep
+                                                
                                                  })
     
 
