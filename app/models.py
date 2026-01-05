@@ -31,6 +31,10 @@ class AddEmployee(models.Model):
     contact = models.CharField(max_length=15)
     image = models.ImageField(upload_to='employee_images/', blank=True, null=True)
     password = models.CharField(max_length=128)
+    department=models.CharField(max_length=50,null=True)
+    d_code = models.CharField(max_length=20,null=True)
+    d_des = models.CharField(max_length=50,null=True)
+
 
     def __str__(self):
         return self.name
@@ -47,3 +51,21 @@ class Query(models.Model):
     name = models.CharField(max_length=20)
     email = models.EmailField()
     query =  models.CharField(max_length=200)
+
+##new
+
+class userquery(models.Model):
+    STATUS_CHOICES = (
+        ('Pending', 'Pending'),
+        ('In Progress', 'In Progress'),
+        ('Completed', 'Completed'),
+    )
+
+    name = models.CharField(max_length=100)      
+    email = models.EmailField()                  
+    query = models.TextField()                   
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+    created_at = models.DateTimeField(auto_now_add=True)  
+
+    def _str_(self):
+        return f"{self.name} - {self.query[:30]}..."

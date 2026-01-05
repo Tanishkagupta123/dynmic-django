@@ -190,8 +190,10 @@ def add_emp(req):
             p = req.POST.get('password')
             cp = req.POST.get('cpassword')
             img = req.FILES.get('image')
+            dep = req.POST.get('department')
 
-            print(n, e, c, p)
+
+            print(n, e, c, p, dep)
 
             user = new.objects.filter(email=e)
 
@@ -205,7 +207,8 @@ def add_emp(req):
                         email=e,
                         contact=c,
                         password=p,
-                        image=img
+                        image=img,
+                        department=dep
                     )
                     send_mail("User id and Password from admin",
                               f'your user_id is {e} and password is {p}',
@@ -221,11 +224,13 @@ def add_emp(req):
         
         msg = req.session.pop('msg', None)
         message = req.session.pop('message', None)
+        # all_dep = dep.objects.all()
         return render(req, 'admindashboard.html', {
             'data': data,
             'add_emp': True,
             'msg': msg,
-            'message': message
+            'message': message,
+            'all_dep':all_dep
         
         })
     
