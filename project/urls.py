@@ -33,6 +33,12 @@ urlpatterns = [
     path('dashboard/add_dep/',add_dep,name='add_dep'),
     path('dashboard/all_dep/',all_dep,name='all_dep'),
     path('dashboard/all_emp/',all_emp,name='all_emp'),
+    path('show_query/',show_query,name='show_query'),
+    # path('dashboard/profile/',profile,name='profile'),
+    # path('dashboard/query',query,name='query'),
+    # path('dashboard/query_status',query_status,name='query_status'),
+    # path('dashboard/all_query',all_query,name='all_query'),
+    path('delete/<int:pk>',delete,name='delete'),
     path('logout/',logout,name='logout')
 
 

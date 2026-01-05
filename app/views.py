@@ -1,6 +1,8 @@
 from django.shortcuts import render,redirect
-from .models import Employee
+from .models import Employee ,Department as dep,AddEmployee as new
 from django.http import HttpResponse
+from django.core.mail import send_mail
+from .models import Query
 
 # Create your views here.
 
@@ -51,7 +53,9 @@ def registration(req):
          xyz = req.session.get('xyz','')
          signup = req.session.get('signup','')
         #  del req.session['msg']
-         req.session.flush()
+        #  req.session.flush()
+         req.session.pop('msg', None)
+         req.session.pop('xyz', None)
          return render(req,'registration.html',{'msg':msg,'xyz':xyz,'signup':signup})
         
 def show_data(req):
@@ -102,24 +106,23 @@ def show_data(req):
 
 
 def login(req):
-    req.session.flush()  
     if req.method == 'POST':
         e = req.POST.get('email')
         p = req.POST.get('password')
 
-        if e == 'rashi@gmail.com' and p == 'gupta':
+        if e == 'tanishkagupta241@gmail.com' and p == 'gupta':
             req.session['admin'] = {
-                'name': 'Rashi',
+                'name': 'Tanishka',
                 'email': e
             }
             return redirect('dashboard')
 
         
-        user = Employee.objects.filter(email=e)
+        user = new.objects.filter(email=e)
 
         if not user:
             req.session['signup'] = f'Given email {e} is not registered'
-            return redirect('registration')
+            return redirect('login')
 
         userdata = user.first()
         if p == userdata.password:
@@ -134,7 +137,8 @@ def login(req):
 
 
 # def dashboard(req):
-#     if req.session.get('user_id'):
+
+#     if req.session.get('user_id',None):
 #         id = req.session['user_id']
 #         userdata= Employee.objects.get(id=id)
 #         return render(req,'dashboard.html',{'data':userdata})
@@ -142,87 +146,170 @@ def login(req):
 #        return redirect('login')
 
 
+# def dashboard(req):
+
+#     if req.session.get('admin', None):
+#         data = req.session.get('admin')
+#         return render(req, 'admindashboard.html', {'data': data})
+
+#     elif req.session.get('user_id', None):
+#         data = req.session.get('user_id')
+#         userdata = Employee.objects.get(id=data)
+#         return render(req, 'userdashboard.html', {'data': userdata})
+    
+# newh
+
 def dashboard(req):
-
-    if req.session.get('admin', None):
-        data = req.session.get('admin')
-        return render(req, 'admindashboard.html', {'data': data})
-
-    elif req.session.get('user_id', None):
-        data = req.session.get('user_id')
-        userdata = Employee.objects.get(id=data)
+    if req.session.get('admin',None):
+        
+        data=req.session.get('admin')
+        return render(req,'admindashboard.html',{'data':data})
+    
+    elif req.session.get('user_id',None):    
+        id = req.session['user_id']
+        userdata = new.objects.get(id=id)
         return render(req, 'userdashboard.html', {'data': userdata})
+    else:
+        return redirect('login')
+
+# newh
     
 
 def add_emp(req):
+
     if 'admin' in req.session:
-        print ('hello')
+        print('admin is here')
+
         data = req.session.get('admin')
-        return render(req, 'admindashboard.html', {'data': data,'add_emp':True})
 
-# def add_emp(req):
-#     if 'admin' in req.session:
-#         data = req.session.get('admin')
-#         message = ""
+        if req.method == 'POST':
 
-#         if req.method == 'POST':
-#             name = req.POST.get('name')
-#             email = req.POST.get('email')
-#             contact = req.POST.get('contact')
-#             password = req.POST.get('password')
-#             cpassword = req.POST.get('cpassword')
+            n = req.POST.get('name')
+            e = req.POST.get('email')
+            c = req.POST.get('contact')
+            p = req.POST.get('password')
+            cp = req.POST.get('cpassword')
+            img = req.FILES.get('image')
 
-#             if password != cpassword:
-#                 message = "Passwords do not match"
+            print(n, e, c, p)
 
-#             elif Employee.objects.filter(email=email).exists():
-#                 message = "Employee already exists"
-#             else:
+            user = new.objects.filter(email=e)
+
+            if user:
+                req.session['msg'] = f'{e} Email already exists'
+                return redirect('add_emp')
+            else:
+                if p == cp:
+                    new.objects.create(
+                        name=n,
+                        email=e,
+                        contact=c,
+                        password=p,
+                        image=img
+                    )
+                    send_mail("User id and Password from admin",
+                              f'your user_id is {e} and password is {p}',
+                              'tanishkagupta241@gmail.com',
+                              [e],
+                              fail_silently=False)
+                    req.session['message'] = 'employee added successfully and user_id sent to mail'
+                    return redirect('add_emp')
                 
-#                 Employee.objects.create(
-#                     name=name,
-#                     email=email,
-#                     contact=contact,
-#                     password=password
-#                 )
-#                 message = "Employee added successfully"
-
-#         return render(req, 'admindashboard.html', {'data': data, 'add_emp': True, 'message': message})
-
-#     else:
-#         return redirect('login')
-
+                else:
+                    req.session['msg'] = 'Password did not match'
+                    return redirect('add_emp')
+        
+        msg = req.session.pop('msg', None)
+        message = req.session.pop('message', None)
+        return render(req, 'admindashboard.html', {
+            'data': data,
+            'add_emp': True,
+            'msg': msg,
+            'message': message
+        
+        })
     
+
 def add_dep(req):
     if 'admin' in req.session:
-        data = req.session.get('admin')
-        return render(req, 'admindashboard.html', {'data': data,'add_dep':True})
+        print("Dept")
+        if req.method=='POST':
+            n=req.POST.get('name')
+            c=req.POST.get('code')
+            d=req.POST.get('description')
+            print(n,c,d)
+            depart=dep.objects.filter(code=c)
+            if depart:
+                req.session['msg']='department already exists'
+            else:
+                dep.objects.create(
+                    name=n,
+                    code=c,
+                    description=d
+                )
+                req.session['data']='Department created successfully'
+                return redirect('add_dep')
+        msg = req.session.pop('msg', None)
+        all_dep=dep.objects.all()
+        data = req.session.pop('data', None)
+            
+        return render(req,'admindashboard.html',{'add_dep':True,
+                                                 'msg':msg,
+                                                 'data':data,
+                                                 'all_dep':all_dep
+                                                 })
+    
 
 def all_dep(req):
-    if 'admin' in req.session:
-        data = req.session.get('admin')
-        return render(req, 'admindashboard.html', {'data': data,'all_dep':True})
+    if 'admin' not in req.session:
+        return redirect('login')
+
+    data = req.session.get('admin')
+
+    departments = dep.objects.all()
+
+    return render(req,'admindashboard.html', {
+        'data': data,
+        'all_dep': True,
+        'departments': departments
+    })
     
+
 def all_emp(req):
-    if 'admin' in req.session:
-        data = req.session.get('admin')
-        return render(req, 'admindashboard.html', {'data': data,'all_emp':True})
-
-# def all_emp(req):
-#     if 'admin' in req.session:
-#         data = req.session.get('admin')
-#         employees = Employee.objects.all() 
-#         return render(req, 'admindashboard.html', {
-#             'data': data,
-#             'all_emp': True,
-#             'employees': employees
-#         })
-#     else:
-#         return redirect('login')
-
-
+    if 'admin' not in req.session:
+        return redirect('login')
+    data = req.session.get('admin')
+    employees = new.objects.all()
+    return render(req,'admindashboard.html', {
+        'data': data,
+        'all_emp': True,
+        'employees': employees
+    })
+    
     
 def logout(req):
-    # if req.session.get('user_id',None):
-    req.session.flush()
+    if req.session.get('user_id',None):
+        req.session.flush()
     return redirect('login')
+
+
+
+def show_query(req):
+    all_query = Query.objects.all()
+    return render(req,'admindashboard.html',{'query':all_query})
+
+def delete(req,pk):
+    data = Query.objects.get(id=pk)
+    data.delete()
+    all_query = Query.objects.all()
+    return render(req,'admindashboard.html',{'query':all_query})
+
+
+# def profile(req):
+#     user_id = req.session.get('user_id')
+#     if not user_id:
+#         return redirect('login')
+#     user = Employee.objects.get(id=user_id)
+#     return render(req, 'userdashboard.html', {'user': user})
+
+

@@ -1,18 +1,13 @@
-
 {% block title %}
-
 <title>userdashboard</title>
-    
 {% endblock title %}
-
-
 
 {% block contant %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>User Dashboard</title>
+    <title>Employee Dashboard</title>
 
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -22,12 +17,44 @@
             background: url('/static/images/background dashboard.avif') no-repeat center center fixed;
             background-size: cover;
         }
+
         .glass {
-            background: rgba(255,255,255,0.40);
+            background: rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(10px);
             border-radius: 16px;
-            color: rgb(66, 152, 185);
+            color: #02225a;
         }
+
+        .sidebar {
+            height: 100vh;
+            position: fixed;
+            width: 220px;
+            padding-top: 20px;
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar a {
+            display: block;
+            padding: 12px 20px;
+            color: #02225a;
+            text-decoration: none;
+            font-weight: 500;
+            border-radius: 10px;
+            margin: 5px 10px;
+        }
+
+        .sidebar a:hover,
+        .sidebar a.active {
+            background-color: rgba(66, 152, 185, 0.7);
+            color: #fff;
+        }
+
+        .main-content {
+            margin-left: 240px;
+            padding: 30px;
+        }
+
         .profile-img {
             width: 130px;
             height: 130px;
@@ -35,10 +62,11 @@
             object-fit: cover;
             border: 4px solid #a6b8a8;
         }
+
         .info-label {
             font-size: 14px;
-            color: #02225a;
         }
+
         .info-value {
             font-size: 17px;
             font-weight: 500;
@@ -48,76 +76,202 @@
 
 <body>
 
-<div class="container mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-10">
+<!-- SIDEBAR -->
+<div class="sidebar glass shadow-lg">
+    <div class="text-center mb-4">
+        <img src="{{ data.image.url }}" class="profile-img mb-2">
+        <h5>{{ data.name }}</h5>
+        <p>{{ data.email }}</p>
+    </div>
 
-            <div class="glass shadow-lg p-4">
+    <a href=""
+       class="{% if section == 'profile' %}active{% endif %}">
+       Profile
+    </a>
 
-                <!-- Header -->
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h3>Welcome, {{ data.name }}</h3>
-                    <form method="post" action="{% url 'logout' %}">
-                        {% csrf_token %}
-                        <button class="btn btn-dark btn-sm">Logout</button>
-                    </form>
-                </div>
+    <a href="#"
+       class="{% if section == 'queries' %}active{% endif %}">
+       Query
+    </a>
 
-                <div class="row">
-                    <!-- LEFT SIDE -->
-                    <div class="col-md-4 text-center">
-                        <h5>{{ data.name }}</h5>
-                        <p class="text-dark">{{ data.email }}</p>
-                    </div>
+    <a href="#"
+       class="{% if section == 'attendance' %}active{% endif %}">
+       Query_Status
+    </a>
 
-                    <!-- RIGHT SIDE -->
-                    <div class="col-md-8">
+    <a href="#"
+       class="{% if section == 'settings' %}active{% endif %}">
+       All_Query
+    </a>
 
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="glass p-3">
-                                    <div class="info-label">Contact</div>
-                                    <div class="info-value">{{ data.contact }}</div>
-                                </div>
-                            </div>
+    <form method="post" action="{% url 'logout' %}" class="mt-4 text-center">
+        {% csrf_token %}
+        <button class="btn btn-dark btn-sm">Logout</button>
+    </form>
+</div>
 
-                            <div class="col-md-6">
-                                <div class="glass p-3">
-                                    <div class="info-label">Gender</div>
-                                    <div class="info-value">{{ data.gender }}</div>
-                                </div>
-                            </div>
-                        </div>
+<!-- MAIN CONTENT -->
+<div class="main-content">
 
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <div class="glass p-3">
-                                    <div class="info-label">Qualification</div>
-                                    <div class="info-value">{{ data.qualification }}</div>
-                                </div>
-                            </div>
+    <!-- ✅ DEFAULT (dashboard open hote hi kuch bhi auto open nahi) -->
+    {% if not section %}
+    <div class="glass shadow-lg p-5 text-center">
+        <h3>Welcome {{ data.name }} 👋</h3>
+        <p>Please select any option from sidebar</p>
+    </div>
+    {% endif %}
 
-                            <div class="col-md-6">
-                                <div class="glass p-3">
-                                    <div class="info-label">State</div>
-                                    <div class="info-value">{{ data.state }}</div>
-                                </div>
-                            </div>
-                        </div>
+    <!-- PROFILE -->
+    <div id="profile" class="section"
+         {% if section != 'profile' %}style="display:none"{% endif %}>
+        <div class="glass shadow-lg p-4">
+            <h3>Profile Information</h3>
 
-                        <!-- Buttons -->
-                        <div class="mt-4">
-                            <a href="#" class="btn btn-warning me-2">Edit Profile</a>
-                            <a href="#" class="btn btn-secondary">Change Password</a>
-                        </div>
-
+            <div class="row mt-3">
+                <div class="col-md-6 mb-3">
+                    <div class="glass p-3">
+                        <div class="info-label">Contact</div>
+                        <div class="info-value">{{ data.contact }}</div>
                     </div>
                 </div>
 
+                <div class="col-md-6 mb-3">
+                    <div class="glass p-3">
+                        <div class="info-label">Gender</div>
+                        <div class="info-value">{{ data.gender }}</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="glass p-3">
+                        <div class="info-label">Qualification</div>
+                        <div class="info-value">{{ data.qualification }}</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <div class="glass p-3">
+                        <div class="info-label">State</div>
+                        <div class="info-value">{{ data.state }}</div>
+                    </div>
+                </div>
             </div>
-
         </div>
     </div>
+
+    <!-- QUERY -->
+    <div id="queries" class="section"
+         {% if section != 'queries' %}style="display:none"{% endif %}>
+        <div class="glass shadow-lg p-4">
+            <h3>Query Form</h3>
+
+            <form method="post">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label>Name</label>
+                    <input class="form-control" value="{{ data.name }}" readonly>
+                </div>
+
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input class="form-control" value="{{ data.email }}" readonly>
+                </div>
+
+                <div class="mb-3">
+                    <label>Query</label>
+                    <textarea class="form-control" name="query" rows="4" required></textarea>
+                </div>
+
+                <button class="btn btn-primary">Submit Query</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- QUERY STATUS -->
+    <div id="attendance" class="section"
+         {% if section != 'attendance' %}style="display:none"{% endif %}>
+        <div class="glass shadow-lg p-4">
+            <h3>Query Status</h3>
+
+            <table class="table table-bordered table-hover mt-3 text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Query</th>
+                        <th>Status</th>
+                        <th>Solution</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for q in queries %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ q.query_text }}</td>
+                        <td>
+                            {% if q.status == 'Done' %}
+                            <span class="badge bg-success">Done</span>
+                            {% else %}
+                            <span class="badge bg-warning text-dark">Pending</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ q.solution|default:"Waiting for admin response" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">No queries submitted</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ALL QUERY -->
+    <div id="settings" class="section"
+         {% if section != 'settings' %}style="display:none"{% endif %}>
+        <div class="glass shadow-lg p-4">
+            <h3>All Query</h3>
+
+            <table class="table table-bordered table-hover text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Query</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for q in queries %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ q.query_text }}</td>
+                        <td>
+                            <a href="{% url 'edit_query' q.id %}"
+                               class="btn btn-warning btn-sm">
+                               Edit
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{% url 'delete' q.id %}"
+                               class="btn btn-danger btn-sm">
+                               Delete
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4">No queries found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
 </div>
 
 </body>
