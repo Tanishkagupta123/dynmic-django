@@ -79,33 +79,34 @@
 <!-- SIDEBAR -->
 <div class="sidebar glass shadow-lg">
     <div class="text-center mb-4">
-        {% if data.image %}
-            <img src="{{ data.image.url }}" class="profile-img mb-2">
-        {% else %}
-            <!-- Placeholder circle agar image nahi hai -->
-            <div class="profile-img mb-2 mx-auto" style="background-color:#ccc;"></div>
-        {% endif %}
-        <h5>{{ data.name }}</h5>
-        <p>{{ data.email }}</p>
-    </div>
+    {% if data.image %}
+        <img src="{{ data.image.url }}" class="profile-img mb-2">
+    {% else %}
 
-    <a href=""
+        <div class="profile-img mb-2 d-block mx-auto" style="background-color:#ffff;"></div>
+    {% endif %}
+    <h5>{{ data.name }}</h5>
+    {% comment %} <p>{{ data.email }}</p> {% endcomment %}
+</div>
+
+
+    <a href="{% url 'profile' %}"
        class="{% if section == 'profile' %}active{% endif %}">
        Profile
     </a>
 
-    <a href="#"
-       class="{% if section == 'queries' %}active{% endif %}">
+    <a href="{% url 'query' %}"
+       class="{% if section == 'query' %}active{% endif %}">
        Query
     </a>
 
-    <a href="#"
-       class="{% if section == 'attendance' %}active{% endif %}">
+    <a href="{% url 'query_status' %}"
+       class="{% if section == 'query_status' %}active{% endif %}">
        Query_Status
     </a>
 
-    <a href="#"
-       class="{% if section == 'settings' %}active{% endif %}">
+    <a href="{% url 'all_query' %}"
+       class="{% if section == 'all-query' %}active{% endif %}">
        All_Query
     </a>
 
@@ -118,55 +119,71 @@
 <!-- MAIN CONTENT -->
 <div class="main-content">
 
-    <!-- ✅ DEFAULT  -->
+    
     {% if not section %}
     <div class="glass shadow-lg p-5 text-center">
         <h3>Welcome {{ data.name }} 👋</h3>
-        <p>Please select any option from sidebar</p>
+        {% comment %} <p>Please select any option from sidebar</p> {% endcomment %}
     </div>
     {% endif %}
 
     <!-- PROFILE -->
-    <div id="profile" class="section"
-         {% if section != 'profile' %}style="display:none"{% endif %}>
-        <div class="glass shadow-lg p-4">
+{% if profile %}
+<div id="profile" class="section">
+
+    <div class="glass shadow-lg p-4">
+        <div class="d-flex justify-content-between align-items-center">
             <h3>Profile Information</h3>
 
-            <div class="row mt-3">
-                <div class="col-md-6 mb-3">
-                    <div class="glass p-3">
-                        <div class="info-label">Contact</div>
-                        <div class="info-value">{{ data.contact }}</div>
-                    </div>
-                </div>
+            <!-- Buttons -->
+            <div>
+                <a href="#" class="btn btn-sm btn-primary me-2">
+                    Edit Profile
+                </a>
+                <a href="#" class="btn btn-sm btn-warning">
+                    Change Password
+                </a>
+            </div>
+        </div>
 
-                <div class="col-md-6 mb-3">
-                    <div class="glass p-3">
-                        <div class="info-label">Gender</div>
-                        <div class="info-value">{{ data.gender }}</div>
-                    </div>
+        <div class="row mt-3">
+            <div class="col-md-6 mb-3">
+                <div class="glass p-3">
+                    <div class="info-label">Contact</div>
+                    <div class="info-value">{{ data.contact }}</div>
                 </div>
+            </div>
 
-                <div class="col-md-6 mb-3">
-                    <div class="glass p-3">
-                        <div class="info-label">Qualification</div>
-                        <div class="info-value">{{ data.qualification }}</div>
-                    </div>
+            <div class="col-md-6 mb-3">
+                <div class="glass p-3">
+                    <div class="info-label">Email</div>
+                    <div class="info-value">{{ data.email }}</div>
                 </div>
+            </div>
 
-                <div class="col-md-6 mb-3">
-                    <div class="glass p-3">
-                        <div class="info-label">State</div>
-                        <div class="info-value">{{ data.state }}</div>
-                    </div>
+            <div class="col-md-6 mb-3">
+                <div class="glass p-3">
+                    <div class="info-label">Department</div>
+                    <div class="info-value">{{ data.department}}</div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="glass p-3">
+                    <div class="info-label">Description</div>
+                    <div class="info-value">{{ data.d_des }}</div>
                 </div>
             </div>
         </div>
     </div>
 
+</div>
+{% endif %}
+
     <!-- QUERY -->
-    <div id="queries" class="section"
-         {% if section != 'queries' %}style="display:none"{% endif %}>
+    {% if query %}
+    <div id="query" class="section">
+         
         <div class="glass shadow-lg p-4">
             <h3>Query Form</h3>
 
@@ -192,10 +209,11 @@
             </form>
         </div>
     </div>
+    {% endif %}
 
     <!-- QUERY STATUS -->
-    <div id="attendance" class="section"
-         {% if section != 'attendance' %}style="display:none"{% endif %}>
+    {% if query_status %}
+    <div id="query_status" class="section">
         <div class="glass shadow-lg p-4">
             <h3>Query Status</h3>
 
@@ -232,50 +250,70 @@
             </table>
         </div>
     </div>
+    {% endif %}
 
-    <!-- ALL QUERY -->
-    <div id="settings" class="section"
-         {% if section != 'settings' %}style="display:none"{% endif %}>
-        <div class="glass shadow-lg p-4">
+    
+<!-- ALL QUERY -->
+{% if all_query %}
+<div id="all_query" class="section">
+    <div class="glass shadow-lg p-4">
+
+        <!-- Heading + Search -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
             <h3>All Query</h3>
 
-            <table class="table table-bordered table-hover text-center">
-                <thead class="table-dark">
-                    <tr>
-                        <th>S.No</th>
-                        <th>Query</th>
-                        <th>Edit</th>
-                        <th>Delete</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for q in queries %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ q.query_text }}</td>
-                        <td>
-                            <a href="{% url 'edit_query' q.id %}"
-                               class="btn btn-warning btn-sm">
-                               Edit
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{% url 'delete' q.id %}"
-                               class="btn btn-danger btn-sm">
-                               Delete
-                            </a>
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="4">No queries found</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <form method="get">
+                <input type="text"
+                       name="search"
+                       placeholder="Search"
+                       value="{{ request.GET.search }}"
+                       class="form-control form-control-sm"
+                       style="width:200px;">
+            </form>
         </div>
+
+        <table class="table table-bordered table-hover text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>S.No</th>
+                    <th>Query</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for q in queries %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ q.query_text }}</td>
+
+                    <td>
+                        <a href="{% url 'edit_query' q.id %}"
+                           class="btn btn-warning btn-sm">
+                           Edit
+                        </a>
+                    </td>
+
+                    <td>
+                        <a href="{% url 'delete_query' q.id %}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Are you sure?')">
+                           Delete
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No queries found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
     </div>
+</div>
+{% endif %}
 
 </div>
 

@@ -2,7 +2,8 @@ from django.shortcuts import render,redirect
 from .models import Employee ,Department as dep,AddEmployee as new
 from django.http import HttpResponse
 from django.core.mail import send_mail
-from .models import Query
+from .models import Query,userquery
+
 
 # Create your views here.
 
@@ -317,11 +318,43 @@ def delete(req,pk):
     return render(req,'admindashboard.html',{'query':all_query})
 
 
-# def profile(req):
-#     user_id = req.session.get('user_id')
-#     if not user_id:
-#         return redirect('login')
-#     user = Employee.objects.get(id=user_id)
-#     return render(req, 'userdashboard.html', {'user': user})
 
+def userdashboard(req):
+    if 'user_id' in req.session:
+        id=req.session['user_id']
+        userdata=new.objects.get(id=id)
+        return render(req,'userdashboard.html',{'data':userdata})
+
+def profile(req):
+    if 'user_id' in req.session:
+        id=req.session['user_id']
+        userdata=new.objects.get(id=id)
+        return render(req,'userdashboard.html',{'data':userdata,'profile':True})
+    else:
+        return redirect('login')
+    
+def query(req):
+    if 'user_id' in req.session:
+        id=req.session['user_id']
+        userdata=new.objects.get(id=id)
+        return render(req,'userdashboard.html',{'data':userdata,'query':True})
+    else:
+        return redirect('login')
+
+def query_status(req):
+    if 'user_id' in req.session:
+        id=req.session['user_id']
+        userdata=new.objects.get(id=id)
+        return render(req,'userdashboard.html',{'data':userdata,'query_status':True})
+    else:
+        return redirect('login')
+
+
+def all_query(req):
+    if 'user_id' in req.session:
+        id=req.session['user_id']
+        userdata=new.objects.get(id=id)
+        return render(req,'userdashboard.html',{'data':userdata,'all_query':True})
+    else:
+        return redirect('login')
 
