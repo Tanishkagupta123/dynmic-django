@@ -54,18 +54,18 @@ class Query(models.Model):
 
 ##new
 
-class userquery(models.Model):
-    STATUS_CHOICES = (
-        ('Pending', 'Pending'),
-        ('In Progress', 'In Progress'),
-        ('Completed', 'Completed'),
-    )
+# class userquery(models.Model):
+#     STATUS_CHOICES = (
+#         ('Pending', 'Pending'),
+#         ('In Progress', 'In Progress'),
+#         ('Completed', 'Completed'),
+#     )
 
-    name = models.CharField(max_length=100)      
-    email = models.EmailField()                  
-    query = models.TextField()                   
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
-    created_at = models.DateTimeField(auto_now_add=True)  
+#     name = models.CharField(max_length=100)      
+#     email = models.EmailField()                  
+#     query = models.TextField()                   
+#     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Pending')
+#     created_at = models.DateTimeField(auto_now_add=True)  
 
-    def _str_(self):
-        return f"{self.name} - {self.query[:30]}..."
+#     def _str_(self):
+#         return f"{self.name} - {self.query[:30]}..."

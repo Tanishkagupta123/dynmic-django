@@ -2,7 +2,7 @@ from django.shortcuts import render,redirect
 from .models import Employee ,Department as dep,AddEmployee as new
 from django.http import HttpResponse
 from django.core.mail import send_mail
-from .models import Query,userquery
+from .models import Query
 
 
 # Create your views here.
@@ -324,6 +324,7 @@ def userdashboard(req):
         id=req.session['user_id']
         userdata=new.objects.get(id=id)
         return render(req,'userdashboard.html',{'data':userdata})
+    
 
 def profile(req):
     if 'user_id' in req.session:
@@ -333,6 +334,7 @@ def profile(req):
     else:
         return redirect('login')
     
+    
 def query(req):
     if 'user_id' in req.session:
         id=req.session['user_id']
@@ -340,6 +342,7 @@ def query(req):
         return render(req,'userdashboard.html',{'data':userdata,'query':True})
     else:
         return redirect('login')
+
 
 def query_status(req):
     if 'user_id' in req.session:
