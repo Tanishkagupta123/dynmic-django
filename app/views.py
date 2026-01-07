@@ -308,8 +308,17 @@ def logout(req):
 
 
 def show_query(req):
-    all_query = Query.objects.all()
-    return render(req,'admindashboard.html',{'query':all_query})
+     if 'admin' not in req.session:
+          return redirect('login')
+     else:
+          queries = Query.objects.all().order_by('created_at')
+          return render(req,'admindashboard.html',{
+                'show_query':True,
+                'queries':queries,
+                'data':req.session.get('admin')
+          })
+
+
 
 def delete(req,pk):
     data = Query.objects.get(id=pk)
@@ -348,6 +357,7 @@ def query_status(req):
     if 'user_id' in req.session:
         id=req.session['user_id']
         userdata=new.objects.get(id=id)
+
         return render(req,'userdashboard.html',{'data':userdata,'query_status':True})
     else:
         return redirect('login')
@@ -360,4 +370,19 @@ def all_query(req):
         return render(req,'userdashboard.html',{'data':userdata,'all_query':True})
     else:
         return redirect('login')
+    
+def query_data(req):
+    if 'user_id' in req.session:
+        id=req.session['user_id']
+        userdata=new.objects.get(id=id)
+        if req.method=='POST':
+            n=req.POST.get('name')
+            e=req.POST.get('email')
+            s=req.POST.get('subject')
+            q=req.POST.get('query')
+            print(n,e,s,q,sep=',')
+            Query.objects.create(name=n,email=e,message=q)
 
+            return render(req,'userdashboard.html',{'data':userdata,'query':True})
+    else:
+        return redirect('login')

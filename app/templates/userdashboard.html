@@ -109,6 +109,9 @@
        class="{% if section == 'all-query' %}active{% endif %}">
        All_Query
     </a>
+    
+
+
 
     <form method="post" action="{% url 'logout' %}" class="mt-4 text-center">
         {% csrf_token %}
@@ -174,6 +177,8 @@
                     <div class="info-value">{{ data.d_des }}</div>
                 </div>
             </div>
+
+            
         </div>
     </div>
 
@@ -187,18 +192,29 @@
         <div class="glass shadow-lg p-4">
             <h3>Query Form</h3>
 
-            <form method="post">
+            <form method="post" action="{% url 'query_data' %}">
                 {% csrf_token %}
 
                 <div class="mb-3">
                     <label>Name</label>
-                    <input class="form-control" value="{{ data.name }}" readonly>
+                    <input class="form-control" name="name" value="{{ data.name }}" readonly>
                 </div>
 
                 <div class="mb-3">
                     <label>Email</label>
-                    <input class="form-control" value="{{ data.email }}" readonly>
+                    <input class="form-control" email="email" value="{{ data.email }}" readonly>
                 </div>
+
+    <label for="subject" class="form-label">Subject</label>
+<select name="subject" id="subject" class="form-select" required>
+    <option value="" disabled selected>Select Subject</option>
+    <option value="attendance">Attendance</option>
+    <option value="salary">Salary</option>
+    <option value="profile">Profile Info</option>
+    <option value="leave">Leave</option>
+</select>
+
+
 
                 <div class="mb-3">
                     <label>Query</label>
