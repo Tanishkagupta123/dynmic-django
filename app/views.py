@@ -311,7 +311,7 @@ def show_query(req):
      if 'admin' not in req.session:
           return redirect('login')
      else:
-          queries = Query.objects.all().order_by('created_at')
+          queries = Query.objects.all()
           return render(req,'admindashboard.html',{
                 'show_query':True,
                 'queries':queries,
@@ -319,12 +319,11 @@ def show_query(req):
           })
 
 
-
 def delete(req,pk):
     data = Query.objects.get(id=pk)
     data.delete()
     all_query = Query.objects.all()
-    return render(req,'admindashboard.html',{'query':all_query})
+    return render(req,'admindashboard.html',{'queries':all_query})
 
 
 
@@ -372,17 +371,19 @@ def all_query(req):
         return redirect('login')
     
 def query_data(req):
-    if 'user_id' in req.session:
-        id=req.session['user_id']
-        userdata=new.objects.get(id=id)
-        if req.method=='POST':
-            n=req.POST.get('name')
-            e=req.POST.get('email')
-            s=req.POST.get('subject')
-            q=req.POST.get('query')
-            print(n,e,s,q,sep=',')
-            Query.objects.create(name=n,email=e,message=q)
+      if 'user_id' in req.session:
+          id=req.session['user_id']
+          userdata=new.objects.get(id=id)
+          if req.method=='POST':
+               n=req.POST.get('name')
+               e=req.POST.get('email')
+               s=req.POST.get('subject')
+               q=req.POST.get('query')
+               print(n,e,s,q,sep=',')
+               Query.objects.create(name=n,email=e,subject=s,query=q)
+            #    return render (req,'userdashboard.html',{'data':userdata})
+               msg = "Query sent successfully"
+               return render (req,'userdashboard.html',{'data':userdata,'query':True,'msg':msg})
+      else:
+          return redirect('login')
 
-            return render(req,'userdashboard.html',{'data':userdata,'query':True})
-    else:
-        return redirect('login')

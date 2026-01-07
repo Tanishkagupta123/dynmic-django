@@ -186,6 +186,13 @@
 {% endif %}
 
     <!-- QUERY -->
+
+    {% if msg %}
+<div class="alert alert-success text-center">
+    {{ msg }}
+</div>
+{% endif %}
+
     {% if query %}
     <div id="query" class="section">
          
@@ -202,7 +209,7 @@
 
                 <div class="mb-3">
                     <label>Email</label>
-                    <input class="form-control" email="email" value="{{ data.email }}" readonly>
+                    <input class="form-control" name="email" value="{{ data.email }}" readonly>
                 </div>
 
     <label for="subject" class="form-label">Subject</label>

@@ -3,7 +3,6 @@ from django.db import models
 # Create your models here.
 from django.db import models
 
-
 # Create your models here.
 class Employee(models.Model):
     name = models.CharField(max_length=100)
@@ -52,8 +51,7 @@ class Query(models.Model):
     name = models.CharField(max_length=20)
     email = models.EmailField()
     query =  models.CharField(max_length=200)
-
-
+    subject = models.CharField(max_length=50) 
 
 ##new
 
