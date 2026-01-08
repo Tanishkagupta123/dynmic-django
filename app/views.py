@@ -404,8 +404,7 @@ def reply_query(req,pk):
                return render(req,'admindashboard.html',{
                 'all_query':True,
                 'queries':queries,
-                'data':req.session.get('admin'),
-                
+                'data':req.session.get('admin')  
                })
      
 
