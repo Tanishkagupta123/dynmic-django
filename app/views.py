@@ -356,8 +356,9 @@ def query_status(req):
     if 'user_id' in req.session:
         id=req.session['user_id']
         userdata=new.objects.get(id=id)
+        query_data=Query.objects.filter(email=userdata.email)
 
-        return render(req,'userdashboard.html',{'data':userdata,'query_status':True})
+        return render(req,'userdashboard.html',{'data':userdata,'query_status':query_data})
     else:
         return redirect('login')
 
@@ -379,12 +380,34 @@ def query_data(req):
                e=req.POST.get('email')
                s=req.POST.get('subject')
                q=req.POST.get('query')
+               solu=req.POST.get('reply','panding')
                
-               print(n,e,s,q,sep=',')
-               Query.objects.create(name=n,email=e,subject=s,query=q)
+               print(n,e,s,q,solu,sep=',')
+               Query.objects.create(name=n,email=e,subject=s,query=q,solution=solu)
             #    return render (req,'userdashboard.html',{'data':userdata})
                msg = "Query sent successfully"
                return render (req,'userdashboard.html',{'data':userdata,'query':True,'msg':msg})
       else:
           return redirect('login')
 
+def reply_query(req,pk):
+     if 'admin' in req.session:
+        data = req.session.get('admin')
+        if req.method=='POST':
+             r = req.POST.get('reply')
+             querydata = Query.objects.get(id=pk)
+             if len(r)>1:
+               querydata.solution = r
+               querydata.status="Done"
+               querydata.save()
+               queries = Query.objects.all()
+               return render(req,'admindashboard.html',{
+                'all_query':True,
+                'queries':queries,
+                'data':req.session.get('admin'),
+                
+               })
+     
+
+        else:
+             return render(req, 'admindashboard.html', {'data': data,'reply':True,'id':pk})

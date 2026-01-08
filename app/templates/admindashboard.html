@@ -308,6 +308,7 @@
           {% endif %}
 
 <!-- ✅ Employee Queries -->
+
 {% if queries %}
 <div class="container mt-5">
     <div class="card shadow p-4">
@@ -321,6 +322,7 @@
                     <th>Email</th>
                     <th>Query</th>
                     <th>Subject</th>
+                    <th>Reply</th>
                     <th>Edit</th>
                     <th>Delete</th>
                 </tr>
@@ -333,16 +335,31 @@
                     <td>{{ i.email }}</td>
                     <td>{{ i.query }}</td>
                     <td>{{ i.subject }}</td>
+
+                    <!-- Reply button -->
                     <td>
-                        <a href="" class="btn btn-warning btn-sm">Edit</a>
+                        <a href="{% url 'reply_query' i.id %}" class="btn btn-success btn-sm">
+                            Reply
+                        </a>
                     </td>
+
+                    <!-- Edit -->
                     <td>
-                        <a href="{% url 'delete' i.pk %}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">Delete</a>
+                        <a href="#" class="btn btn-warning btn-sm">Edit</a>
+                    </td>
+
+                    <!-- Delete -->
+                    <td>
+                        <a href="{% url 'delete' i.pk %}"
+                           class="btn btn-danger btn-sm"
+                           onclick="return confirm('Are you sure?')">
+                           Delete
+                        </a>
                     </td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="7">No data found</td>
+                    <td colspan="8">No data found</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -350,6 +367,43 @@
     </div>
 </div>
 {% endif %}
+
+<!-- ✅ REPLY FORM -->
+
+
+{% if reply %}
+<div class="container mt-4">
+    <div class="card shadow p-4">
+
+        <h4 class="mb-3 text-center">Reply to Employee</h4>
+
+        <form method="post">
+            {% csrf_token %}
+
+
+            <!-- Reply -->
+            <div class="mb-3">
+                <label class="form-label">Your Reply</label>
+                <textarea
+                    name="reply"
+                    class="form-control"
+                    rows="3"
+                    placeholder="Write reply here..."
+                    required>
+                </textarea>
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary btn-sm px-4">
+                    Submit Reply
+                </button>
+            </div>
+        </form>
+
+    </div>
+</div>
+{% endif %}
+
 
 
         </div>

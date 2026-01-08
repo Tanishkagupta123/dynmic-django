@@ -40,6 +40,8 @@ urlpatterns = [
     path('dashboard/all_query',all_query,name='all_query'),
     path('userdashboard/',userdashboard,name='userdashboard'),
     path('query_data/',query_data,name='query_data'),
+    path('reply_query/<int:pk>',reply_query,name='reply_query'),
+
 
     path('delete/<int:pk>',delete,name='delete'),
     path('logout/',logout,name='logout')

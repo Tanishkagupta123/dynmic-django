@@ -53,7 +53,8 @@ class Query(models.Model):
     query =  models.CharField(max_length=200)
     subject = models.CharField(max_length=50) 
     status =  models.CharField(max_length=10,default='panding')
-    solution = models.CharField(max_length=100)
+    solution = models.CharField(max_length=100,null=True)
+    
 
 ##new
 

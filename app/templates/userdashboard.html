@@ -236,7 +236,9 @@
     {% endif %}
 
     <!-- QUERY STATUS -->
+
     {% if query_status %}
+
     <div id="query_status" class="section">
         <div class="glass shadow-lg p-4">
             <h3>Query Status</h3>
@@ -252,22 +254,14 @@
                 </thead>
 
                 <tbody>
-                    {% for q in queries %}
+                    {% for q in query_status %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td>{{ q.query_text }}</td>
+                        <td>{{ q.query }}</td>
                         <td>
-                            {% if q.status == 'Done' %}
-                            <span class="badge bg-success">Done</span>
-                            {% else %}
-                            <span class="badge bg-warning text-dark">Pending</span>
-                            {% endif %}
+                            {{ q.status }}   
                         </td>
-                        <td>{{ q.solution|default:"Waiting for admin response" }}</td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="4">No queries submitted</td>
+                        <td>{{ q.solution}}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
