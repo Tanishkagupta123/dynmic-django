@@ -379,6 +379,7 @@ def query_data(req):
                e=req.POST.get('email')
                s=req.POST.get('subject')
                q=req.POST.get('query')
+               
                print(n,e,s,q,sep=',')
                Query.objects.create(name=n,email=e,subject=s,query=q)
             #    return render (req,'userdashboard.html',{'data':userdata})
