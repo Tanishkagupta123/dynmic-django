@@ -367,7 +367,8 @@ def all_query(req):
     if 'user_id' in req.session:
         id=req.session['user_id']
         userdata=new.objects.get(id=id)
-        return render(req,'userdashboard.html',{'data':userdata,'all_query':True})
+        queries = Query.objects.filter(email=userdata.email)
+        return render(req,'userdashboard.html',{'data':userdata,'all_query':True,'queries': queries})
     else:
         return redirect('login')
     
@@ -410,3 +411,29 @@ def reply_query(req,pk):
 
         else:
              return render(req, 'admindashboard.html', {'data': data,'reply':True,'id':pk})
+        
+
+# def edit(req,pk):
+#     if 'user_id' in req.session:
+#         id=req.session.get('user_id')
+#         user=new.objects.get(id=id)
+#         query=Query.objects.get(id=pk)
+#         return render(req,'userdashboard.html',{'user':user,'e_query':query})
+    
+# def update(req,pk):
+#     if 'user_id' in req.session:
+#         id=req.session.get('user_id')
+#         query=Query.objects.get(id=pk)
+#         query.name=req.POST.get('name')
+#         query.email=req.POST.get('email')
+#         query.subject=req.POST.get('subject')
+#         query.query=req.POST.get('query')
+#         query.save()
+#         user = new.objects.get(id=id)
+#         queries = Query.objects.filter(email=user.email)
+
+#         return render(req, 'userdashboard.html', {
+#         'user': user,
+#         'all_query': True,
+#         'queries': queries
+#     })
