@@ -41,7 +41,7 @@ urlpatterns = [
     path('userdashboard/',userdashboard,name='userdashboard'),
     path('query_data/',query_data,name='query_data'),
     path('reply_query/<int:pk>',reply_query,name='reply_query'),
-    # path('userdashboard/query/edit/<int:pk>/',edit,name='edit'),
+    path('userdashboard/query/edit/<int:pk>/',edit,name='edit'),
     # path('userdashboard/query/update/<int:pk>/',update,name='update'),
 
 

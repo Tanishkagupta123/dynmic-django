@@ -90,6 +90,7 @@
 </div>
 
 
+
     <a href="{% url 'profile' %}"
        class="{% if section == 'profile' %}active{% endif %}">
        Profile
@@ -109,9 +110,6 @@
        class="{% if section == 'all-query' %}active{% endif %}">
        All_Query
     </a>
-    
-
-
 
     <form method="post" action="{% url 'logout' %}" class="mt-4 text-center">
         {% csrf_token %}
@@ -307,16 +305,15 @@
                     <td>{{ q.query }}</td>
 
                     <td>
-                        <a href=""
+                        <a href="#"
                            class="btn btn-warning btn-sm">
                            Edit
                         </a>
                     </td>
 
                     <td>
-                        <a href=""
-                           class="btn btn-danger btn-sm"
-                           onclick="return confirm('Are you sure?')">
+                        <a href="#"
+                           class="btn btn-danger btn-sm">
                            Delete
                         </a>
                     </td>
@@ -331,7 +328,51 @@
 
     </div>
 </div>
-{% endif %}
+
+
+<!-- edit query form add -->
+
+    {% elif e_query %}
+    <div id="query" class="section">
+         
+        <div class="glass shadow-lg p-4">
+            <h3> Update Your Query Form</h3>
+
+            <form method="post" action="{% url 'update' pk=e_query.id %}">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label>Name</label>
+                    <input class="form-control" name="name" value="{{ e_query.name }}">
+                </div>
+
+                <div class="mb-3">
+                    <label>Email</label>
+                    <input class="form-control" name="email" value="{{ e_query.email }}">
+                </div>
+
+    <label for="subject" class="form-label">Subject</label>
+<select name="subject" value="{{e_query.subject}}" id="subject" class="form-select" required>
+    <option value="" disabled selected>Select Subject</option>
+    <option value="attendance">Attendance</option>
+    <option value="salary">Salary</option>
+    <option value="profile">Profile Info</option>
+    <option value="leave">Leave</option>
+</select>
+
+                <div class="mb-3">
+                    <label>Update Query</label>
+                    <textarea class="form-control" name="query" value="{{e_query.query}}" rows="4" required></textarea>
+                </div>
+
+                <button class="btn btn-primary">Update</button>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+
+
 
 </div>
 

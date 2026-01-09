@@ -413,12 +413,12 @@ def reply_query(req,pk):
              return render(req, 'admindashboard.html', {'data': data,'reply':True,'id':pk})
         
 
-# def edit(req,pk):
-#     if 'user_id' in req.session:
-#         id=req.session.get('user_id')
-#         user=new.objects.get(id=id)
-#         query=Query.objects.get(id=pk)
-#         return render(req,'userdashboard.html',{'user':user,'e_query':query})
+def edit(req,pk):
+    if 'user_id' in req.session:
+        id=req.session.get('user_id')
+        user=new.objects.get(id=id)
+        query=Query.objects.get(id=pk)
+        return render(req,'userdashboard.html',{'user':user,'e_query':query})
     
 # def update(req,pk):
 #     if 'user_id' in req.session:
