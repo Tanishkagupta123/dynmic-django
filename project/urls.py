@@ -42,7 +42,8 @@ urlpatterns = [
     path('query_data/',query_data,name='query_data'),
     path('reply_query/<int:pk>',reply_query,name='reply_query'),
     path('userdashboard/query/edit/<int:pk>/',edit,name='edit'),
-    # path('userdashboard/query/update/<int:pk>/',update,name='update'),
+    path('userdashboard/query/update/<int:pk>/',update,name='update'),
+    path('userdashboard/delete_query/<int:pk>/',delete_query, name='delete_query'),
 
 
     path('delete/<int:pk>',delete,name='delete'),
