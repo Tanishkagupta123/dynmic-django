@@ -246,8 +246,9 @@
                     <tr>
                         <th>S.No</th>
                         <th>Name</th>
-                         <th>Email</th>
-                          <th>Query</th>
+                        <th>Email</th>
+                        <th>Subject</th>
+                        <th>Query</th>
                         <th>Status</th>
                         <th>Solution</th>
                     </tr>
@@ -259,10 +260,9 @@
                         <td>{{ forloop.counter }}</td>
                         <td>{{ q.name }}</td>
                         <td>{{ q.email }}</td>
+                        <td>{{ q.subject }}</td>
                         <td>{{ q.query }}</td>
-                        <td>
-                            {{ q.status }}   
-                        </td>
+                        <td>{{ q.status }}</td>
                         <td>{{ q.solution}}</td>
                     </tr>
                     {% endfor %}
