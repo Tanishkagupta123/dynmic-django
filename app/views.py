@@ -238,7 +238,7 @@ def add_emp(req):
             'add_emp': True,
             'msg': msg,
             'message': message,
-            'all_dep':all_dep
+            'dep_list':all_dep
         
         })
     
