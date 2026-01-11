@@ -435,10 +435,19 @@ def update(req,pk):
         return render(req,'userdashboard.html',{'data':userdata,'all_query':True,'queries': queries})
     
 
-def delete_query(req, pk):
-    query = Query.objects.get(id=pk)
-    query.delete()
-    # return redirect(req,'all_query') 
-    # return render(req,'userdashboard.html',{'queries':all_query})
-    return redirect('all_query')
+# def delete_query(req, pk):
+#     query = Query.objects.get(id=pk)
+#     query.delete()
+#     # return redirect(req,'all_query') 
+#     # return render(req,'userdashboard.html',{'queries':all_query})
+#     return redirect('all_query')
  
+def delete_query(req, pk):
+    if 'user_id' not in req.session:
+        return redirect('login')
+    u_id=req.session.get('user_id')
+    user=new.objects.get(id=u_id)
+    data=Query.objects.get(id=pk)
+    data.delete()
+    all_query=Query.objects.filter(email=user.email)
+    return redirect ('all_query')
