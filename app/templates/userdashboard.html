@@ -282,14 +282,20 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h3>All Query</h3>
 
-            <form method="get">
-                <input type="text"
+            <form action="{% url 'search' %}"
+             method="POST">
+             {% csrf_token %}
+                <input type="search"
                        name="search"
                        placeholder="Search"
-                       value="{{ request.GET.search }}"
                        class="form-control form-control-sm"
                        style="width:200px;">
-            </form>
+                        <input type="submit" value="search">
+                        <button>  <a href="{% url 'reset' %}">Reset</a></button> 
+                        
+        
+            </form> 
+
         </div>
 
         <table class="table table-bordered table-hover text-center">

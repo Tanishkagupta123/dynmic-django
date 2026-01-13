@@ -451,3 +451,34 @@ def delete_query(req, pk):
     data.delete()
     all_query=Query.objects.filter(email=user.email)
     return redirect ('all_query')
+
+def search(req):
+    # if not 'user_id' in req.session:
+    #     redirect ('login')
+    # user_id=req.session.get('user_id')
+    # data=new.objects.get(id=user_id)
+    # s=req.POST.get('search')
+    # f_qdata = Query.objects.filter(name=s, query=s, status=s)
+    if 'user_id' in req.session:
+        id=req.session['user_id']
+        userdata=new.objects.get(id=id)
+        s=req.POST.get('search')
+        # queries = Query.objects.filter(email=userdata.email,name=s)
+        # queries = Query.objects.filter(email=userdata.email,name=s,query=s)
+        queries = Query.objects.filter(email=userdata.email,name__contains=s,query__contains=s)
+
+
+        return render(req,'userdashboard.html',{'data':userdata,'all_query':True,'queries': queries})
+    else:
+        return redirect('login')
+    
+
+def reset(req):
+    if 'user_id' in req.session:
+        id=req.session['user_id']
+        userdata=new.objects.get(id=id)
+        s=req.POST.get('search')
+        queries = Query.objects.filter(email=userdata.email)
+        return render(req,'userdashboard.html',{'data':userdata,'all_query':True,'queries': queries})
+    else:
+        return redirect('login')
