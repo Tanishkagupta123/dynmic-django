@@ -301,8 +301,8 @@ def all_emp(req):
     
     
 def logout(req):
-    if req.session.get('user_id',None):
-        req.session.flush()
+    # if req.session.get('user_id',None):
+    req.session.flush()
     return redirect('login')
 
 
@@ -401,7 +401,7 @@ def reply_query(req,pk):
                querydata.solution = r
                querydata.status="Done"
                querydata.save()
-               queries = Query.objects.all()
+               queries = Query.objects.all().order_by('created_at')
                return render(req,'admindashboard.html',{
                 'all_query':True,
                 'queries':queries,
