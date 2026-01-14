@@ -363,14 +363,39 @@ def query_status(req):
         return redirect('login')
 
 
+# def all_query(req):
+#     if 'user_id' in req.session:
+#         id=req.session['user_id']
+#         userdata=new.objects.get(id=id)
+#         queries = Query.objects.filter(email=userdata.email)
+#         return render(req,'userdashboard.html',{'data':userdata,'all_query':True,'queries': queries})
+#     else:
+#         return redirect('login')
+
 def all_query(req):
     if 'user_id' in req.session:
-        id=req.session['user_id']
-        userdata=new.objects.get(id=id)
-        queries = Query.objects.filter(email=userdata.email)
-        return render(req,'userdashboard.html',{'data':userdata,'all_query':True,'queries': queries})
+        id = req.session['user_id']
+        userdata = new.objects.get(id=id)
+
+        order = req.GET.get('order')  
+
+        if order == 'oldest':
+            queries = Query.objects.filter(
+                email=userdata.email
+            ).order_by('created_at')      
+        else:
+            queries = Query.objects.filter(
+                email=userdata.email
+            ).order_by('-created_at')     
+
+        return render(req, 'userdashboard.html', {
+            'data': userdata,
+            'all_query': True,
+            'queries': queries
+        })
     else:
         return redirect('login')
+
     
 def query_data(req):
       if 'user_id' in req.session:
