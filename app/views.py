@@ -379,7 +379,7 @@ def all_query(req):
 
         order = req.GET.get('order')  
 
-        if order == 'oldest':
+        if order == 'oldest':    
             queries = Query.objects.filter(
                 email=userdata.email
             ).order_by('created_at')      
@@ -507,3 +507,5 @@ def reset(req):
         return render(req,'userdashboard.html',{'data':userdata,'all_query':True,'queries': queries})
     else:
         return redirect('login')
+
+
