@@ -512,4 +512,48 @@ def reset(req):
     else:
         return redirect('login')
 
+def user_search(req):
+    if 'user_id' in req.session:
+        id=req.session['user_id']
+        userdata=new.objects.get(id=id)
+        name=req.POST.get('name', '').strip()
+        status=req.POST.get('status', '').strip()
+        subject=req.POST.get('subject', '').strip()
+        query=req.POST.get('query', '').strip()
+        solution=req.POST.get('solution', '').strip()
 
+        queries=Query.objects.filter(email=userdata.email)
+
+        if name:
+            queries=queries.filter(name__contains=name)
+
+        if status:
+            queries=queries.filter(status__contains=status)
+
+        if subject:
+            queries=queries.filter(subject__contains=subject)
+
+        if query:
+            queries=queries.filter(query__contains=query)
+
+        if solution:
+            queries=queries.filter(solution__contains=query)
+
+
+        return render(req, 'userdashboard.html', {'data': userdata,'query_status': True,'queries': queries
+        })
+
+    else:
+        return redirect('login')
+
+
+# def user_reset(req):
+#     if 'user_id' in req.session:
+#         id = req.session['user_id']
+#         userdata = new.objects.get(id=id)
+#         queries = Query.objects.filter(email=userdata.email)
+
+#         return render(req, 'userdashboard.html', {'data': userdata,'query_status': True,'queries': queries
+#         })
+#     else:
+#         return redirect('login')

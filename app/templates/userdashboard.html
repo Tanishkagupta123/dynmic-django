@@ -449,7 +449,7 @@
                 <h3>Query Status</h3>
 
                 <!-- SEARCH FORM -->
-                <form action="{% url 'search' %}" method="POST">
+                <form action="{% url 'user_search' %}" method="POST">
                     {% csrf_token %}
 
                     <table class="table table-bordered table-hover mt-3 text-center query-status-table">
@@ -507,7 +507,7 @@
 
                         <!-- DATA -->
                         <tbody>
-                            {% for q in query_status %}
+                            {% for q in queries %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ q.name }}</td>
@@ -527,6 +527,9 @@
                         <button type="submit" class="btn btn-primary btn-sm">
                             🔍 Search
                         </button>
+                        <!-- <a href="" class="btn btn-warning btn-sm">
+                             🔄 Reset</a> -->
+
                     </div>
 
                 </form>
