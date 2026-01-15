@@ -5,6 +5,7 @@
 {% block contant %}
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Employee Dashboard</title>
@@ -71,383 +72,632 @@
             font-size: 17px;
             font-weight: 500;
         }
+
+        /* ================= QUERY STATUS ONLY ================= */
+
+        #query_status h3 {
+            font-weight: 700;
+            color: #030e1e;
+            margin-bottom: 15px;
+        }
+
+        /* table container feel */
+        .query-status-table {
+            background: rgba(255, 255, 255, 0.55);
+            backdrop-filter: blur(12px);
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        /* search row inputs */
+        #query_status thead.table-light th {
+            background: rgba(255, 255, 255, 0.75);
+            border-bottom: none;
+        }
+
+        #query_status input.form-control-sm {
+            border-radius: 20px;
+            border: 1px solid #bcd3e6;
+            padding: 6px 10px;
+            font-size: 13px;
+        }
+
+        /* heading row */
+        #query_status thead.table-dark th {
+            background: linear-gradient(135deg, #03161e, #15596d);
+            color: #fff;
+            border: none;
+            font-size: 14px;
+            padding: 12px;
+        }
+
+        /* table body */
+        #query_status tbody tr {
+            background: rgba(255, 255, 255, 0.7);
+            transition: all 0.2s ease-in-out;
+        }
+
+        #query_status tbody tr:hover {
+            background: rgba(173, 216, 230, 0.6);
+            transform: scale(1.01);
+        }
+
+        /* table cells */
+        #query_status td {
+            padding: 10px;
+            font-size: 14px;
+            color: #040a11;
+            vertical-align: middle;
+        }
+
+        /* status highlight */
+        #query_status td:nth-child(6) {
+            font-weight: 600;
+        }
+
+        /* search button */
+        #query_status button.btn-primary {
+            border-radius: 20px;
+            padding: 6px 18px;
+            font-size: 14px;
+        }
+
+        /* ===== QUERY STATUS TEXT FIX ===== */
+
+        /* table body text */
+        #query_status td {
+            color: #000 !important;
+            font-size: 15px;
+            font-weight: 400;
+        }
+
+        /* table heading text */
+        #query_status thead.table-dark th {
+            font-size: 16px;
+            font-weight: 50;
+        }
+
+        /* search input text */
+        #query_status input.form-control-sm {
+            color: #000;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        /* search placeholder text */
+        #query_status input::placeholder {
+            color: #333;
+            font-size: 13px;
+        }
+
+        /* ===== QUERY STATUS : NAME COLUMN WIDTH ===== */
+
+        /* Table heading Name */
+        #query_status thead.table-dark th:nth-child(2) {
+            width: 130px;
+        }
+
+        /* Table body Name column */
+        #query_status tbody td:nth-child(2) {
+            width: 130px;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* ================= ALL QUERY ================= */
+
+#all_query h3 {
+    font-weight: 700;
+    color: #030e1e;
+    margin-bottom: 15px;
+}
+
+/* table container feel */
+.all-query-table {
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(12px);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+/* search row inputs */
+#all_query thead.table-light th {
+    background: rgba(255, 255, 255, 0.75);
+    border-bottom: none;
+}
+
+#all_query input.form-control-sm {
+    border-radius: 20px;
+    border: 1px solid #bcd3e6;
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+/* heading row */
+#all_query thead.table-dark th {
+    background: linear-gradient(135deg, #03161e, #15596d);
+    color: #fff;
+    border: none;
+    font-size: 16px;
+    padding: 12px;
+}
+
+/* table body */
+#all_query tbody tr {
+    background: rgba(255, 255, 255, 0.7);
+    transition: all 0.2s ease-in-out;
+}
+
+#all_query tbody tr:hover {
+    background: rgba(173, 216, 230, 0.6);
+    transform: scale(1.01);
+}
+
+/* table cells */
+#all_query td {
+    padding: 10px;
+    font-size: 14px;
+    color: #040a11;
+    vertical-align: middle;
+}
+
+/* search & other buttons */
+#all_query .btn {
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-size: 14px;
+}
+
+/* table body text */
+#all_query td {
+    color: #000 !important;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+/* Table heading text */
+#all_query thead.table-dark th {
+    font-size: 16px;
+    font-weight: 500;
+}
+
+/* search input text */
+#all_query input.form-control-sm {
+    color: #000;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+/* search placeholder text */
+#all_query input::placeholder {
+    color: #333;
+    font-size: 13px;
+}
+
+/* Name column width */
+#all_query thead.table-dark th:nth-child(2),
+#all_query tbody td:nth-child(2) {
+    width: 130px;
+    font-weight: 500;
+    font-size: 15px;
+}
+
+
     </style>
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
-<div class="sidebar glass shadow-lg">
-    <div class="text-center mb-4">
-    {% if data.image %}
-        <img src="{{ data.image.url }}" class="profile-img mb-2">
-    {% else %}
+    <!-- SIDEBAR -->
+    <div class="sidebar glass shadow-lg">
+        <div class="text-center mb-4">
+            {% if data.image %}
+            <img src="{{ data.image.url }}" class="profile-img mb-2">
+            {% else %}
 
-        <div class="profile-img mb-2 d-block mx-auto" style="background-color:#ffff;"></div>
-    {% endif %}
-    <h5>{{ data.name }}</h5>
-    {% comment %} <p>{{ data.email }}</p> {% endcomment %}
-</div>
-
-
-
-    <a href="{% url 'profile' %}"
-       class="{% if section == 'profile' %}active{% endif %}">
-       Profile
-    </a>
-
-    <a href="{% url 'query' %}"
-       class="{% if section == 'query' %}active{% endif %}">
-       Query
-    </a>
-
-    <a href="{% url 'query_status' %}"
-       class="{% if section == 'query_status' %}active{% endif %}">
-       Query_Status
-    </a>
-
-    <a href="{% url 'all_query' %}"
-       class="{% if section == 'all-query' %}active{% endif %}">
-       All_Query
-    </a>
-
-    <form method="post" action="{% url 'logout' %}" class="mt-4 text-center">
-        {% csrf_token %}
-        <button class="btn btn-dark btn-sm">Logout</button>
-    </form>
-</div>
-
-<!-- MAIN CONTENT -->
-<div class="main-content">
-
-    
-    {% if not section %}
-    <div class="glass shadow-lg p-5 text-center">
-        <h3>Welcome {{ data.name }} 👋</h3>
-        {% comment %} <p>Please select any option from sidebar</p> {% endcomment %}
-    </div>
-    {% endif %}
-
-    <!-- PROFILE -->
-{% if profile %}
-<div id="profile" class="section">
-
-    <div class="glass shadow-lg p-4">
-        <div class="d-flex justify-content-between align-items-center">
-            <h3>Profile Information</h3>
-
-            <!-- Buttons -->
-            <div>
-                <a href="#" class="btn btn-sm btn-primary me-2">
-                    Edit Profile
-                </a>
-                <a href="#" class="btn btn-sm btn-warning">
-                    Change Password
-                </a>
-            </div>
+            <div class="profile-img mb-2 d-block mx-auto" style="background-color:#ffff;"></div>
+            {% endif %}
+            <h5>{{ data.name }}</h5>
+            {% comment %} <p>{{ data.email }}</p> {% endcomment %}
         </div>
 
-        <div class="row mt-3">
-            <div class="col-md-6 mb-3">
-                <div class="glass p-3">
-                    <div class="info-label">Contact</div>
-                    <div class="info-value">{{ data.contact }}</div>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <div class="glass p-3">
-                    <div class="info-label">Email</div>
-                    <div class="info-value">{{ data.email }}</div>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <div class="glass p-3">
-                    <div class="info-label">Department</div>
-                    <div class="info-value">{{ data.department}}</div>
-                </div>
-            </div>
-
-            <div class="col-md-6 mb-3">
-                <div class="glass p-3">
-                    <div class="info-label">Description</div>
-                    <div class="info-value">{{ data.d_des }}</div>
-                </div>
-            </div>
-
-            
-        </div>
-    </div>
-
-</div>
-{% endif %}
-
-    <!-- QUERY -->
-
-    {% if msg %}
-<div class="alert alert-success text-center">
-    {{ msg }}
-</div>
-{% endif %}
-
-    {% if query %}
-    <div id="query" class="section">
-         
-        <div class="glass shadow-lg p-4">
-            <h3>Query Form</h3>
-
-            <form method="post" action="{% url 'query_data' %}">
-                {% csrf_token %}
-
-                <div class="mb-3">
-                    <label>Name</label>
-                    <input class="form-control" name="name" value="{{ data.name }}" readonly>
-                </div>
-
-                <div class="mb-3">
-                    <label>Email</label>
-                    <input class="form-control" name="email" value="{{ data.email }}" readonly>
-                </div>
-
-    <label for="subject" class="form-label">Subject</label>
-<select name="subject" id="subject" class="form-select" required>
-    <option value="" disabled selected>Select Subject</option>
-    <option value="attendance">Attendance</option>
-    <option value="salary">Salary</option>
-    <option value="profile">Profile Info</option>
-    <option value="leave">Leave</option>
-</select>
 
 
-
-
-                <div class="mb-3">
-                    <label>Query</label>
-                    <textarea class="form-control" name="query" rows="4" required></textarea>
-                </div>
-
-                <button class="btn btn-primary">Submit Query</button>
-            </form>
-        </div>
-    </div>
-    {% endif %}
-
-    <!-- QUERY STATUS -->
-
-    {% if query_status %}
-
-    <div id="query_status" class="section">
-        <div class="glass shadow-lg p-4">
-            <h3>Query Status</h3>
-
-            <table class="table table-bordered table-hover mt-3 text-center">
-                <thead class="table-dark">
-                    <tr>
-                        <th>S.No</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Subject</th>
-                        <th>Query</th>
-                        <th>Status</th>
-                        <th>Solution</th>
-                    </tr>
-                </thead>
-
-                <tbody>
-                    {% for q in query_status %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td>{{ q.name }}</td>
-                        <td>{{ q.email }}</td>
-                        <td>{{ q.subject }}</td>
-                        <td>{{ q.query }}</td>
-                        <td>{{ q.status }}</td>
-                        <td>{{ q.solution}}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
-    {% endif %}
-
-    
-<!-- ALL QUERY -->
-{% if all_query %}
-<div id="all_query" class="section">
-    <div class="glass shadow-lg p-4">
-
-        <!-- Heading + Search -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h3>All Query</h3>
-
-<form action="{% url 'search' %}" method="POST" style="display:flex; align-items:center; gap:8px;">
-    {% csrf_token %}
-
-    <input type="search"
-           name="search"
-           placeholder="Search"
-           class="form-control form-control-sm"
-           style="width:200px;">
-
-    <input type="submit" value="search" class="btn btn-primary btn-sm">
-
-    <button style="padding:0; border:none; background:none;">
-        <a href="{% url 'reset' %}" class="btn btn-warning btn-sm">
-            Reset
+        <a href="{% url 'profile' %}" class="{% if section == 'profile' %}active{% endif %}">
+            Profile
         </a>
-    </button>
-<div class="mb-3">
-    <a href="{% url 'all_query' %}?order=latest"
-       class="btn btn-success btn-sm">
-        Latest First
-    </a>
 
-    <a href="{% url 'all_query' %}?order=oldest"
-       class="btn btn-primary btn-sm">
-        Oldest First
-    </a>
-</div>
-
-    
-</form>
-
-        </div>
-
-        <table class="table table-bordered table-hover text-center">
-            <thead class="table-dark">
-                <tr>
-                    <th>S.No</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Query</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for q in queries %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>{{ q.name }}</td>
-                    <td>{{ q.email }}</td>
-
-                    <td>{{ q.query }}</td>
-
-<td>
-
-    {% if q.status == "panding" %}
-        <a href="{% url 'edit' pk=q.id %}"
-           class="btn btn-info btn-sm">
-           Edit
+        <a href="{% url 'query' %}" class="{% if section == 'query' %}active{% endif %}">
+            Query
         </a>
-    {% else %}
-        <button class="btn btn-secondary btn-sm" disabled>
-            Locked
-        </button>
-    {% endif %}
-</td>
 
-                    <td>
-                        {% if q.status == "panding" %}
-                        <a href="{% url 'delete_query' q.pk %}"
-                           class="btn btn-danger btn-sm">
-                           Delete
-                        </a>
-                        {% else %}
-                     <button class="btn btn-secondary btn-sm" disabled>
-                         Locked
-                     </button>
-                     {% endif %}
-                    </td>
+        <a href="{% url 'query_status' %}" class="{% if section == 'query_status' %}active{% endif %}">
+            Query_Status
+        </a>
 
-                </tr>
-                {% empty %}
+        <a href="{% url 'all_query' %}" class="{% if section == 'all-query' %}active{% endif %}">
+            All_Query
+        </a>
 
-                <tr>
-                    <td colspan="4">No queries found</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-    </div>
-</div>
-
-
-<!-- edit query form  -->
-
-{% elif e_query %}
-<div id="query" class="section">
-    <div class="glass shadow-lg p-4"
-         style="background: rgba(173, 216, 230, 0.45);">
-
-        <h3 style="color:#0b4f6c;">
-            ✏️ Update Your Query
-        </h3>
-
-        <p class="small text-muted">
-            You are editing your previously submitted query
-        </p>
-
-        <form method="post" action="{% url 'update' pk=e_query.id %}">
+        <form method="post" action="{% url 'logout' %}" class="mt-4 text-center">
             {% csrf_token %}
-
-            <div class="mb-3">
-                <label>Name</label>
-                <input class="form-control"
-                       name="name"
-                       value="{{ e_query.name }}"
-                       >
-            </div>
-
-            <div class="mb-3">
-                <label>Email</label>
-                <input class="form-control"
-                       name="email"
-                       value="{{ e_query.email }}"
-                       >
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Subject</label>
-                <select name="subject" class="form-select" required>
-                    <option value="attendance" {% if e_query.subject == "attendance" %}selected{% endif %}>Attendance</option>
-                    <option value="salary" {% if e_query.subject == "salary" %}selected{% endif %}>Salary</option>
-                    <option value="profile" {% if e_query.subject == "profile" %}selected{% endif %}>Profile Info</option>
-                    <option value="leave" {% if e_query.subject == "leave" %}selected{% endif %}>Leave</option>
-                </select>
-            </div>
-
-            <div class="mb-3">
-                <label>Update Query</label>
-                <textarea class="form-control"
-                          name="query"
-                          rows="4"
-                          required>{{ e_query.query }}</textarea>
-            </div>
-
-            <button class="btn btn-info text-white">
-                🔄 Update Query
-            </button>
-
-            <a href="{% url 'all_query' %}"
-               class="btn btn-outline-secondary ms-2">
-                Cancel
-            </a>
+            <button class="btn btn-dark btn-sm">Logout</button>
         </form>
     </div>
-</div>
-{% endif %}
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+
+        {% if not section %}
+        <div class="glass shadow-lg p-5 text-center">
+            <h3>Welcome {{ data.name }} 👋</h3>
+            {% comment %} <p>Please select any option from sidebar</p> {% endcomment %}
+        </div>
+        {% endif %}
+
+        <!-- PROFILE -->
+        {% if profile %}
+        <div id="profile" class="section">
+
+            <div class="glass shadow-lg p-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3>Profile Information</h3>
+
+                    <!-- Buttons -->
+                    <div>
+                        <a href="#" class="btn btn-sm btn-primary me-2">
+                            Edit Profile
+                        </a>
+                        <a href="#" class="btn btn-sm btn-warning">
+                            Change Password
+                        </a>
+                    </div>
+                </div>
+
+                <div class="row mt-3">
+                    <div class="col-md-6 mb-3">
+                        <div class="glass p-3">
+                            <div class="info-label">Contact</div>
+                            <div class="info-value">{{ data.contact }}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="glass p-3">
+                            <div class="info-label">Email</div>
+                            <div class="info-value">{{ data.email }}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="glass p-3">
+                            <div class="info-label">Department</div>
+                            <div class="info-value">{{ data.department}}</div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <div class="glass p-3">
+                            <div class="info-label">Description</div>
+                            <div class="info-value">{{ data.d_des }}</div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div>
+
+        </div>
+        {% endif %}
+
+        <!-- QUERY -->
+
+        {% if msg %}
+        <div class="alert alert-success text-center">
+            {{ msg }}
+        </div>
+        {% endif %}
+
+        {% if query %}
+        <div id="query" class="section">
+
+            <div class="glass shadow-lg p-4">
+                <h3>Query Form</h3>
+
+                <form method="post" action="{% url 'query_data' %}">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label>Name</label>
+                        <input class="form-control" name="name" value="{{ data.name }}" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Email</label>
+                        <input class="form-control" name="email" value="{{ data.email }}" readonly>
+                    </div>
+
+                    <label for="subject" class="form-label">Subject</label>
+                    <select name="subject" id="subject" class="form-select" required>
+                        <option value="" disabled selected>Select Subject</option>
+                        <option value="attendance">Attendance</option>
+                        <option value="salary">Salary</option>
+                        <option value="profile">Profile Info</option>
+                        <option value="leave">Leave</option>
+                    </select>
+
+
+
+
+                    <div class="mb-3">
+                        <label>Query</label>
+                        <textarea class="form-control" name="query" rows="4" required></textarea>
+                    </div>
+
+                    <button class="btn btn-primary">Submit Query</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- Query status -->
+
+        {% if query_status %}
+        <div id="query_status" class="section">
+            <div class="glass shadow-lg p-4">
+                <h3>Query Status</h3>
+
+                <!-- SEARCH FORM -->
+                <form action="{% url 'search' %}" method="POST">
+                    {% csrf_token %}
+
+                    <table class="table table-bordered table-hover mt-3 text-center query-status-table">
+
+
+                        <!-- SEARCH INPUT ROW -->
+                        <thead class="table-light">
+                            <tr>
+
+                                <th>
+                                    <input type="text" name="name" class="form-control form-control-sm"
+                                        placeholder="Search Name">
+                                </th>
+
+                                <th>
+                                    <input type="text" name="email" class="form-control form-control-sm"
+                                        placeholder="Search Email" readonly>
+                                </th>
+
+                                <th>
+                                    <input type="text" name="subject" class="form-control form-control-sm"
+                                        placeholder="Search Subject">
+                                </th>
+
+                                <th>
+                                    <input type="text" name="query" class="form-control form-control-sm"
+                                        placeholder="Search Query">
+                                </th>
+
+                                <th>
+                                    <input type="text" name="status" class="form-control form-control-sm"
+                                        placeholder="Search Status">
+                                </th>
+
+                                <th>
+                                    <input type="text" name="solution" class="form-control form-control-sm"
+                                        placeholder="Search Solution">
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <!-- TABLE HEADING -->
+                        <thead class="table-dark">
+                            <tr>
+                                <th>S.No</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Subject</th>
+                                <th>Query</th>
+                                <th>Status</th>
+                                <th>Solution</th>
+                            </tr>
+                        </thead>
+
+                        <!-- DATA -->
+                        <tbody>
+                            {% for q in query_status %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ q.name }}</td>
+                                <td>{{ q.email }}</td>
+                                <td>{{ q.subject }}</td>
+                                <td>{{ q.query }}</td>
+                                <td>{{ q.status }}</td>
+                                <td>{{ q.solution }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+
+                    </table>
+
+                    <!-- SEARCH BUTTON -->
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-primary btn-sm">
+                            🔍 Search
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+        {% endif %}
+
+        <!-- ALL QUERY -->
+
+        {% if all_query %}
+        <div id="all_query" class="section">
+            <div class="glass shadow-lg p-4">
+
+                <!-- Heading + Search -->
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3>All Query</h3>
+
+                    <form action="{% url 'search' %}" method="POST" style="display:flex; align-items:center; gap:8px;">
+                        {% csrf_token %}
+
+                        <input type="search" name="search" placeholder="Search" class="form-control form-control-sm"
+                            style="width:200px;">
+
+                        <input type="submit" value="search" class="btn btn-primary btn-sm">
+
+                        <button style="padding:0; border:none; background:none;">
+                            <a href="{% url 'reset' %}" class="btn btn-warning btn-sm">
+                                Reset
+                            </a>
+                        </button>
+
+
+                        <!-- button latest , oldest -->
+
+                        <div class="mb-3">
+                            <a href="{% url 'all_query' %}?order=latest" class="btn btn-success btn-sm">
+                                Latest First
+                            </a>
+
+                            <a href="{% url 'all_query' %}?order=oldest" class="btn btn-primary btn-sm">
+                                Oldest First
+                            </a>
+                        </div>
+
+
+                    </form>
+
+                </div>
+
+                <table class="table table-bordered table-hover text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>S.No</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Query</th>
+                            <th>Edit</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for q in queries %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td>{{ q.name }}</td>
+                            <td>{{ q.email }}</td>
+
+                            <td>{{ q.query }}</td>
+
+                            <td>
+
+                                {% if q.status == "panding" %}
+                                <a href="{% url 'edit' pk=q.id %}" class="btn btn-info btn-sm">
+                                    Edit
+                                </a>
+                                {% else %}
+                                <button class="btn btn-secondary btn-sm" disabled>
+                                    Locked
+                                </button>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                {% if q.status == "panding" %}
+                                <a href="{% url 'delete_query' q.pk %}" class="btn btn-danger btn-sm">
+                                    Delete
+                                </a>
+                                {% else %}
+                                <button class="btn btn-secondary btn-sm" disabled>
+                                    Locked
+                                </button>
+                                {% endif %}
+                            </td>
+
+                        </tr>
+                        {% empty %}
+
+                        <tr>
+                            <td colspan="4">No queries found</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+
+
+        <!-- edit query form  -->
+
+        {% elif e_query %}
+        <div id="query" class="section">
+            <div class="glass shadow-lg p-4" style="background: rgba(173, 216, 230, 0.45);">
+
+                <h3 style="color:#0b4f6c;">
+                    ✏️ Update Your Query
+                </h3>
+
+                <p class="small text-muted">
+                    You are editing your previously submitted query
+                </p>
+
+                <form method="post" action="{% url 'update' pk=e_query.id %}">
+                    {% csrf_token %}
+
+                    <div class="mb-3">
+                        <label>Name</label>
+                        <input class="form-control" name="name" value="{{ e_query.name }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Email</label>
+                        <input class="form-control" name="email" value="{{ e_query.email }}">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Subject</label>
+                        <select name="subject" class="form-select" required>
+                            <option value="attendance" {% if e_query.subject == "attendance" %}selected{% endif %}>
+                                Attendance</option>
+                            <option value="salary" {% if e_query.subject == "salary" %}selected{% endif %}>Salary</option>
+                            <option value="profile" {% if e_query.subject == "profile" %}selected{% endif %}>Profile Info
+                            </option>
+                            <option value="leave" {% if e_query.subject == "leave" %}selected{% endif %}>Leave</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label>Update Query</label>
+                        <textarea class="form-control" name="query" rows="4" required>{{ e_query.query }}</textarea>
+                    </div>
+
+                    <button class="btn btn-info text-white">
+                        🔄 Update Query
+                    </button>
+
+                    <a href="{% url 'all_query' %}" class="btn btn-outline-secondary ms-2">
+                        Cancel
+                    </a>
+                </form>
+            </div>
+        </div>
+        {% endif %}
 
 
 
 
 
-</div>
+    </div>
 
 </body>
+
 </html>
 {% endblock contant %}

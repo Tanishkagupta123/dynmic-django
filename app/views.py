@@ -3,6 +3,7 @@ from .models import Employee ,Department as dep,AddEmployee as new
 from django.http import HttpResponse
 from django.core.mail import send_mail
 from .models import Query
+from django.db.models import Q
 
 
 # Create your views here.
@@ -488,9 +489,12 @@ def search(req):
         id=req.session['user_id']
         userdata=new.objects.get(id=id)
         s=req.POST.get('search')
+        print(s,type(s))
         # queries = Query.objects.filter(email=userdata.email,name=s)
         # queries = Query.objects.filter(email=userdata.email,name=s,query=s)
-        queries = Query.objects.filter(email=userdata.email,name__contains=s,query__contains=s)
+        # queries = Query.objects.filter(email=userdata.email,name__contains=s,query__contains=s)
+        queries = Query.objects.filter(Q(email__contains=userdata.email)&(Q(name__contains=s)|Q(query__contains=s)))
+        # queries = Query.objects.filter(Q(name__contains=s)|Q(query__contains=s)) #for admin use only
 
 
         return render(req,'userdashboard.html',{'data':userdata,'all_query':True,'queries': queries})
