@@ -360,7 +360,7 @@ def query_status(req):
         userdata=new.objects.get(id=id)
         query_data=Query.objects.filter(email=userdata.email)
 
-        return render(req,'userdashboard.html',{'data':userdata,'query_status':query_data})
+        return render(req,'userdashboard.html',{'data':userdata,'query_status':True,'queries':query_data})
     else:
         return redirect('login')
 
@@ -512,6 +512,7 @@ def reset(req):
         return render(req,'userdashboard.html',{'data':userdata,'all_query':True,'queries': queries})
     else:
         return redirect('login')
+    
 
 def user_search(req):
     if 'user_id' in req.session:
@@ -548,13 +549,13 @@ def user_search(req):
         return redirect('login')
 
 
-# def user_reset(req):
-#     if 'user_id' in req.session:
-#         id = req.session['user_id']
-#         userdata = new.objects.get(id=id)
-#         queries = Query.objects.filter(email=userdata.email)
+def user_reset(req):
+    if 'user_id' in req.session:
+        id = req.session['user_id']
+        userdata = new.objects.get(id=id)
+        queries = Query.objects.filter(email=userdata.email)
 
-#         return render(req, 'userdashboard.html', {'data': userdata,'query_status': True,'queries': queries
-#         })
-#     else:
-#         return redirect('login')
+        return render(req, 'userdashboard.html', {'data': userdata,'query_status': True,'queries': queries
+        })
+    else:
+        return redirect('login')

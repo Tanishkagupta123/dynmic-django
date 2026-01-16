@@ -47,7 +47,7 @@ urlpatterns = [
     path('userdashboard/query/search/',search,name='search'),
     path('userdashboard/query/reset',reset, name='reset'),
     path('userdashboard/query/user_search',user_search, name='user_search'),
-    # path('userdashboard/query/user_reset',user_reset, name='user_reset'),
+    path('userdashboard/query/user_reset',user_reset, name='user_reset'),
 
 
     
