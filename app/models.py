@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 from django.db import models
+from django.core.validators import MaxLengthValidator,MinLengthValidator
 
 # Create your models here.
 class Employee(models.Model):
@@ -26,7 +27,11 @@ class Employee(models.Model):
 
 
 class AddEmployee(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100,validators=[MaxLengthValidator(10),MinLengthValidator(3)],error_messages={
+            'min_length': 'Name must contain at least 3 characters.',
+            'max_length': 'Name cannot exceed 10 characters.'
+        }
+ )
     email = models.EmailField(unique=True)
     contact = models.CharField(max_length=15)
     image = models.ImageField(upload_to='employee_images/', blank=True, null=True)
@@ -55,4 +60,5 @@ class Query(models.Model):
     status =  models.CharField(max_length=10,default='panding')
     solution = models.CharField(max_length=100,null=True)
     created_at = models.DateTimeField(auto_now_add=True,null=True)
+
     

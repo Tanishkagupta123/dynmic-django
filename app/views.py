@@ -6,6 +6,7 @@ from .models import Query
 from django.db.models import Q
 
 
+
 # Create your views here.
 
 def landing(req):
