@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 from django.db import models
 from django.core.validators import MaxLengthValidator,MinLengthValidator
+from django.core.exceptions import ValidationError
 
 # Create your models here.
 class Employee(models.Model):
@@ -26,19 +27,34 @@ class Employee(models.Model):
     # return f"{self.name}"
 
 
+
+def Emp_contact(value):
+    if not (len(str(value)) == 10 and value.isdigit()):
+        raise ValidationError("Contact must be 10 digits only")
+
+
 class AddEmployee(models.Model):
     name = models.CharField(max_length=100,validators=[MaxLengthValidator(10),MinLengthValidator(3)],error_messages={
             'min_length': 'Name must contain at least 3 characters.',
-            'max_length': 'Name cannot exceed 10 characters.'
-        }
- )
+            'max_length': 'Name cannot exceed 10 characters.'})
     email = models.EmailField(unique=True)
-    contact = models.CharField(max_length=15)
+    contact = models.CharField(max_length=15,validators=[Emp_contact])
     image = models.ImageField(upload_to='employee_images/', blank=True, null=True)
     password = models.CharField(max_length=128)
     department=models.CharField(max_length=50,null=True)
     d_code = models.CharField(max_length=20,null=True)
     d_des = models.CharField(max_length=50,null=True)
+
+
+
+def clean(self):
+    if not len(str(self.password)) == 4:
+        raise ValidationError("Password must be at least 5 characters long")
+
+
+    def save(self,*args,**kwargs):
+        self.full_clean()
+        super().save(*args,**kwargs)
 
 
     def __str__(self):
