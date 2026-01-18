@@ -46,7 +46,6 @@ class AddEmployee(models.Model):
     d_des = models.CharField(max_length=50,null=True)
 
 
-
 def clean(self):
     if not len(str(self.password)) == 4:
         raise ValidationError("Password must be at least 5 characters long")
