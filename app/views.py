@@ -539,7 +539,7 @@ def user_search(req):
 
         if solution:
             queries=queries.filter(solution__contains=query)
-            
+
         return render(req, 'userdashboard.html', {'data': userdata,'query_status': True,'queries': queries
         })
 
