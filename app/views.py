@@ -271,7 +271,6 @@ def add_dep(req):
         return render(req,'admindashboard.html',{'add_dep':True,
                                                  'msg':msg,
                                                  'data':data,
-                                                
                                                  })
     
 
@@ -540,8 +539,7 @@ def user_search(req):
 
         if solution:
             queries=queries.filter(solution__contains=query)
-
-
+            
         return render(req, 'userdashboard.html', {'data': userdata,'query_status': True,'queries': queries
         })
 
