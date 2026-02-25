@@ -41,7 +41,7 @@ def registration(req):
                 if p==cp:
                      Employee.objects.create(name=n,email=e,contact=c,gender=g,qualification=','.join(q),
                                 state=s,image=i,audio=a,video=v,resume=r,password=p)
-                     req.session['pqr']="Registration Done"
+                     req.session['login_msg'] = "Registration Done"
                     
                      return redirect('login')
                 else:
@@ -124,7 +124,7 @@ def login(req):
         user = new.objects.filter(email=e)
 
         if not user:
-            req.session['signup'] = f'Given email {e} is not registered'
+            req.session['pqr'] = f'Given email {e} is not registered'
             return redirect('login')
 
         userdata = user.first()
@@ -132,10 +132,10 @@ def login(req):
             req.session['user_id'] = userdata.id
             return redirect('dashboard')
         else:
-            req.session['signup'] = 'Wrong password'
+            req.session['pqr'] = 'Wrong password'
             return redirect('login')
 
-    msg = req.session.get('pqr')
+    msg = req.session.pop('pqr', None)  
     return render(req, 'login.html', {'pqr': msg})
 
 

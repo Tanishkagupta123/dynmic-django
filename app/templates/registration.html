@@ -3,23 +3,23 @@
 
 <div class="container mt-5">
     <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-7">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-5">
 
-             {% if msg %}
-              <h1 class="text-center text-danger">{{ msg }}</h1> 
-             {% endif %}
+            {% if msg %}
+                <h4 class="text-center text-danger">{{ msg }}</h4>
+            {% endif %}
 
-             {% if xyz %}
-              <h1 class="text-center text-danger">{{ xyz }}</h1> 
-             {% endif %}
+            {% if xyz %}
+                <h4 class="text-center text-danger">{{ xyz }}</h4>
+            {% endif %}
 
-             {% if signup %}
-              <h1 class="text-center text-danger">{{ signup }}</h1> 
-             {% endif %}
+            {% if signup %}
+                <h4 class="text-center text-danger">{{ signup }}</h4>
+            {% endif %}
 
-            <div class="card shadow-lg" style="border-radius: 25px; background: linear-gradient(to bottom right, #ffffff, #f0f0f0); padding: 40px;">
+            <div class="card shadow-lg p-4 p-md-5" style="border-radius: 25px; background: linear-gradient(to bottom right, #ffffff, #f0f0f0);">
 
-                <h3 class="text-center mb-4" style="color:#4a4a4a; font-weight:700;">Registration Form</h3>
+                <h3 class="text-center mb-4 fw-bold" style="color:#4a4a4a;">Registration Form</h3>
 
                 <form action="{% url 'registration' %}" method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
@@ -45,38 +45,42 @@
                     <!-- Gender -->
                     <div class="mb-3">
                         <label class="form-label d-block">Gender</label>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="gender" value="Male">
-                            <label class="form-check-label">Male</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="gender" value="Female">
-                            <label class="form-check-label">Female</label>
-                        </div>
-                        <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="gender" value="Other">
-                            <label class="form-check-label">Other</label>
+                        <div class="d-flex flex-wrap gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" value="Male">
+                                <label class="form-check-label">Male</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" value="Female">
+                                <label class="form-check-label">Female</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="gender" value="Other">
+                                <label class="form-check-label">Other</label>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Qualification -->
                     <div class="mb-3">
                         <label class="form-label d-block">Qualification</label>
-                        <div class="form-check">
-                            <input class="form-check-input" name="qualification[]" type="checkbox">
-                            <label class="form-check-label">10th</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" name="qualification[]" type="checkbox">
-                            <label class="form-check-label">12th</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" name="qualification[]" type="checkbox">
-                            <label class="form-check-label">Graduation</label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" name="qualification[]" type="checkbox">
-                            <label class="form-check-label">Post Graduation</label>
+                        <div class="d-flex flex-wrap gap-3">
+                            <div class="form-check">
+                                <input class="form-check-input" name="qualification[]" type="checkbox" value="10th">
+                                <label class="form-check-label">10th</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" name="qualification[]" type="checkbox" value="12th">
+                                <label class="form-check-label">12th</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" name="qualification[]" type="checkbox" value="Graduation">
+                                <label class="form-check-label">Graduation</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" name="qualification[]" type="checkbox" value="Post Graduation">
+                                <label class="form-check-label">Post Graduation</label>
+                            </div>
                         </div>
                     </div>
 
@@ -115,14 +119,14 @@
                     </div>
                     
                     <!-- Passwords -->
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label class="form-label">Password</label>
                         <input type="password" name="password" class="form-control rounded-pill" placeholder="Enter your password">
                     </div>
 
                     <div class="mb-4">
                         <label class="form-label">Confirm password</label>
-                        <input type="password" name="cpassword" class="form-control rounded-pill" placeholder="Enter your confirm password">
+                        <input type="password" name="cpassword" class="form-control rounded-pill" placeholder="Confirm password">
                     </div>
 
                     <!-- Button -->
@@ -140,15 +144,28 @@
 </div>
 
 <style>
+    /* Hover effect for card */
     .card:hover {
         transform: translateY(-5px);
         transition: 0.3s;
     }
+
+    /* Focus effect for inputs */
     .form-control:focus {
         border-color: #764ba2;
         box-shadow: 0 0 0 0.2rem rgba(118, 75, 162, 0.25);
     }
+
+    /* Responsive tweaks */
+    @media (max-width: 576px) {
+        .card {
+            padding: 20px !important;
+        }
+        .btn-lg {
+            font-size: 1rem;
+            padding: 0.5rem 1rem;
+        }
+    }
 </style>
 
 {% endblock content %}
-
