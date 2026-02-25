@@ -1,123 +1,188 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <title>Base page</title>
+  <title>Student Management System</title>
 
-    <!-- ===== Added CSS (sirf styling) ===== -->
-    <style>
-      body {
-        background: linear-gradient(135deg, #f4f6fb, #e9eff5);
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      }
+  <style>
+    body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      min-height: 100vh;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+    }
 
-      .navbar {
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.35);
-      }
+    .navbar {
+      background: rgba(0, 0, 0, 0.75) !important;
+      backdrop-filter: blur(10px);
+      padding: 15px 40px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+    }
 
-      .navbar-brand {
-        font-weight: bold;
-        letter-spacing: 1px;
-        color: #00ffcc !important;
-      }
+    .navbar-brand {
+      font-size: 24px;
+      font-weight: 700;
+      color: #00f5d4 !important;
+    }
 
-      .nav-link {
-        margin-right: 12px;
-        transition: all 0.3s ease;
-      }
+    .nav-link {
+      color: white !important;
+      margin-right: 20px;
+      font-weight: 500;
+      position: relative;
+      transition: 0.3s;
+    }
 
-      .nav-link:hover {
-        color: #00ffcc !important;
-        transform: translateY(-2px);
-      }
+    .nav-link::after {
+      content: "";
+      position: absolute;
+      width: 0%;
+      height: 2px;
+      bottom: 0;
+      left: 0;
+      background: #00f5d4;
+      transition: 0.3s;
+    }
 
-      .dropdown-menu {
-        border-radius: 10px;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
-      }
+    .nav-link:hover::after {
+      width: 100%;
+    }
 
-      .dropdown-item {
-        transition: all 0.3s ease;
-      }
+    .nav-link:hover {
+      color: #00f5d4 !important;
+    }
 
-      .dropdown-item:hover {
-        background-color: #212529;
-        color: #00ffcc;
-        padding-left: 22px;
-      }
+    .hero-section {
+      text-align: center;
+      padding: 100px 20px;
+    }
 
-      .form-control {
-        border-radius: 20px;
-      }
+    .hero-section h1 {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
 
-      .btn-outline-success {
-        border-radius: 20px;
-        transition: all 0.3s ease;
-      }
+    .hero-section p {
+      font-size: 18px;
+      opacity: 0.9;
+      margin-bottom: 40px;
+    }
 
-      .btn-outline-success:hover {
-        background-color: #00ffcc;
-        border-color: #00ffcc;
-        color: #000;
-      }
-    </style>
-    <!-- ===== CSS end ===== -->
+    .btn-custom {
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-weight: 600;
+      margin: 10px;
+      transition: 0.3s ease;
+    }
 
-  </head>
-  <body>
+    .btn-register {
+      background: #00f5d4;
+      color: black;
+      border: none;
+    }
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container-fluid">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+    .btn-register:hover {
+      background: white;
+      transform: translateY(-3px);
+    }
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-            <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="#">Home</a>
-            </li>
+    .btn-login {
+      border: 2px solid #00f5d4;
+      color: #00f5d4;
+      background: transparent;
+    }
 
-            <li class="nav-item">
-              <a class="nav-link" href="#">Link</a>
-            </li>
+    .btn-login:hover {
+      background: #00f5d4;
+      color: black;
+      transform: translateY(-3px);
+    }
 
-            <li class="nav-item dropdown">
-              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Dropdown
-              </a>
+    .content-box {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 40px;
+      margin: 40px auto;
+      width: 85%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+      animation: fadeUp 0.8s ease;
+    }
 
-              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li><a class="dropdown-item" href="#" methood="POST"></a></li>
-                {% csrf_token %}
-                <li><a class="dropdown-item" href="{% url 'registration' %}">Registration</a></li>
-                <li><a class="dropdown-item" href="{% url 'login' %}">Login</a></li>
-                <li><a class="dropdown-item" href="{% url 'show_data' %}">Show_data</a></li>
-                <li><a class="dropdown-item" href="{% url 'show_query' %}">Show_query</a></li>
-              </ul>
-            </li>
-          </ul>
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(25px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
 
-          <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
-          </form>
-        </div>
-      </div>
-    </nav>
+<body>
 
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<nav class="navbar navbar-expand-lg navbar-dark">
+  <div class="container-fluid">
 
-    {% block content %}
-    {% endblock content %}
+    <!-- LOGO CLICK = LANDING PAGE -->
+    <a class="navbar-brand" href="{% url 'landing' %}">Student Portal</a>
 
-  </body>
+    <button class="navbar-toggler" type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+      <ul class="navbar-nav ms-auto">
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'landing' %}">Home</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'registration' %}">Registration</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'login' %}">Login</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'show_data' %}">Show Data</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'show_query' %}">Show Query</a>
+        </li>
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+<!-- HERO SECTION ONLY FOR LANDING PAGE -->
+{% if request.path == '/' %}
+<div class="hero-section">
+  <h1>Welcome to Student Management System</h1>
+  <p>Manage student records, registration, and queries efficiently with a professional dashboard interface.</p>
+
+  <a href="{% url 'registration' %}" class="btn btn-custom btn-register">Register Now</a>
+  <a href="{% url 'login' %}" class="btn btn-custom btn-login">Login</a>
+</div>
+{% endif %}
+
+<div class="content-box">
+  {% block content %}
+  {% endblock %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
 </html>

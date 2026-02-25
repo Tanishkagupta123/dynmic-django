@@ -50,11 +50,8 @@ urlpatterns = [
     path('userdashboard/query/user_reset',user_reset, name='user_reset'),
 
 
-    
-
     path('delete/<int:pk>',delete,name='delete'),
     path('logout/',logout,name='logout')
-
 
 
 
