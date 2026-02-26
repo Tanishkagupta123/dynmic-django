@@ -1,12 +1,16 @@
 {% load static %}
 
+<!-- ===== Viewport Meta ===== -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
 /* ===== Google Font ===== */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+/* ===== Body ===== */
 body {
     margin: 0;
-    height: 100vh;
+    min-height: 100vh;
     font-family: 'Inter', sans-serif;
     display: flex;
     justify-content: center;
@@ -21,7 +25,7 @@ body {
     position: relative;
     width: 90%;
     max-width: 400px;
-    padding: 40px 30px;
+    padding: 35px 25px;
     border-radius: 25px;
     background: linear-gradient(145deg, rgba(255,255,255,0.85), rgba(255,255,255,0.95));
     box-shadow: 0 15px 40px rgba(0,0,0,0.3);
@@ -42,32 +46,34 @@ body {
     100% { opacity: 1; transform: translateY(0);}
 }
 
-/* ===== Error/message ===== */
-.login-card h1 {
-    text-align: center;
-    color: #e74c3c;
-    font-size: 1rem;
-    margin-bottom: 15px;
-}
-
-/* ===== Card heading ===== */
+/* ===== Card Heading ===== */
 .login-card h3 {
     text-align: center;
     font-weight: 700;
     font-size: 1.8rem;
     color: #222;
-    margin-bottom: 30px;
+    margin-bottom: 25px;
 }
 
-/* ===== Form floating labels ===== */
+/* ===== Error/Message ===== */
+.login-card .alert {
+    background-color: #f8d7da;
+    color: #842029;
+    padding: 10px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* ===== Form Floating Labels ===== */
 .form-floating {
     position: relative;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
 }
 
 .form-floating input {
     width: 100%;
-    padding: 14px 15px 14px 15px;
+    padding: 14px 15px;
     border-radius: 12px;
     border: 1px solid #ccc;
     outline: none;
@@ -126,7 +132,7 @@ body {
 .login-card p {
     font-size: 0.9rem;
     color: #333;
-    margin-top: 20px;
+    margin-top: 15px;
     text-align: center;
 }
 
@@ -144,7 +150,7 @@ body {
 /* ===== Responsive ===== */
 @media (max-width: 768px) {
     .login-card {
-        padding: 35px 20px;
+        padding: 30px 20px;
     }
 }
 
@@ -155,22 +161,34 @@ body {
     body {
         background-position: top;
     }
+    .login-card h3 {
+        font-size: 1.5rem;
+    }
+    .form-floating input {
+        font-size: 0.9rem;
+        padding: 12px 12px;
+    }
+    .login-card .btn-primary {
+        font-size: 0.95rem;
+        padding: 10px;
+    }
 }
 </style>
 
 <div class="login-card shadow">
-   {% if pqr %}
-<div style="background-color:#f8d7da; color:#842029; padding:10px; border-radius:8px; text-align:center; margin-bottom:15px;">
-    {{ pqr }}
-</div>
-{% endif %}
-    <h3 class="text-center mb-4">Login</h3>
+    {% if pqr %}
+    <div class="alert">
+        {{ pqr }}
+    </div>
+    {% endif %}
+
+    <h3>Login</h3>
 
     <form method="post">
         {% csrf_token %}
 
         <div class="form-floating">
-            <input type="email" class="form-control" name="email">
+            <input type="email" class="form-control" name="email" >
             <label>Email</label>
         </div>
 
@@ -180,8 +198,8 @@ body {
         </div>
 
         <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox">
-            <label class="form-check-label">Remember me</label>
+            <input class="form-check-input" type="checkbox" id="remember">
+            <label class="form-check-label" for="remember">Remember me</label>
         </div>
 
         <div class="d-grid">
@@ -189,7 +207,7 @@ body {
         </div>
     </form>
 
-    <p class="text-center mt-3">
+    <p>
         Don't have an account? <a href="{% url 'registration' %}">Register</a>
     </p>
 </div>

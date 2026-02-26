@@ -602,7 +602,7 @@
 
                             <td>
 
-                                {% if q.status == "panding" %}
+                                {% if q.status == "pending" %}
                                 <a href="{% url 'edit' pk=q.id %}" class="btn btn-info btn-sm">
                                     Edit
                                 </a>
@@ -614,7 +614,7 @@
                             </td>
 
                             <td>
-                                {% if q.status == "panding" %}
+                                {% if q.status == "pending" %}
                                 <a href="{% url 'delete_query' q.pk %}" class="btn btn-danger btn-sm">
                                     Delete
                                 </a>
