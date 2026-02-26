@@ -48,8 +48,6 @@ def registration(req):
                      req.session['xyz']="password and confirm password not matched"
                      return redirect('registration')
 
-    
-
         else:
         #  msg = req.session['msg']
          msg = req.session.get('msg','')
