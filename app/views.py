@@ -118,7 +118,7 @@ def login(req):
             }
             return redirect('dashboard')
 
-        
+    
         user = new.objects.filter(email=e)
 
         if not user:

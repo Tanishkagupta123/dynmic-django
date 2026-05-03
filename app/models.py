@@ -75,3 +75,4 @@ class Query(models.Model):
     status =  models.CharField(max_length=10,default='panding')
     solution = models.CharField(max_length=100,null=True)
     created_at = models.DateTimeField(auto_now_add=True,null=True)
+    
