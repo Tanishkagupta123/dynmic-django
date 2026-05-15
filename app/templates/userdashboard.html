@@ -442,100 +442,70 @@
         {% endif %}
 
         <!-- Query status -->
+{% if query_status %}
+<div id="query_status" class="section">
+    <div class="glass shadow-lg p-4">
+        <h3>Query Status</h3>
 
-        {% if query_status %}
-        <div id="query_status" class="section">
-            <div class="glass shadow-lg p-4">
-                <h3>Query Status</h3>
+        <!-- SEARCH FORM -->
+        <form action="{% url 'user_search' %}" method="POST">
+            {% csrf_token %}
 
-                <!-- SEARCH FORM -->
-                <form action="{% url 'user_search' %}" method="POST">
-                    {% csrf_token %}
+            <!-- SEARCH BAR ROW -->
+            <div class="d-flex align-items-center gap-2 mb-3">
 
-                    <table class="table table-bordered table-hover mt-3 text-center query-status-table">
+                <!-- SMALL SEARCH INPUT -->
+                <input type="text" name="search"
+                    class="form-control form-control-sm w-50"
+                    placeholder="Search anything (Name, Email, Subject, Status, Query, Solution...)">
 
+                <!-- SEARCH BUTTON -->
+                <button type="submit" class="btn btn-primary btn-sm px-3">
+                    🔍 Search
+                </button>
 
-                        <!-- SEARCH INPUT ROW -->
-                        <thead class="table-light">
-                            <tr>
-                                <th></th>
+                <!-- RESET BUTTON -->
+                <a href="{% url 'user_reset' %}" class="btn btn-warning btn-sm px-3">
+                    🔄 Reset
+                </a>
 
-                                <th>
-                                    <input type="text" name="name" class="form-control form-control-sm"
-                                        placeholder="Search Name">
-                                </th>
-
-                                <th>
-                                    <input type="text" name="email" class="form-control form-control-sm"
-                                        placeholder="Search Email" readonly>
-                                </th>
-
-                                <th>
-                                    <input type="text" name="subject" class="form-control form-control-sm"
-                                        placeholder="Search Subject">
-                                </th>
-
-                                <th>
-                                    <input type="text" name="query" class="form-control form-control-sm"
-                                        placeholder="Search Query">
-                                </th>
-
-                                <th>
-                                    <input type="text" name="status" class="form-control form-control-sm"
-                                        placeholder="Search Status">
-                                </th>
-
-                                <th>
-                                    <input type="text" name="solution" class="form-control form-control-sm"
-                                        placeholder="Search Solution">
-                                </th>
-                            </tr>
-                        </thead>
-
-                        <!-- TABLE HEADING -->
-                        <thead class="table-dark">
-                            <tr>
-                                <th>S.No</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Subject</th>
-                                <th>Query</th>
-                                <th>Status</th>
-                                <th>Solution</th>
-                            </tr>
-                        </thead>
-
-                        <!-- DATA -->
-                        <tbody>
-                            {% for q in queries %}
-                            <tr>
-                                <td>{{ forloop.counter }}</td>
-                                <td>{{ q.name }}</td>
-                                <td>{{ q.email }}</td>
-                                <td>{{ q.subject }}</td>
-                                <td>{{ q.query }}</td>
-                                <td>{{ q.status }}</td>
-                                <td>{{ q.solution }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-
-                    </table>
-
-                    <!-- SEARCH BUTTON -->
-                    <div class="text-end">
-                        <button type="submit" class="btn btn-primary btn-sm">
-                            🔍 Search
-                        </button>
-                        <a href="{% url 'user_reset' %}" class="btn btn-warning btn-sm">
-                             🔄 Reset</a>
-
-                    </div>
-
-                </form>
             </div>
-        </div>
-        {% endif %}
+
+            <!-- TABLE -->
+            <table class="table table-bordered table-hover mt-3 text-center query-status-table">
+
+                <thead class="table-dark">
+                    <tr>
+                        <th>S.No</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Subject</th>
+                        <th>Query</th>
+                        <th>Status</th>
+                        <th>Solution</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for q in queries %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ q.name }}</td>
+                        <td>{{ q.email }}</td>
+                        <td>{{ q.subject }}</td>
+                        <td>{{ q.query }}</td>
+                        <td>{{ q.status }}</td>
+                        <td>{{ q.solution }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+
+            </table>
+
+        </form>
+    </div>
+</div>
+{% endif %}
 
         <!-- ALL QUERY -->
 
@@ -602,7 +572,7 @@
 
                             <td>
 
-                                {% if q.status == "panding" %}
+                                {% if q.status == "pending" %}
                                 <a href="{% url 'edit' pk=q.id %}" class="btn btn-info btn-sm">
                                     Edit
                                 </a>
@@ -614,7 +584,7 @@
                             </td>
 
                             <td>
-                                {% if q.status == "panding" %}
+                                {% if q.status == "pending" %}
                                 <a href="{% url 'delete_query' q.pk %}" class="btn btn-danger btn-sm">
                                     Delete
                                 </a>

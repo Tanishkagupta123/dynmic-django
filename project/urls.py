@@ -51,7 +51,12 @@ urlpatterns = [
 
     
     path('delete/<int:pk>',delete,name='delete'),
-    path('logout/',logout,name='logout')
+    path('logout/',logout,name='logout'),
+
+
+    path('admin_query_search/',admin_query_search, name='admin_query_search'),
+
+
 
 
 

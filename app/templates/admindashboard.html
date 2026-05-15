@@ -425,6 +425,37 @@
     <div class="card shadow p-4">
         <h3 class="mb-4 text-center">Employee Queries</h3>
 
+          <!-- office -->
+<form action="{% url 'admin_query_search' %}" method="POST" class="mb-3">
+
+    {% csrf_token %}
+
+    <div class="row mb-2">
+        <div class="col-md-10">
+            <input type="text"
+                   name="search"
+                   class="form-control"
+                   placeholder="Search anything (Name, Email, Subject, Query, Status, Solution)">
+        </div>
+
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">
+                🔍 Search
+            </button>
+        </div>
+    </div>
+
+    <div class="mt-2">
+        <a href="{% url 'show_query' %}" class="btn btn-warning btn-sm">
+            Reset
+        </a>
+    </div>
+
+</form>
+  
+          <!-- office -->
+
+
         <table class="table table-bordered table-hover text-center align-middle">
             <thead class="table-dark">
                 <tr>

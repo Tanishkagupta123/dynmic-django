@@ -316,6 +316,38 @@ def show_query(req):
                 'queries':queries,
                 'data':req.session.get('admin')
           })
+     
+    #  office
+def admin_query_search(req):
+
+    if 'admin' not in req.session:
+        return redirect('login')
+
+    search = req.POST.get('search', '').strip()
+
+    queries = Query.objects.all()
+
+    if search:
+        queries = queries.filter(
+            name__icontains=search
+        ) | queries.filter(
+            email__icontains=search
+        ) | queries.filter(
+            subject__icontains=search
+        ) | queries.filter(
+            query__icontains=search
+        ) | queries.filter(
+            status__icontains=search
+        ) | queries.filter(
+            solution__icontains=search
+        )
+
+    return render(req, 'admindashboard.html', {
+        'show_query': True,
+        'queries': queries,
+        'data': req.session.get('admin')
+    })
+    # office
 
 
 def delete(req,pk):
@@ -510,35 +542,32 @@ def reset(req):
     else:
         return redirect('login')
     
+from django.db.models import Q
 
 def user_search(req):
     if 'user_id' in req.session:
-        id=req.session['user_id']
-        userdata=new.objects.get(id=id)
-        name=req.POST.get('name', '').strip()
-        status=req.POST.get('status', '').strip()
-        subject=req.POST.get('subject', '').strip()
-        query=req.POST.get('query', '').strip()
-        solution=req.POST.get('solution', '').strip()
+        id = req.session['user_id']
+        userdata = new.objects.get(id=id)
 
-        queries=Query.objects.filter(email=userdata.email)
+        # 🔥 SINGLE SEARCH BOX VALUE
+        search = req.POST.get('search', '').strip()
 
-        if name:
-            queries=queries.filter(name__contains=name)
+        queries = Query.objects.filter(email=userdata.email)
 
-        if status:
-            queries=queries.filter(status__contains=status)
+        # ✔ SINGLE CONDITION FOR ALL FIELDS
+        if search:
+            queries = queries.filter(
+                Q(name__icontains=search) |
+                Q(status__icontains=search) |
+                Q(subject__icontains=search) |
+                Q(query__icontains=search) |
+                Q(solution__icontains=search)
+            )
 
-        if subject:
-            queries=queries.filter(subject__contains=subject)
-
-        if query:
-            queries=queries.filter(query__contains=query)
-
-        if solution:
-            queries=queries.filter(solution__contains=query)
-
-        return render(req, 'userdashboard.html', {'data': userdata,'query_status': True,'queries': queries
+        return render(req, 'userdashboard.html', {
+            'data': userdata,
+            'query_status': True,
+            'queries': queries
         })
 
     else:
