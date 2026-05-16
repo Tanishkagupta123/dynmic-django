@@ -62,6 +62,33 @@
             font-weight: bold;
         }
 
+.summary-card{
+    border-radius: 15px;
+    padding: 20px;
+    color: white;
+    text-align: center;
+    font-weight: bold;
+}
+
+.present{
+    background: #28a745;
+}
+
+.absent{
+    background: #dc3545;
+}
+
+.half{
+    background: #fd7e14;
+}
+
+.percent{
+    background: #007bff;
+}
+
+.employee-btn{
+    margin: 5px;
+}
     </style>
 
 </head>
@@ -70,20 +97,127 @@
 
 <div class="container mt-5">
 
+    <!-- SUMMARY -->
+
+    <div class="row mb-4">
+
+        <div class="col-md-3">
+            <div class="summary-card present">
+                <h4>Present</h4>
+                <h2>{{ total_present }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="summary-card absent">
+                <h4>Absent</h4>
+                <h2>{{ total_absent }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="summary-card half">
+                <h4>Half Day</h4>
+                <h2>{{ total_half }}</h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="summary-card percent">
+                <h4>Attendance %</h4>
+                <h2>{{ percentage }}%</h2>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- MONTH FILTER -->
+
+    <div class="table-card mb-4">
+
+        <form method="GET">
+
+            <div class="row">
+
+                <div class="col-md-4">
+
+                    <select name="month" class="form-select">
+
+                        <option value="1">January</option>
+                        <option value="2">February</option>
+                        <option value="3">March</option>
+                        <option value="4">April</option>
+                        <option value="5">May</option>
+                        <option value="6">June</option>
+                        <option value="7">July</option>
+                        <option value="8">August</option>
+                        <option value="9">September</option>
+                        <option value="10">October</option>
+                        <option value="11">November</option>
+                        <option value="12">December</option>
+
+                    </select>
+
+                </div>
+
+                <div class="col-md-3">
+
+                    <button class="btn btn-primary">
+                        Filter Month
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- EMPLOYEE BUTTONS -->
+
+    <div class="table-card mb-4">
+
+        <h4 class="mb-3">
+            Employees
+        </h4>
+
+        <a href="?month={{ month }}"
+           class="btn btn-dark employee-btn">
+            All
+        </a>
+
+        {% for e in employees %}
+
+        <a href="?month={{ month }}&emp={{ e.employee__id }}"
+           class="btn btn-info employee-btn">
+
+            {{ e.employee__name }}
+
+        </a>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- TABLE -->
+
     <div class="table-card">
 
         <h2 class="text-center mb-4">
             Attendance Records
         </h2>
 
-        <table class="table table-bordered table-hover text-center align-middle">
+        <table class="table table-bordered table-hover text-center">
 
-            <thead>
+            <thead class="table-dark">
+
                 <tr>
                     <th>Name</th>
                     <th>Date</th>
                     <th>Status</th>
                 </tr>
+
             </thead>
 
             <tbody>
@@ -99,19 +233,23 @@
                     <td>
 
                         {% if i.status == "Present" %}
+
                             <span class="status-present">
-                                {{ i.status }}
+                                Present
                             </span>
 
                         {% elif i.status == "Absent" %}
+
                             <span class="status-absent">
-                                {{ i.status }}
+                                Absent
                             </span>
 
                         {% else %}
+
                             <span class="status-half">
-                                {{ i.status }}
+                                Half Day
                             </span>
+
                         {% endif %}
 
                     </td>

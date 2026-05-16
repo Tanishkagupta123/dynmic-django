@@ -650,12 +650,86 @@ def mark_attendance(request):
 
 from .models import Attendance
 
+from datetime import date
+from .models import Attendance
+
+
 def show_attendance(request):
 
-    attendance = Attendance.objects.all().order_by('-date')
+    today = date.today()
+
+    # month filter
+    month = request.GET.get('month')
+
+    if month:
+        month = int(month)
+    else:
+        month = today.month
+
+    # employee filter
+    emp_id = request.GET.get('emp')
+
+    # BASE QUERY
+    base_qs = Attendance.objects.filter(
+        date__month=month,
+        date__year=today.year
+    )
+
+    # employee filter
+    if emp_id:
+        base_qs = base_qs.filter(employee_id=emp_id)
+
+    # attendance table
+    attendance = base_qs.order_by('-date')
+
+    # summary
+    total_present = base_qs.filter(
+        status="Present"
+    ).count()
+
+    total_absent = base_qs.filter(
+        status="Absent"
+    ).count()
+
+    total_half = base_qs.filter(
+        status="Half Day"
+    ).count()
+
+    total = base_qs.count()
+
+    # percentage
+    percentage = 0
+
+    if total > 0:
+        percentage = (
+            (total_present + (total_half * 0.5))
+            / total
+        ) * 100
+
+    # employee list
+    employees = Attendance.objects.select_related(
+        'employee'
+    ).values(
+        'employee__id',
+        'employee__name'
+    ).distinct()
 
     context = {
-        'attendance': attendance
+
+        'attendance': attendance,
+        'employees': employees,
+
+        'total_present': total_present,
+        'total_absent': total_absent,
+        'total_half': total_half,
+
+        'percentage': round(percentage, 2),
+
+        'month': month,
     }
 
-    return render(request, 'show_attendance.html', context)
+    return render(
+        request,
+        'show_attendance.html',
+        context
+    )
