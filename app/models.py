@@ -19,6 +19,8 @@ class Employee(models.Model):
     resume = models.FileField(upload_to='resumes/')
     password=models.CharField(max_length=20,null=True)         ##table pehle se created  h ab isme naya column add krna h islie 
 
+    def __str__(self):
+      return f"{self.name} ({self.email})"
 
     # def__str__(self):
     # return str(self.contact)
@@ -75,4 +77,26 @@ class Query(models.Model):
     status =  models.CharField(max_length=10,default='panding')
     solution = models.CharField(max_length=100,null=True)
     created_at = models.DateTimeField(auto_now_add=True,null=True)
+
+
+from django.db import models
+from datetime import date
+
+class Attendance(models.Model):
+
+    STATUS_CHOICES = (
+        ('Present', 'Present'),
+        ('Absent', 'Absent'),
+        ('Half Day', 'Half Day'),
+    )
+
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+    date = models.DateField(default=date.today)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES)
+
+    class Meta:
+        unique_together = ('employee', 'date')
+
+    def __str__(self):
+        return f"{self.employee.name} - {self.date}"
     

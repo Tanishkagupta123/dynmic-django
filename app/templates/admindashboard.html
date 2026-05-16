@@ -173,6 +173,8 @@
         <a href="{% url 'all_dep' %}">Show All Dept</a>
         <a href="{% url 'all_emp' %}">Show All Emp</a>
         <a href="{% url 'show_query' %}">Show Emp Query</a><br><br><br><br><br>
+        <a href="{% url 'mark_attendance' %}">Mark Attendance</a>
+        <a href="{% url 'show_attendance' %}">Show Attendance</a>
 
         <div class="text-center mt-4">
           <a href="{% url 'logout' %}" class="btn btn-primary btn-sm">Logout</a>
@@ -548,6 +550,36 @@
     </div>
 </div>
 {% endif %}
+
+<!-- ATTENDANCE SECTION START -->
+
+{% if attendance %}
+
+<div class="container mt-5">
+  <div class="card shadow p-4">
+
+    <h3 class="text-center mb-4">
+      Mark Attendance
+    </h3>
+
+    <form method="POST">
+
+      {% csrf_token %}
+
+      {{ form.as_p }}
+
+      <button type="submit" class="btn btn-primary">
+        Save Attendance
+      </button>
+
+    </form>
+
+  </div>
+</div>
+
+{% endif %}
+
+<!-- ATTENDANCE SECTION END -->
 
 
 

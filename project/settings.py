@@ -128,3 +128,5 @@ EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = 'tanishkagupta241@gmail.com'
 EMAIL_HOST_PASSWORD = 'ytogmlszildaohmm'
+
+MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'

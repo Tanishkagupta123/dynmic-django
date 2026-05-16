@@ -5,7 +5,9 @@ from django.core.mail import send_mail
 from .models import Query
 from django.db.models import Q
 
-
+from django.contrib import messages
+from datetime import date
+from django.db import IntegrityError
 
 # Create your views here.
 
@@ -584,3 +586,76 @@ def user_reset(req):
         })
     else:
         return redirect('login')
+
+
+# new
+
+from django.shortcuts import render, redirect
+from .forms import AttendanceForm
+from django.contrib import messages
+from datetime import date
+from .models import Attendance
+from .forms import AttendanceForm
+
+
+def mark_attendance(request):
+
+    # purane messages clear karega
+    storage = messages.get_messages(request)
+    for i in storage:
+        pass
+
+    form = AttendanceForm()
+
+    if request.method == 'POST':
+
+        form = AttendanceForm(request.POST)
+
+        if form.is_valid():
+
+            employee = form.cleaned_data['employee']
+
+            today = date.today()
+
+            already_marked = Attendance.objects.filter(
+                employee=employee,
+                date=today
+            ).exists()
+
+            if already_marked:
+
+                messages.error(
+                    request,
+                    f"Attendance already marked for {employee.name} today."
+                )
+
+                return redirect('mark_attendance')
+
+            else:
+
+                form.save()
+
+                messages.success(
+                    request,
+                    "Attendance marked successfully."
+                )
+
+                return redirect('show_attendance')
+
+    context = {
+        'form': form
+    }
+
+    return render(request, 'mark_attendance.html', context)
+
+from .models import Attendance
+
+def show_attendance(request):
+
+    attendance = Attendance.objects.all().order_by('-date')
+
+    context = {
+        'attendance': attendance
+    }
+
+    return render(request, 'show_attendance.html', context)
