@@ -315,9 +315,17 @@
             Query_Status
         </a>
 
+        <a href="{% url 'my_attendance' %}" 
+   class="{% if section == 'attendance' %}active{% endif %}">
+    Attendance
+</a>
+
         <a href="{% url 'all_query' %}" class="{% if section == 'all-query' %}active{% endif %}">
             All_Query
         </a>
+
+        
+        
 
         <form method="post" action="{% url 'logout' %}" class="mt-4 text-center">
             {% csrf_token %}
@@ -506,6 +514,117 @@
     </div>
 </div>
 {% endif %}
+
+<!-- EMPLOYEE ATTENDANCE -->
+
+{% if my_attendance %}
+
+<div id="attendance" class="section">
+
+    <div class="glass shadow-lg p-4">
+
+        <h3 class="mb-4">
+            My Attendance
+        </h3>
+
+        <!-- SUMMARY CARDS -->
+
+        <div class="row text-center mb-4">
+
+            <div class="col-md-3 mb-3">
+                <div class="glass p-3">
+                    <h5>Total Present</h5>
+                    <h2>{{ total_present }}</h2>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="glass p-3">
+                    <h5>Total Absent</h5>
+                    <h2>{{ total_absent }}</h2>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="glass p-3">
+                    <h5>Half Days</h5>
+                    <h2>{{ total_half }}</h2>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="glass p-3">
+                    <h5>Attendance %</h5>
+                    <h2>{{ percentage }}%</h2>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- TABLE -->
+
+        <table class="table table-bordered table-hover text-center">
+
+            <thead class="table-dark">
+                <tr>
+                    <th>Date</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for i in attendance %}
+
+                <tr>
+                    <td>{{ i.date }}</td>
+
+                    <td>
+
+                        {% if i.status == "Present" %}
+
+                            <span class="badge bg-success">
+                                Present
+                            </span>
+
+                        {% elif i.status == "Absent" %}
+
+                            <span class="badge bg-danger">
+                                Absent
+                            </span>
+
+                        {% else %}
+
+                            <span class="badge bg-warning text-dark">
+                                Half Day
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="2">
+                        No attendance found
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+
 
         <!-- ALL QUERY -->
 

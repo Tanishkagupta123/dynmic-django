@@ -8,6 +8,8 @@ from django.db.models import Q
 from django.contrib import messages
 from datetime import date
 from django.db import IntegrityError
+from .models import Attendance
+
 
 # Create your views here.
 
@@ -731,5 +733,67 @@ def show_attendance(request):
     return render(
         request,
         'show_attendance.html',
+        context
+    )
+
+
+def my_attendance(request):
+
+    if 'user_id' not in request.session:
+        return redirect('login')
+
+    user_id = request.session.get('user_id')
+
+    userdata = new.objects.get(id=user_id)
+
+    attendance = Attendance.objects.filter(
+        employee__email=userdata.email
+    ).order_by('-date')
+
+    total_present = attendance.filter(
+        status='Present'
+    ).count()
+
+    total_absent = attendance.filter(
+        status='Absent'
+    ).count()
+
+    total_half = attendance.filter(
+        status='Half Day'
+    ).count()
+
+    total = attendance.count()
+
+    percentage = 0
+
+    if total > 0:
+
+        percentage = (
+            (total_present + (total_half * 0.5))
+            / total
+        ) * 100
+
+    context = {
+
+        'data': userdata,
+
+        'my_attendance': True,
+
+        'attendance': attendance,
+
+        'total_present': total_present,
+
+        'total_absent': total_absent,
+
+        'total_half': total_half,
+
+        'percentage': round(percentage, 2),
+
+        'section': 'attendance'
+    }
+
+    return render(
+        request,
+        'userdashboard.html',
         context
     )
