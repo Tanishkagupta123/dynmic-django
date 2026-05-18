@@ -196,6 +196,8 @@ def add_emp(req):
             cp = req.POST.get('cpassword')
             img = req.FILES.get('image')
             dept = req.POST.get('department')
+            joining_date = req.POST.get('joining_date')
+            salary = req.POST.get('salary')
             dept_data=dep.objects.get(id=dept)
             d_name=dept_data.name
             d_code=dept_data.code
@@ -220,7 +222,10 @@ def add_emp(req):
                         image=img,
                         department=d_name,
                         d_code=d_code,
-                        d_des=d_des
+                        d_des=d_des,
+                        joining_date=joining_date,
+                        salary=salary
+
                     )
                     send_mail("User id and Password from admin",
                               f'your user_id is {e} and password is {p}',
@@ -654,7 +659,6 @@ from .models import Attendance
 
 from datetime import date
 from .models import Attendance
-
 
 def show_attendance(request):
 

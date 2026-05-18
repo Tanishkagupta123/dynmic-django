@@ -41,7 +41,7 @@ class AddEmployee(models.Model):
         validators=[MaxLengthValidator(10), MinLengthValidator(3)],
         error_messages={
             'min_length': 'Name must contain at least 3 characters.',
-            'max_length': 'Name cannot exceed 10 characters.'
+            'max_length': 'Name cannot exceed 20 characters.'
         }
     )
 
@@ -65,6 +65,11 @@ class AddEmployee(models.Model):
     d_code = models.CharField(max_length=20, null=True)
 
     d_des = models.CharField(max_length=50, null=True)
+    joining_date = models.DateField(null=True, blank=True)
+
+    salary = models.IntegerField(null=True, blank=True)
+
+    
 
 
     def clean(self):

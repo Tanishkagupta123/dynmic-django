@@ -155,6 +155,13 @@
   .btn-outline-secondary {
     border-radius: 6px;
   }
+  .card{
+    width: 100% !important;
+}
+
+.container-fluid{
+    padding-right: 0px;
+}
 </style>
 
 </head>
@@ -183,7 +190,7 @@
       </div>
 
       <!-- Main Content -->
-      <div class="col-md-9 col-lg-10 content">
+<div class="col-md-10 col-lg-10 content w-100">
         <h2>Welcome Admin Tanishka</h2>
         <hr>
 
@@ -244,6 +251,17 @@
               <input type="file" class="form-control" name="image">
             </div>
 
+                  <!-- Joining Date -->
+<div class="mb-3">
+  <label class="form-label">Joining Date</label>
+  <input type="date" class="form-control" name="joining_date">
+</div>
+
+<!-- Salary -->
+<div class="mb-3">
+  <label class="form-label">Salary</label>
+  <input type="number" class="form-control" name="salary" placeholder="Enter salary">
+</div>
             <!-- Password -->
             <div class="mb-3">
               <label class="form-label">Password</label>
@@ -255,6 +273,7 @@
               <label class="form-label">Confirm Password</label>
               <input type="password" class="form-control" name="cpassword" placeholder="Confirm password">
             </div>
+      
 
             <div class="d-grid">
               <button type="submit" class="btn btn-primary">Add Employee</button>
@@ -336,7 +355,7 @@
 
        <!-- all department -->
 {% if all_dep %}
-<div class="container mt-5">
+<div class="container-fluid mt-5">
   <div class="card shadow p-4">
     <h3 class="mb-4 text-center">All Departments</h3>
 
@@ -368,7 +387,7 @@
 
           <!-- all employee -->
           {% if all_emp %}
-          <div class="container mt-5">
+          <div class="container-fluid mt-5 px-4"></div>
             <div class="card shadow p-4">
               <h3 class="mb-4 text-center">All Employees</h3>
 
@@ -383,6 +402,8 @@
                     <th>Department</th>
                     <th>D_code</th>
                     <th>D_des</th>
+                    <th>Joining Date</th>
+                    <th>Salary</th>
 <!-- 
                     <th>Edit</th>
                     <th>Delete</th> -->
@@ -405,6 +426,8 @@
                     <td>{{ emp.department }}</td>
                     <td>{{ emp.d_code }}</td>
                     <td>{{ emp.d_des }}</td>
+                    <td>{{ emp.joining_date }}</td>
+                    <td>{{ emp.salary }}</td>
                     <!-- <td>
                       <a href="" class="btn btn-sm btn-warning">Edit</a>
                     </td> -->
