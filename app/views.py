@@ -650,11 +650,12 @@ def mark_attendance(request):
                 return redirect('show_attendance')
 
     context = {
-        'form': form
-    }
+    'form': form,
+    'attendance': True,
+    'data': request.session.get('admin')
+}
 
-    return render(request, 'mark_attendance.html', context)
-
+    return render(request, 'admindashboard.html', context)
 from .models import Attendance
 
 from datetime import date

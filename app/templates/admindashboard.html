@@ -179,9 +179,10 @@
         <a href="{% url 'add_emp' %}">Add Employee</a>
         <a href="{% url 'all_dep' %}">Show All Dept</a>
         <a href="{% url 'all_emp' %}">Show All Emp</a>
-        <a href="{% url 'show_query' %}">Show Emp Query</a><br><br><br><br><br>
+        <a href="{% url 'show_query' %}">Show Emp Query</a>
         <a href="{% url 'mark_attendance' %}">Mark Attendance</a>
         <a href="{% url 'show_attendance' %}">Show Attendance</a>
+        <br><br><br><br><br><br>
 
         <div class="text-center mt-4">
           <a href="{% url 'logout' %}" class="btn btn-primary btn-sm">Logout</a>
@@ -190,8 +191,8 @@
       </div>
 
       <!-- Main Content -->
-<div class="col-md-10 col-lg-10 content w-100">
-        <h2>Welcome Admin Tanishka</h2>
+<div class="col-md-9 col-lg-10 content">
+          <h2>Welcome Admin Tanishka</h2>
         <hr>
 
 <!-- add employee -->
@@ -387,7 +388,7 @@
 
           <!-- all employee -->
           {% if all_emp %}
-          <div class="container-fluid mt-5 px-4"></div>
+          <div class="container-fluid mt-5 px-4">
             <div class="card shadow p-4">
               <h3 class="mb-4 text-center">All Employees</h3>
 
@@ -577,6 +578,13 @@
 <!-- ATTENDANCE SECTION START -->
 
 {% if attendance %}
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endif %}
 
 <div class="container mt-5">
   <div class="card shadow p-4">
