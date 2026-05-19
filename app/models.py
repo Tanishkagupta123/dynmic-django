@@ -28,8 +28,6 @@ class Employee(models.Model):
     # return f"{self.name}" - {self.email}
     # return f"{self.name}"
 
-
-
 def Emp_contact(value):
     if not (len(str(value)) == 10 and value.isdigit()):
         raise ValidationError("Contact must be 10 digits only")
