@@ -399,6 +399,42 @@ tbody tr:hover{
 
 }
 
+
+.dashboard-title{
+    color:white;
+    text-decoration:none;
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:1px;
+    display:inline-block;
+    line-height:1.1;
+}
+
+.dashboard-title span{
+    font-size:22px;
+    font-weight:700;
+    opacity:0.9;
+}
+
+.dashboard-title:hover{
+    transform:scale(1.05);
+    transition:0.3s ease;
+}
+
+.dashboard-title{
+    font-size:42px;
+    font-weight:900;
+    color:white;
+    text-decoration:none;
+    display:inline-block;
+    line-height:1.1;
+}
+
+.dashboard-title span{
+    font-size:24px;
+    font-weight:700;
+    opacity:0.9;
+}
 </style>
 </head>
 
@@ -411,10 +447,12 @@ tbody tr:hover{
     <!-- SIDEBAR -->
 
    <div class="col-md-3 col-lg-2 sidebar p-0">
-
-    <h4 class="text-center">
-        EMS<br>Dashboard
-    </h4>
+<div class="text-center py-3 border-bottom border-light">
+    <a href="{% url 'dashboard' %}" class="dashboard-title">
+        EMS <br>
+        <span>Dashboard</span>
+    </a>
+</div>
 
     <a href="{% url 'add_dep' %}">Add Department</a>
 
