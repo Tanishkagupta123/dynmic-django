@@ -178,12 +178,9 @@ def dashboard(req):
         return redirect('login')
 
 # newh
-    
-
 def add_emp(req):
 
     if 'admin' in req.session:
-        print('admin is here')
 
         data = req.session.get('admin')
 
@@ -198,59 +195,184 @@ def add_emp(req):
             dept = req.POST.get('department')
             joining_date = req.POST.get('joining_date')
             salary = req.POST.get('salary')
-            dept_data=dep.objects.get(id=dept)
-            d_name=dept_data.name
-            d_code=dept_data.code
-            d_des=dept_data.description
 
+            # FORM DATA SAVE
+            form_data = {
+                'name': n,
+                'email': e,
+                'contact': c,
+                'joining_date': joining_date,
+                'salary': salary,
+                'department': dept,
+            }
 
+            all_dep = dep.objects.all()
 
-            print(n, e, c, p, dept,dept_data, d_name, d_code, d_des)
+            # =========================
+            # VALIDATION
+            # =========================
 
+            if not n:
+                return render(req, 'admindashboard.html', {
+                    'data': data,
+                    'add_emp': True,
+                    'msg': 'Name is required',
+                    'dep_list': all_dep,
+                    'form_data': form_data
+                })
+
+            if not e:
+                return render(req, 'admindashboard.html', {
+                    'data': data,
+                    'add_emp': True,
+                    'msg': 'Email is required',
+                    'dep_list': all_dep,
+                    'form_data': form_data
+                })
+
+            if not c:
+                return render(req, 'admindashboard.html', {
+                    'data': data,
+                    'add_emp': True,
+                    'msg': 'Contact is required',
+                    'dep_list': all_dep,
+                    'form_data': form_data
+                })
+
+            if not c.isdigit():
+                return render(req, 'admindashboard.html', {
+                    'data': data,
+                    'add_emp': True,
+                    'msg': 'Contact must contain numbers only',
+                    'dep_list': all_dep,
+                    'form_data': form_data
+                })
+
+            if len(c) != 10:
+                return render(req, 'admindashboard.html', {
+                    'data': data,
+                    'add_emp': True,
+                    'msg': 'Contact must be exactly 10 digits',
+                    'dep_list': all_dep,
+                    'form_data': form_data
+                })
+
+            if not dept:
+                return render(req, 'admindashboard.html', {
+                    'data': data,
+                    'add_emp': True,
+                    'msg': 'Department is required',
+                    'dep_list': all_dep,
+                    'form_data': form_data
+                })
+
+            if not joining_date:
+                return render(req, 'admindashboard.html', {
+                    'data': data,
+                    'add_emp': True,
+                    'msg': 'Joining date is required',
+                    'dep_list': all_dep,
+                    'form_data': form_data
+                })
+
+            if not salary:
+                return render(req, 'admindashboard.html', {
+                    'data': data,
+                    'add_emp': True,
+                    'msg': 'Salary is required',
+                    'dep_list': all_dep,
+                    'form_data': form_data
+                })
+
+            if not p:
+                return render(req, 'admindashboard.html', {
+                    'data': data,
+                    'add_emp': True,
+                    'msg': 'Password is required',
+                    'dep_list': all_dep,
+                    'form_data': form_data
+                })
+
+            if not cp:
+                return render(req, 'admindashboard.html', {
+                    'data': data,
+                    'add_emp': True,
+                    'msg': 'Confirm password is required',
+                    'dep_list': all_dep,
+                    'form_data': form_data
+                })
+
+            if p != cp:
+                return render(req, 'admindashboard.html', {
+                    'data': data,
+                    'add_emp': True,
+                    'msg': 'Password did not match',
+                    'dep_list': all_dep,
+                    'form_data': form_data
+                })
+
+            # EMAIL CHECK
             user = new.objects.filter(email=e)
 
             if user:
-                req.session['msg'] = f'{e} Email already exists'
-                return redirect('add_emp')
-            else:
-                if p == cp:
-                    new.objects.create(
-                        name=n,
-                        email=e,
-                        contact=c,
-                        password=p,
-                        image=img,
-                        department=d_name,
-                        d_code=d_code,
-                        d_des=d_des,
-                        joining_date=joining_date,
-                        salary=salary
+                return render(req, 'admindashboard.html', {
+                    'data': data,
+                    'add_emp': True,
+                    'msg': f'{e} Email already exists',
+                    'dep_list': all_dep,
+                    'form_data': form_data
+                })
 
-                    )
-                    send_mail("User id and Password from admin",
-                              f'your user_id is {e} and password is {p}',
-                              'tanishkagupta241@gmail.com',
-                              [e],
-                              fail_silently=False)
-                    req.session['message'] = 'employee added successfully and user_id sent to mail'
-                    return redirect('add_emp')
-                
-                else:
-                    req.session['msg'] = 'Password did not match'
-                    return redirect('add_emp')
-        
-        msg = req.session.pop('msg', None)
-        message = req.session.pop('message', None)
+            # DEPARTMENT DATA
+            dept_data = dep.objects.get(id=dept)
+
+            d_name = dept_data.name
+            d_code = dept_data.code
+            d_des = dept_data.description
+
+            # SAVE EMPLOYEE
+            new.objects.create(
+                name=n,
+                email=e,
+                contact=c,
+                password=p,
+                image=img,
+                department=d_name,
+                d_code=d_code,
+                d_des=d_des,
+                joining_date=joining_date,
+                salary=salary
+            )
+
+            send_mail(
+                "User id and Password from admin",
+                f'your user_id is {e} and password is {p}',
+                'tanishkagupta241@gmail.com',
+                [e],
+                fail_silently=False
+            )
+
+            # SUCCESS MESSAGE
+            req.session['success'] = 'Employee added successfully'
+
+            # REDIRECT FOR FORM REFRESH
+            return redirect('add_emp')
+
+        # GET REQUEST
         all_dep = dep.objects.all()
+
+        success = req.session.pop('success', None)
+
         return render(req, 'admindashboard.html', {
             'data': data,
             'add_emp': True,
-            'msg': msg,
-            'message': message,
-            'dep_list':all_dep
-
+            'dep_list': all_dep,
+            'message': success
         })
-    
+
+    else:
+        return redirect('login')    
+
 
 def add_dep(req):
     if 'admin' in req.session:

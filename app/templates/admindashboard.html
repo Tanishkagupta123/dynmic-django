@@ -39,7 +39,7 @@ body{
     background-image:none !important;
     background-attachment:fixed;
     color:#1e293b;
-    overflow-x:hidden;
+    overflow-x:auto;
 }
 
 /* =========================
@@ -120,6 +120,11 @@ body{
     padding:35px;
 }
 
+.main-content{
+    margin-left:16.666667%;
+    width:83.333333%;
+    overflow-x:auto;
+}
 /* =========================
    TOPBAR
 ========================= */
@@ -317,6 +322,14 @@ body{
     color:#334155;
 }
 
+.table-responsive{
+    overflow-x:auto;
+    border-radius:22px;
+}
+
+table{
+    min-width:1200px;
+}
 /* =========================
    IMAGE
 ========================= */
@@ -385,8 +398,7 @@ body{
     <div class="row">
 
       <!-- Sidebar -->
-      <div class="col-md-3 col-lg-2 sidebar p-0">
-<h4 class="text-center py-4 border-bottom border-light">
+<div class="col-md-3 col-lg-2 sidebar p-0 position-fixed start-0 top-0"><h4 class="text-center py-4 border-bottom border-light">
     EMS Dashboard
 </h4>
         <a href="{% url 'add_dep' %}">Add Department</a>
@@ -405,8 +417,8 @@ body{
       </div>
 
       <!-- Main Content -->
-<div class="col-md-9 col-lg-10 content">
-          <div class="topbar d-flex justify-content-between align-items-center">
+<div class="col-md-9 offset-lg-2 col-lg-10 content main-content">   
+           <div class="topbar d-flex justify-content-between align-items-center">
 
     <div>
         <h2>Welcome Back, Tanishka ✨</h2>
@@ -426,6 +438,7 @@ body{
 <!-- add employee -->
 
 <div class="main">
+    
   {% if msg %}
     <div style="color:red">{{ msg }}</div>
   {% endif %}
@@ -447,31 +460,50 @@ body{
             <!-- Employee Name -->
             <div class="mb-3">
               <label class="form-label">Employee Name</label>
-              <input type="text" class="form-control" name="name" placeholder="Enter name">
-            </div>
+<input type="text"
+       class="form-control"
+       name="name"
+       placeholder="Enter name"
+       value="{{ form_data.name }}">            </div>
 
             <!-- Employee Email -->
             <div class="mb-3">
               <label class="form-label">Employee Email</label>
-              <input type="email" class="form-control" name="email" placeholder="Enter email">
-            </div>
+<input type="email"
+       class="form-control"
+       name="email"
+       placeholder="Enter email"
+       value="{{ form_data.email }}">            </div>
 
             <!-- Employee Contact -->
             <div class="mb-3">
               <label class="form-label">Employee Contact</label>
-              <input type="text" class="form-control" name="contact" placeholder="Enter contact number">
-            </div>
+<input type="text"
+       class="form-control"
+       name="contact"
+       placeholder="Enter contact number"
+       value="{{ request.POST.contact }}">            </div>
 
             <!-- Department Dropdown -->
             <div class="mb-3">
               <label class="form-label">Department</label>
               <select class="form-control" name="department">
-                <option value="">-- Select Department --</option>
 
-                {% for i in dep_list %}
-                  <option value="{{ i.id }}">{{ i.name }}</option>
-                {% endfor %}
-              </select>
+    <option value="">-- Select Department --</option>
+
+    {% for i in dep_list %}
+
+        <option value="{{ i.id }}"
+        {% if request.POST.department == i.id|stringformat:"s" %}
+            selected
+        {% endif %}
+        >
+            {{ i.name }}
+        </option>
+
+    {% endfor %}
+
+</select>
             </div>
 
             <!-- Profile Picture -->
@@ -483,14 +515,19 @@ body{
                   <!-- Joining Date -->
 <div class="mb-3">
   <label class="form-label">Joining Date</label>
-  <input type="date" class="form-control" name="joining_date">
-</div>
+<input type="date"
+       class="form-control"
+       name="joining_date"
+       value="{{ request.POST.joining_date }}"></div>
 
 <!-- Salary -->
 <div class="mb-3">
   <label class="form-label">Salary</label>
-  <input type="number" class="form-control" name="salary" placeholder="Enter salary">
-</div>
+<input type="number"
+       class="form-control"
+       name="salary"
+       placeholder="Enter salary"
+       value="{{ request.POST.salary }}"></div>
             <!-- Password -->
             <div class="mb-3">
               <label class="form-label">Password</label>
@@ -536,35 +573,37 @@ body{
           <div class="mb-3">
             <label class="form-label">Department Name</label>
             <input
-              type="text"
-              class="form-control"
-              name="name"
-              placeholder="e.g. Human Resources"
-              required
-            >
+  type="text"
+  class="form-control"
+  name="name"
+  placeholder="e.g. Human Resources"
+  value="{{ request.POST.name }}"
+  required
+>
           </div>
 
           <!-- Department Code -->
           <div class="mb-3">
             <label class="form-label">Department Code</label>
             <input
-              type="text"
-              class="form-control"
-              name="code"
-              placeholder="e.g. HR01"
-              required
-            >
+  type="text"
+  class="form-control"
+  name="code"
+  placeholder="e.g. HR01"
+  value="{{ request.POST.code }}"
+  required
+>
           </div>
 
           <!-- Description -->
           <div class="mb-3">
             <label class="form-label">Description</label>
             <textarea
-              class="form-control"
-              name="description"
-              rows="3"
-              placeholder="About department"
-            ></textarea>
+  class="form-control"
+  name="description"
+  rows="3"
+  placeholder="About department"
+>{{ request.POST.description }}</textarea>
           </div>
 
           <!-- Submit -->
@@ -620,7 +659,9 @@ body{
             <div class="card shadow p-4">
               <h3 class="mb-4 text-center">All Employees</h3>
 
-              <table class="table table-bordered table-hover text-center align-middle">
+            <div class="table-responsive">
+
+<table class="table table-bordered table-hover text-center align-middle">
                 <thead class="table-dark">
                   <tr>
                     <th>ID</th>
@@ -709,8 +750,10 @@ body{
           <!-- office -->
 
 
-        <table class="table table-bordered table-hover text-center align-middle">
-            <thead class="table-dark">
+<div class="table-responsive">
+
+<table class="table table-bordered table-hover text-center align-middle">
+                <thead class="table-dark">
                 <tr>
                     <th>S.No</th>
                     <th>Name</th>
