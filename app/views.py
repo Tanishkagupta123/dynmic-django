@@ -163,17 +163,32 @@ def login(req):
 #         return render(req, 'userdashboard.html', {'data': userdata})
     
 # newh
-
 def dashboard(req):
-    if req.session.get('admin',None):
+    if req.session.get('admin', None):
+        data = req.session.get('admin')
         
-        data=req.session.get('admin')
-        return render(req,'admindashboard.html',{'data':data})
+        # 🔥 YAHA HUMNE REAL DATA COUNT ADD KAR DIYA HAI
+        total_emp = new.objects.count()
+        total_dep = dep.objects.count()
+        total_query = Query.objects.count()
+        
+        today = date.today()
+        today_attendance = Attendance.objects.filter(date=today).count()
+        
+        # Purane 'data' ke sath-sath ab ye saare variables bhi template me jayenge
+        return render(req, 'admindashboard.html', {
+            'data': data,
+            'total_emp': total_emp,
+            'total_dep': total_dep,
+            'total_query': total_query,
+            'today_attendance': today_attendance
+        })
     
-    elif req.session.get('user_id',None):    
+    elif req.session.get('user_id', None):    
         id = req.session['user_id']
         userdata = new.objects.get(id=id)
         return render(req, 'userdashboard.html', {'data': userdata})
+        
     else:
         return redirect('login')
 
@@ -927,27 +942,27 @@ def my_attendance(request):
 
 
 
-def dashboard(req):
-    if req.session.get('admin', None):
+# def dashboard(req):
+#     if req.session.get('admin', None):
 
-        total_emp = new.objects.count()
-        total_dep = dep.objects.count()
-        total_query = Query.objects.count()
+#         total_emp = new.objects.count()
+#         total_dep = dep.objects.count()
+#         total_query = Query.objects.count()
 
-        today = date.today()
-        today_attendance = Attendance.objects.filter(date=today).count()
+#         today = date.today()
+#         today_attendance = Attendance.objects.filter(date=today).count()
 
-        return render(req, 'admindashboard.html', {
-            'data': req.session.get('admin'),
+#         return render(req, 'admindashboard.html', {
+#             'data': req.session.get('admin'),
 
-            # dashboard stats
-            'total_emp': total_emp,
-            'total_dep': total_dep,
-            'total_query': total_query,
-            'today_attendance': today_attendance,
+#             # dashboard stats
+#             'total_emp': total_emp,
+#             'total_dep': total_dep,
+#             'total_query': total_query,
+#             'today_attendance': today_attendance,
 
-            # flag optional (safe)
-            'dashboard': True
-        })
+#             # flag optional (safe)
+#             'dashboard': True
+#         })
 
-    return redirect('login')
+#     return redirect('login')

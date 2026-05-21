@@ -7,7 +7,7 @@ from django.core.exceptions import ValidationError
 
 # Create your models here.
 class Employee(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=20)
     email = models.EmailField()
     contact = models.CharField()
     gender = models.CharField(max_length=10)
@@ -102,7 +102,7 @@ class Query(models.Model):
     email = models.EmailField()
     query =  models.CharField(max_length=200)
     subject = models.CharField(max_length=50) 
-    status =  models.CharField(max_length=10,default='panding')
+    status =  models.CharField(max_length=10,default='pending')
     solution = models.CharField(max_length=100,null=True)
     created_at = models.DateTimeField(auto_now_add=True,null=True)
 
