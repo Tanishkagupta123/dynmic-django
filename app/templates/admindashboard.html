@@ -99,10 +99,13 @@ html, body {
 /* TOPBAR */
 .topbar {
     background: white;
-    padding: 25px;
+    padding: 20px 25px;
     border-radius: 22px;
     margin-bottom: 25px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+    display: flex;         /* Ek line me lane ke liye */
+    justify-content: space-between; /* Dono cheezon ko left-right corner par set karne ke liye */
+    align-items: center;   /* Vertical center alignment */
 }
 
 /* CARD */
@@ -135,19 +138,18 @@ html, body {
 
 /* HAMBURGER BUTTON (Hidden on Desktop) */
 .menu-btn {
-    font-size: 30px;
+    font-size: 28px;               /* 30px se chhota karke 28px kar diya */
     cursor: pointer;
-    display: none; /* Laptop par hidden */
-    position: fixed;
-    top: 15px;
-    left: 15px;
-    z-index: 99999;
+    display: none;                 /* Laptop par hidden hi rahega */
     background: #2563eb;
     color: white;
-    padding: 2px 12px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 4px 14px;             /* Padding thodi sahi kar di */
+    border-radius: 10px;           /* Corners thode acche round kar diye */
+    box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+    margin-right: 10px;
+
 }
+
 
 /* TABLES RESPONSIVE FIX */
 .table-responsive {
@@ -160,48 +162,66 @@ html, body {
 .table {
     white-space: nowrap;
 }
+form select,
+form input,
+form textarea {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 10px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}@media(max-width:768px){
+
+    .card{
+        overflow: hidden;
+    }
+
+    form select,
+    form input{
+        font-size: 14px;
+    }
+
+}
 
 /* =========================
    MOBILE & TABLET RESPONSIVE (BREAKPOINT)
 ========================= */
 @media(max-width: 992px) {
+    /* 1. Mobile par button ko dikhane ke liye */
     .menu-btn {
-        display: block; /* Sirf Mobile/Tablet pe toggle button dikhega */
+        display: inline-flex; 
     }
 
-    /* Sidebar transforms to a drawer overlay on small screens */
+    /* 2. Sidebar chhupne par main content ko poori screen dene ke liye */
     .sidebar {
         position: fixed;
-        left: -270px; /* Screen se bahar chala jayega */
+        left: -270px;
         width: 260px;
         height: 100vh;
         z-index: 9999;
     }
 
-    /* Main content takes full screen width on mobile */
+    /* 3. Padding kam ki taaki scroll sahi se ho aur content upar na dabe */
     .main-content {
         margin-left: 0 !important;
         width: 100% !important;
-        padding: 85px 15px 20px 15px; /* Top padding optimized taaki button content ko na chhupaye */
+        padding: 20px 15px;   
     }
 
-    /* Toggle CSS Logic: Jab checkbox checked hoga, tabhi sidebar left:0 par aayega */
+    /* 4. Checkbox checked hone par sidebar khulega */
     #sidebarToggle:checked ~ .wrapper .sidebar {
         left: 0 !important;
     }
     
+    /* 5. Hamburger button aur Logout button dono ko ek hi row (line) me rakhne ke liye */
     .topbar {
-        padding: 20px;
-        flex-direction: column;
-        align-items: flex-start !important;
-        gap: 15px;
-    }
-    
-    .topbar .btn {
-        width: 100%;
+        padding: 15px 20px;
+        flex-direction: row !important; /* Column se hata kar Row kar diya */
+        justify-content: space-between;
+        align-items: center;
     }
 }
-
 @media(max-width: 768px) {
     .sidebar h4 {
         font-size: 20px;
@@ -216,14 +236,73 @@ html, body {
         padding: 20px !important;
     }
 }
+
+/* CUSTOM NAVBAR */
+
+.custom-navbar{
+    width: 100%;
+    height: 70px;
+    background: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    display:flex;
+
+}
+
+.nav-left{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-text{
+    margin: 0;
+    font-weight: 800;
+    color: #2563eb;
+
+}
+.custom-navbar{
+    display: none;
+}
 </style>
 
 </head>
 
 <body>
-    <input type="checkbox" id="sidebarToggle" hidden>
-<label for="sidebarToggle" class="menu-btn">☰</label>
+    <!-- TOP NAVBAR -->
+<nav class="custom-navbar">
 
+    <!-- LEFT -->
+    <div class="nav-left">
+
+        <!-- Toggle Button -->
+        <label for="sidebarToggle" class="menu-btn">
+            ☰
+        </label>
+
+        <h4 class="logo-text">
+            EMS Dashboard
+        </h4>
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="nav-right">
+
+        <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+    <input type="checkbox" id="sidebarToggle" hidden>
 
 <div class="wrapper">
       <!-- Sidebar -->
@@ -251,12 +330,25 @@ html, body {
 
       <!-- Main Content -->
 <div class="content main-content">
-               <div class="topbar d-flex justify-content-between align-items-center">
+    
+<div class="topbar">
+    <div class="mobile-top-buttons">
+
+    <label for="sidebarToggle" class="menu-btn">
+        ☰
+    </label>    
+
+    <!-- <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">
+        Logout
+    </a> -->
+
+</div>
 
     <div>
         <h2>Welcome Back, Tanishka </h2>
         <p class="mb-0">
-            Manage employees, departments and attendance professionally.
+            Manage employees, departments and a
+            ttendance professionally.
         </p>
     </div>
 
@@ -265,6 +357,7 @@ html, body {
             Logout
         </a>
     </div>
+
 
 </div>
 
@@ -507,8 +600,10 @@ html, body {
 <div class="container-fluid mt-5">
   <div class="card shadow p-4">
     <h3 class="mb-4 text-center">All Departments</h3>
+    <div class="table-responsive">
 
     <table class="table table-bordered table-hover text-center">
+
       <thead class="table-dark">
         <tr>
           <th>ID</th>
@@ -529,6 +624,7 @@ html, body {
         {% endfor %}
       </tbody>
     </table>
+  </div>
   </div>
 </div>
 {% endif %}
@@ -738,7 +834,7 @@ html, body {
     {% endfor %}
 {% endif %}
 
-<div class="container mt-5">
+<div class="container-fluid mt-5 px-2 px-md-4">
   <div class="card shadow p-4">
 
     <h3 class="text-center mb-4">
