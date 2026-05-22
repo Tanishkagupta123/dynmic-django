@@ -777,7 +777,63 @@ def mark_attendance(request):
 
             else:
 
-                form.save()
+                attendance = form.save(commit=False)
+
+                from datetime import time
+
+                # default fine
+                attendance.late_fine = 0
+
+                # employee monthly salary
+                emp_salary = attendance.employee.salary
+
+                # 1 day salary
+                per_day_salary = emp_salary / 30
+
+                # default final salary
+                attendance.final_salary = per_day_salary
+
+                if attendance.check_in_time:
+
+                    # office timing
+                    office_time = time(9, 30)
+
+                    # 10 baje limit
+                    late_limit = time(10, 0)
+
+                    # 9:30 ke baad aur 10 ke andar
+                    if (
+                        attendance.check_in_time > office_time
+                        and
+                        attendance.check_in_time <= late_limit
+                    ):
+
+                        attendance.late_fine = 50
+
+                        attendance.final_salary = (
+                            per_day_salary - 50
+                        )
+
+                    # 10 ke baad
+                    elif attendance.check_in_time > late_limit:
+
+                        attendance.status = "Half Day"
+
+                        # half salary cut
+                        attendance.late_fine = (
+                            per_day_salary / 2
+                        )
+
+                        attendance.final_salary = (
+                            per_day_salary / 2
+                        )
+
+                # absent
+                if attendance.status == "Absent":
+
+                    attendance.final_salary = 0
+
+                attendance.save()
 
                 messages.success(
                     request,
@@ -787,12 +843,17 @@ def mark_attendance(request):
                 return redirect('show_attendance')
 
     context = {
-    'form': form,
-    'attendance': True,
-    'data': request.session.get('admin')
-}
+        'form': form,
+        'attendance': True,
+        'data': request.session.get('admin')
+    }
 
-    return render(request, 'admindashboard.html', context)
+    return render(
+        request,
+        'admindashboard.html',
+        context
+    )    
+
 from .models import Attendance
 
 from datetime import date
@@ -826,7 +887,19 @@ def show_attendance(request):
     # attendance table
     attendance = base_qs.order_by('-date')
 
-    # summary
+    # =========================
+    # TOTAL MONTHLY SALARY
+    # =========================
+
+    total_salary = 0
+
+    for i in attendance:
+        total_salary += i.final_salary
+
+    # =========================
+    # SUMMARY
+    # =========================
+
     total_present = base_qs.filter(
         status="Present"
     ).count()
@@ -841,16 +914,23 @@ def show_attendance(request):
 
     total = base_qs.count()
 
-    # percentage
+    # =========================
+    # PERCENTAGE
+    # =========================
+
     percentage = 0
 
     if total > 0:
+
         percentage = (
             (total_present + (total_half * 0.5))
             / total
         ) * 100
 
-    # employee list
+    # =========================
+    # EMPLOYEE LIST
+    # =========================
+
     employees = Attendance.objects.select_related(
         'employee'
     ).values(
@@ -858,18 +938,27 @@ def show_attendance(request):
         'employee__name'
     ).distinct()
 
+    # =========================
+    # CONTEXT
+    # =========================
+
     context = {
 
         'attendance': attendance,
+
         'employees': employees,
 
         'total_present': total_present,
+
         'total_absent': total_absent,
+
         'total_half': total_half,
 
         'percentage': round(percentage, 2),
 
         'month': month,
+
+        'total_salary': round(total_salary, 2),
     }
 
     return render(
@@ -877,7 +966,6 @@ def show_attendance(request):
         'show_attendance.html',
         context
     )
-
 
 def my_attendance(request):
 

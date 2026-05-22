@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 from django.db import models
+from datetime import time
 from django.core.validators import MaxLengthValidator,MinLengthValidator
 from django.core.exceptions import ValidationError
 
@@ -126,6 +127,8 @@ class Attendance(models.Model):
     null=True,
     blank=True
 )
+    late_fine = models.IntegerField(default=0)
+    final_salary = models.FloatField(default=0)
 
     class Meta:
         unique_together = ('employee', 'date')
@@ -133,3 +136,53 @@ class Attendance(models.Model):
     def __str__(self):
         return f"{self.employee.name} - {self.date}"
     
+
+@property
+def late_fine(self):
+
+    if self.status == "Present":
+
+        if self.check_in_time and self.check_in_time > time(9, 30) and self.check_in_time <= time(10, 0):
+
+            return 50
+
+        elif self.check_in_time and self.check_in_time > time(10, 0):
+
+            monthly_salary = self.employee.salary
+            per_day_salary = monthly_salary / 30
+
+            return per_day_salary / 2
+
+    return 0
+
+
+@property
+def final_salary(self):
+
+    monthly_salary = self.employee.salary
+
+    per_day_salary = monthly_salary / 30
+
+    # PRESENT
+    if self.status == "Present":
+
+        # 9:30 to 10
+        if self.check_in_time and self.check_in_time > time(9, 30) and self.check_in_time <= time(10, 0):
+
+            return per_day_salary - 50
+
+        # after 10
+        elif self.check_in_time and self.check_in_time > time(10, 0):
+
+            return per_day_salary / 2
+
+        else:
+            return per_day_salary
+
+    # HALF DAY
+    elif self.status == "Half Day":
+
+        return per_day_salary / 2
+
+    # ABSENT
+    return 0

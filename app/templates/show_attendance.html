@@ -729,6 +729,14 @@ tbody tr:hover{
                     Attendance Records
                 </h2>
 
+                <div class="alert alert-success fw-bold text-center">
+
+    Total Salary This Month :
+    
+    ₹{{ total_salary }}
+
+</div>
+
                 <table class="table table-bordered table-hover text-center">
 
                     <thead class="table-dark">
@@ -737,7 +745,10 @@ tbody tr:hover{
                             <th>Name</th>
                             <th>Date</th>
                             <th>Status</th>
-                            <th>Time</th>
+                            
+                            <th>Check In</th>
+<th>Fine</th>
+<th>Final Salary</th>
                             
                         </tr>
 
@@ -781,6 +792,16 @@ tbody tr:hover{
                                 <td>
         {{ i.check_in_time }}
     </td>
+    <td>
+    {% if i.late_fine > 0 %}
+        ₹{{ i.late_fine }}
+    {% else %}
+        No Fine
+    {% endif %}
+</td>
+<td>
+    ₹{{ i.final_salary }}
+</td>
 
 
                         </tr>
