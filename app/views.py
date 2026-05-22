@@ -1028,29 +1028,3 @@ def my_attendance(request):
         context
     )
 
-
-
-# def dashboard(req):
-#     if req.session.get('admin', None):
-
-#         total_emp = new.objects.count()
-#         total_dep = dep.objects.count()
-#         total_query = Query.objects.count()
-
-#         today = date.today()
-#         today_attendance = Attendance.objects.filter(date=today).count()
-
-#         return render(req, 'admindashboard.html', {
-#             'data': req.session.get('admin'),
-
-#             # dashboard stats
-#             'total_emp': total_emp,
-#             'total_dep': total_dep,
-#             'total_query': total_query,
-#             'today_attendance': today_attendance,
-
-#             # flag optional (safe)
-#             'dashboard': True
-#         })
-
-#     return redirect('login')
