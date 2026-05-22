@@ -122,6 +122,11 @@ class Attendance(models.Model):
     date = models.DateField(default=date.today)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES)
 
+    check_in_time = models.TimeField(
+    null=True,
+    blank=True
+)
+
     class Meta:
         unique_together = ('employee', 'date')
 

@@ -737,6 +737,8 @@ tbody tr:hover{
                             <th>Name</th>
                             <th>Date</th>
                             <th>Status</th>
+                            <th>Time</th>
+                            
                         </tr>
 
                     </thead>
@@ -772,8 +774,14 @@ tbody tr:hover{
                                     </span>
 
                                 {% endif %}
+                                
 
                             </td>
+
+                                <td>
+        {{ i.check_in_time }}
+    </td>
+
 
                         </tr>
 
