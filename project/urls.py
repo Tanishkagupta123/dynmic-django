@@ -57,8 +57,8 @@ urlpatterns = [
     path('admin_query_search/',admin_query_search, name='admin_query_search'),
     path('mark_attendance/', mark_attendance, name='mark_attendance'),
     path('show_attendance/', show_attendance, name='show_attendance'),
-    path(
-    'my_attendance/', my_attendance, name='my_attendance'),
+    path('my_attendance/', my_attendance, name='my_attendance'),
+    path('attendance-pdf/<int:emp_id>/',attendance_pdf, name='attendance_pdf'),
 
 
 

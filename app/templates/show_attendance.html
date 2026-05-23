@@ -670,7 +670,7 @@ tbody tr:hover{
            value="{{ date_filter }}"
            class="form-control mb-2">
 
-    <!-- MONTH -->
+    MONTH
     <select name="month" class="form-select mb-2">
         <option value="1" {% if month == 1 %}selected{% endif %}>January</option>
         <option value="2" {% if month == 2 %}selected{% endif %}>February</option>
@@ -750,6 +750,7 @@ tbody tr:hover{
                             <th>Check In</th>
 <th>Fine</th>
 <th>Final Salary</th>
+<th>PDF</th>
                             
                         </tr>
 
@@ -804,6 +805,14 @@ tbody tr:hover{
     ₹{{ i.final_salary }}
 </td>
 
+<td>
+    <a href="{% url 'attendance_pdf' i.employee.id %}"
+       class="btn btn-danger btn-sm">
+
+       Download PDF
+
+    </a>
+</td>
 
                         </tr>
 

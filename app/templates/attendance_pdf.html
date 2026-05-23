@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+
+        body{
+            font-family: Arial;
+            padding:20px;
+        }
+
+        h1{
+            text-align:center;
+        }
+
+        table{
+            width:100%;
+            border-collapse: collapse;
+            margin-top:20px;
+        }
+
+        table, th, td{
+            border:1px solid black;
+        }
+
+        th, td{
+            padding:10px;
+            text-align:center;
+        }
+
+    </style>
+</head>
+<body>
+
+<h1>Attendance Report</h1>
+
+<h3>Employee Name : {{ employee.name }}</h3>
+
+<p>Total Present : {{ total_present }}</p>
+<p>Total Absent : {{ total_absent }}</p>
+<p>Total Half Day : {{ total_half }}</p>
+<p>Attendance Percentage : {{ percentage }}%</p>
+<p>Total Salary : ₹{{ total_salary }}</p>
+
+<table>
+
+    <tr>
+        <th>Date</th>
+        <th>Status</th>
+        <th>Check In</th>
+        <th>Fine</th>
+        <th>Final Salary</th>
+    </tr>
+
+    {% for i in attendance %}
+
+    <tr>
+
+        <td>{{ i.date }}</td>
+        <td>{{ i.status }}</td>
+        <td>{{ i.check_in_time }}</td>
+        <td>{{ i.late_fine }}</td>
+        <td>{{ i.final_salary }}</td>
+
+    </tr>
+
+    {% endfor %}
+
+</table>
+
+</body>
+</html>

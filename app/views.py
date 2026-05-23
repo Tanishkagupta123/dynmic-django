@@ -10,6 +10,10 @@ from datetime import date
 from django.db import IntegrityError
 from .models import Attendance
 
+from django.template.loader import get_template
+from xhtml2pdf import pisa
+from django.http import HttpResponse
+
 
 # Create your views here.
 
@@ -1036,3 +1040,45 @@ def my_attendance(request):
         context
     )
 
+
+
+def attendance_pdf(request, emp_id):
+
+    employee = new.objects.get(id=emp_id)
+
+    attendance = Attendance.objects.filter(employee=employee)
+
+    total_present = attendance.filter(status="Present").count()
+    total_absent = attendance.filter(status="Absent").count()
+    total_half = attendance.filter(status="Half Day").count()
+
+    total_days = attendance.count()
+
+    if total_days > 0:
+        percentage = round((total_present / total_days) * 100, 2)
+    else:
+        percentage = 0
+
+    total_salary = sum([i.final_salary for i in attendance])
+
+    template = get_template('attendance_pdf.html')
+
+    context = {
+        'employee': employee,
+        'attendance': attendance,
+        'total_present': total_present,
+        'total_absent': total_absent,
+        'total_half': total_half,
+        'percentage': percentage,
+        'total_salary': total_salary,
+    }
+
+    html = template.render(context)
+
+    response = HttpResponse(content_type='application/pdf')
+
+    response['Content-Disposition'] = f'filename="{employee.name}_attendance.pdf"'
+
+    pisa.CreatePDF(html, dest=response)
+
+    return response
