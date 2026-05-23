@@ -863,7 +863,10 @@ def show_attendance(request):
 
     today = date.today()
 
-    # month filter
+    # =========================
+    # FILTERS
+    # =========================
+
     month = request.GET.get('month')
 
     if month:
@@ -871,47 +874,63 @@ def show_attendance(request):
     else:
         month = today.month
 
-    # employee filter
     emp_id = request.GET.get('emp')
 
+    search = request.GET.get('search', '').strip()
+
+    date_filter = request.GET.get('date')
+
+    # =========================
     # BASE QUERY
+    # =========================
+
     base_qs = Attendance.objects.filter(
         date__month=month,
         date__year=today.year
     )
 
-    # employee filter
+    # =========================
+    # EMPLOYEE FILTER
+    # =========================
+
     if emp_id:
         base_qs = base_qs.filter(employee_id=emp_id)
 
-    # attendance table
+    # =========================
+    # SEARCH FILTER (NEW 🔥)
+    # =========================
+
+    if search:
+        base_qs = base_qs.filter(
+            employee__name__icontains=search
+        )
+
+    # =========================
+    # DATE FILTER (NEW 🔥)
+    # =========================
+
+    if date_filter:
+        base_qs = base_qs.filter(date=date_filter)
+
+    # =========================
+    # FINAL DATA
+    # =========================
+
     attendance = base_qs.order_by('-date')
 
     # =========================
-    # TOTAL MONTHLY SALARY
+    # TOTAL SALARY
     # =========================
 
-    total_salary = 0
-
-    for i in attendance:
-        total_salary += i.final_salary
+    total_salary = sum(i.final_salary for i in attendance)
 
     # =========================
     # SUMMARY
     # =========================
 
-    total_present = base_qs.filter(
-        status="Present"
-    ).count()
-
-    total_absent = base_qs.filter(
-        status="Absent"
-    ).count()
-
-    total_half = base_qs.filter(
-        status="Half Day"
-    ).count()
-
+    total_present = base_qs.filter(status="Present").count()
+    total_absent = base_qs.filter(status="Absent").count()
+    total_half = base_qs.filter(status="Half Day").count()
     total = base_qs.count()
 
     # =========================
@@ -921,10 +940,8 @@ def show_attendance(request):
     percentage = 0
 
     if total > 0:
-
         percentage = (
-            (total_present + (total_half * 0.5))
-            / total
+            (total_present + (total_half * 0.5)) / total
         ) * 100
 
     # =========================
@@ -943,29 +960,20 @@ def show_attendance(request):
     # =========================
 
     context = {
-
         'attendance': attendance,
-
         'employees': employees,
-
         'total_present': total_present,
-
         'total_absent': total_absent,
-
         'total_half': total_half,
-
         'percentage': round(percentage, 2),
-
         'month': month,
-
         'total_salary': round(total_salary, 2),
+        'search': search,
+        'date_filter': date_filter,
+        'emp_id': emp_id,
     }
 
-    return render(
-        request,
-        'show_attendance.html',
-        context
-    )
+    return render(request, 'show_attendance.html', context)
 
 def my_attendance(request):
 
