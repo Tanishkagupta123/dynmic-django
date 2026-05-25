@@ -791,11 +791,27 @@ def mark_attendance(request):
                 # employee monthly salary
                 emp_salary = attendance.employee.salary
 
+                # =========================
+                # SALARY VALIDATION
+                # =========================
+                if emp_salary is None or emp_salary == '':
+
+                    messages.error(
+                        request,
+                        f"Please add salary for {employee.name} before marking attendance."
+                    )
+
+                    return redirect('mark_attendance')
+
                 # 1 day salary
                 per_day_salary = emp_salary / 30
 
                 # default final salary
                 attendance.final_salary = per_day_salary
+
+                # default status
+                if not attendance.status:
+                    attendance.status = "Present"
 
                 if attendance.check_in_time:
 
@@ -833,7 +849,7 @@ def mark_attendance(request):
                         )
 
                 # absent
-                if attendance.status == "Absent":
+                if attendance.status and attendance.status == "Absent":
 
                     attendance.final_salary = 0
 
@@ -856,8 +872,7 @@ def mark_attendance(request):
         request,
         'admindashboard.html',
         context
-    )    
-
+    )
 from .models import Attendance
 
 from datetime import date
