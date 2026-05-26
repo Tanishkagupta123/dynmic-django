@@ -5,833 +5,395 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Show Attendance</title>
-
-    <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap');
 
-/* =========================
-   GOOGLE FONT
-========================= */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Manrope',sans-serif; }
+html,body { overflow-x:hidden; background:#f4f7ff; }
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+#sidebarToggle { display:none; }
 
-/* =========================
-   GLOBAL
-========================= */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-html,body{
-    width:100%;
-    overflow-x:hidden;
-}
-
-body{
-    background:linear-gradient(135deg,#eef4ff,#f8fbff,#edf7ff);
-    font-family:'Poppins',sans-serif;
-    min-height:100vh;
-    color:#1e293b;
-}
-
-/* =========================
-   LAYOUT
-========================= */
-
-.container-fluid{
-    padding:0 !important;
-}
-
-.row{
-    margin:0 !important;
-}
-
-/* =========================
-   SIDEBAR
-========================= */
-
-.sidebar{
-    min-height:100vh;
-    position:sticky;
-    top:0;
-    background:linear-gradient(180deg,#4f46e5,#2563eb,#0ea5e9);
-    padding-top:0;
-    box-shadow:5px 0 25px rgba(0,0,0,0.12);
-    overflow:hidden;
+.sidebar-overlay {
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.45);
     z-index:999;
 }
+#sidebarToggle:checked ~ .sidebar-overlay { display:block; }
 
-/* circle effect */
+.wrapper { display:flex; width:100%; position:relative; }
 
-.sidebar::before{
-    content:'';
-    position:absolute;
-    width:220px;
-    height:220px;
-    background:rgba(255,255,255,0.10);
-    border-radius:50%;
-    top:-80px;
-    right:-80px;
+.sidebar {
+    width:260px;
+    height:100vh;
+    background:linear-gradient(180deg,#4f46e5,#2563eb,#0ea5e9);
+    position:fixed;
+    top:0; left:0;
+    overflow-y:auto;
+    z-index:1000;
+    padding-top:10px;
+    transition:0.3s ease;
 }
 
-.sidebar::after{
-    content:'';
-    position:absolute;
-    width:180px;
-    height:180px;
-    background:rgba(255,255,255,0.08);
-    border-radius:50%;
-    bottom:-70px;
-    left:-70px;
+.sidebar h4 { color:white; font-size:22px; font-weight:800; }
+
+.sidebar a {
+    display:block; color:white; text-decoration:none;
+    padding:14px 18px; margin:10px; border-radius:14px;
+    transition:0.3s; font-weight:600;
+}
+.sidebar a:hover { background:rgba(255,255,255,0.15); }
+
+.sidebar .logout-link {
+    background:linear-gradient(135deg,#ef4444,#f97316);
+    margin:15px 10px; text-align:center; border-radius:12px;
+}
+.sidebar .logout-link:hover { opacity:0.88; transform:scale(1.01); }
+
+.main-content {
+    margin-left:260px;
+    padding:25px;
+    min-height:100vh;
+    width:calc(100% - 260px);
+    transition:0.3s ease;
 }
 
-/* =========================
-   DASHBOARD TITLE
-========================= */
+.topbar {
+    background:white;
+    padding:18px 22px;
+    border-radius:20px;
+    margin-bottom:22px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.05);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+}
 
-.dashboard-title{
-    font-size:42px;
-    font-weight:900;
+.topbar h2 { font-size:20px; font-weight:800; color:#1e293b; margin:0; }
+.topbar p  { font-size:13px; color:#64748b; margin:0; }
+
+/* Laptop par topbar logout HIDDEN rehega */
+.topbar-logout { display:none; }
+
+.menu-btn {
+    font-size:26px;
+    cursor:pointer;
+    display:none;
+    background:#2563eb;
     color:white;
-    text-decoration:none;
-    display:inline-block;
-    line-height:1.1;
-    position:relative;
-    z-index:2;
+    padding:4px 14px;
+    border-radius:10px;
+    box-shadow:0 4px 10px rgba(37,99,235,0.2);
+    user-select:none;
+    flex-shrink:0;
 }
 
-.dashboard-title span{
-    font-size:24px;
+.summary-row {
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:18px;
+    margin-bottom:22px;
+}
+
+.summary-card {
+    border-radius:20px;
+    padding:24px 16px;
+    text-align:center;
+    color:white;
     font-weight:700;
-    opacity:0.9;
-}
-
-.dashboard-title:hover{
-    transform:scale(1.03);
+    box-shadow:0 8px 24px rgba(0,0,0,0.10);
     transition:0.3s ease;
-    color:white;
+}
+.summary-card:hover { transform:translateY(-5px); }
+.summary-card h4  { font-size:14px; font-weight:600; opacity:.9; margin-bottom:8px; }
+.summary-card h2  { font-size:30px; font-weight:800; color:white; margin:0; }
+
+.sc-present { background:linear-gradient(135deg,#22c55e,#16a34a); }
+.sc-absent  { background:linear-gradient(135deg,#ef4444,#dc2626); }
+.sc-half    { background:linear-gradient(135deg,#f59e0b,#d97706); }
+.sc-percent { background:linear-gradient(135deg,#6366f1,#4f46e5); }
+
+.card {
+    border:none !important;
+    border-radius:20px !important;
+    box-shadow:0 5px 20px rgba(0,0,0,0.05);
+    margin-bottom:20px;
 }
 
-/* =========================
-   SIDEBAR LINKS
-========================= */
-
-.sidebar a{
-    display:block;
-    text-decoration:none;
-    color:#eef2ff;
-    margin:8px 12px;
-    padding:14px 18px;
-    border-radius:14px;
-    font-size:15px;
-    font-weight:600;
-    transition:0.3s ease;
-    position:relative;
-    z-index:2;
-    word-wrap:break-word;
+.filter-grid {
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr auto;
+    gap:12px;
+    align-items:end;
 }
 
-.sidebar a:hover{
-    background:rgba(255,255,255,0.15);
-    color:white;
-    transform:translateX(4px);
+.form-label { font-size:12px; font-weight:700; color:#64748b; margin-bottom:4px; }
+
+.form-control, .form-select {
+    border:none !important;
+    background:#f1f5f9 !important;
+    border-radius:12px !important;
+    padding:11px 14px !important;
+    font-size:14px;
+    font-weight:500;
+}
+.form-control:focus, .form-select:focus {
+    box-shadow:none !important;
+    border:2px solid #2563eb !important;
+    background:white !important;
 }
 
-/* =========================
-   LOGOUT BUTTON
-========================= */
-
-.sidebar .btn-primary{
-    background:linear-gradient(135deg,#ef4444,#f97316) !important;
+.btn-primary {
     border:none !important;
     border-radius:12px !important;
-    padding:12px 18px !important;
+    font-weight:700 !important;
+    background:linear-gradient(135deg,#4f46e5,#7c3aed) !important;
+    padding:11px 20px !important;
     color:white !important;
-    font-weight:600;
-    width:calc(100% - 24px) !important;
-    margin:15px 12px !important;
-    text-align:center;
-}
-
-.sidebar .btn-primary:hover{
-    transform:scale(1.02);
-}
-
-/* =========================
-   MAIN CONTENT
-========================= */
-
-.main-content{
-    padding:30px;
-    width:100%;
-}
-
-/* =========================
-   PAGE TITLE
-========================= */
-
-.page-title{
-    background:white;
-    border-radius:26px;
-    padding:24px 30px;
-    margin-bottom:30px;
-    box-shadow:0 10px 30px rgba(0,0,0,0.06);
-}
-
-.page-title h2{
-    color:#1e293b;
-    font-weight:700;
-    margin-bottom:5px;
-}
-
-.page-title p{
-    color:#64748b;
-    margin:0;
-}
-
-/* =========================
-   TABLE CARD
-========================= */
-
-.table-card{
-    background:#ffffff;
-    border-radius:24px;
-    padding:24px;
-    box-shadow:0 8px 28px rgba(0,0,0,0.06);
-    border:1px solid #eef2f7;
     transition:0.3s ease;
-    margin-bottom:25px;
-    overflow:hidden;
-}
-
-.table-card:hover{
-    transform:translateY(-2px);
-}
-
-/* =========================
-   HEADINGS
-========================= */
-
-h2{
-    color:#0f172a;
-    font-weight:700;
-    letter-spacing:0.5px;
-}
-
-h4{
-    color:white;
-    font-weight:600;
-}
-
-/* =========================
-   TABLE RESPONSIVE
-========================= */
-
-.table-responsive{
-    width:100%;
-    overflow-x:auto;
-    -webkit-overflow-scrolling:touch;
-}
-
-table{
-    width:100%;
-    min-width:600px;
-    border-radius:18px;
-    overflow:hidden;
-}
-
-thead{
-    background:linear-gradient(90deg,#4f46e5,#7c3aed);
-    color:white;
-}
-
-thead th{
-    padding:16px !important;
-    border:none !important;
-    font-size:15px;
-    font-weight:600;
+    cursor:pointer;
     white-space:nowrap;
 }
+.btn-primary:hover { transform:scale(1.02); opacity:.92; }
 
-tbody td{
-    padding:15px !important;
+.emp-wrap { display:flex; flex-wrap:wrap; gap:8px; margin-top:4px; }
+
+.emp-btn {
+    border-radius:30px; padding:8px 18px; border:none;
+    font-weight:700; font-size:13px; text-decoration:none;
+    transition:0.3s ease; display:inline-block;
+}
+.emp-btn:hover { transform:scale(1.05); }
+.btn-info { background:linear-gradient(135deg,#06b6d4,#3b82f6); color:white !important; }
+.btn-dark { background:linear-gradient(135deg,#111827,#374151); color:white !important; }
+
+.table-responsive { overflow-x:auto; -webkit-overflow-scrolling:touch; border-radius:14px; }
+table { white-space:nowrap; }
+
+thead { background:linear-gradient(90deg,#4f46e5,#7c3aed); }
+thead th { color:white !important; font-weight:700; padding:14px 16px !important; border:none !important; }
+
+tbody td {
+    padding:13px 16px !important;
     vertical-align:middle;
-    border-color:#eef2f7 !important;
     color:#334155 !important;
     font-weight:500;
-    background:white;
-    white-space:nowrap;
+    font-size:14px;
+    border-color:#eef2f7 !important;
+}
+tbody tr:hover td { background:#f8fafc !important; }
+
+.status-present { background:#dcfce7; color:#15803d; padding:6px 14px; border-radius:25px; font-weight:700; font-size:13px; display:inline-block; }
+.status-absent  { background:#fee2e2; color:#dc2626; padding:6px 14px; border-radius:25px; font-weight:700; font-size:13px; display:inline-block; }
+.status-half    { background:#fef3c7; color:#d97706; padding:6px 14px; border-radius:25px; font-weight:700; font-size:13px; display:inline-block; }
+
+.btn-danger {
+    background:linear-gradient(135deg,#ef4444,#dc2626) !important;
+    border:none !important; border-radius:8px !important;
+    padding:6px 14px !important; color:white !important;
+    font-size:12px; font-weight:700; text-decoration:none;
+    transition:0.3s ease; display:inline-block;
+}
+.btn-danger:hover { transform:scale(1.04); opacity:.9; }
+
+.salary-alert {
+    background:linear-gradient(135deg,#dcfce7,#bbf7d0);
+    border:none; border-radius:14px;
+    padding:14px 20px; text-align:center;
+    font-weight:800; font-size:15px; color:#15803d;
+    margin-bottom:18px;
 }
 
-tbody tr{
-    transition:0.3s ease;
+::-webkit-scrollbar { width:7px; height:7px; }
+::-webkit-scrollbar-thumb { background:linear-gradient(#4f46e5,#06b6d4); border-radius:20px; }
+::-webkit-scrollbar-track { background:#f1f5f9; }
+
+@media(max-width:992px) {
+    .menu-btn { display:inline-flex; align-items:center; }
+    .topbar-logout { display:inline-block; }
+    .sidebar { left:-270px; }
+    #sidebarToggle:checked ~ .sidebar-overlay { display:block; }
+    #sidebarToggle:checked ~ .wrapper .sidebar { left:0 !important; }
+    .main-content { margin-left:0 !important; width:100% !important; padding:16px; }
+    .topbar { flex-direction:row !important; padding:14px 16px; }
+    .summary-row { grid-template-columns:repeat(2,1fr); gap:12px; }
+    .filter-grid { grid-template-columns:1fr 1fr; }
+    .filter-grid .filter-btn-cell { grid-column:span 2; }
 }
 
-tbody tr:hover{
-    background:#f8fafc;
+@media(max-width:768px) {
+    .summary-row { grid-template-columns:repeat(2,1fr); gap:10px; }
+    .summary-card h2 { font-size:24px; }
+    .filter-grid { grid-template-columns:1fr; }
+    .filter-grid .filter-btn-cell { grid-column:1; }
+    .topbar h2 { font-size:16px; }
+    .topbar p  { font-size:12px; }
 }
 
-/* =========================
-   STATUS BADGES
-========================= */
-
-.status-present{
-    background:#dcfce7;
-    color:#15803d;
-    padding:7px 16px;
-    border-radius:25px;
-    font-weight:700;
-    display:inline-block;
+@media(max-width:480px) {
+    .summary-card h2 { font-size:22px; }
+    .main-content { padding:10px; }
 }
-
-.status-absent{
-    background:#fee2e2;
-    color:#dc2626;
-    padding:7px 16px;
-    border-radius:25px;
-    font-weight:700;
-    display:inline-block;
-}
-
-.status-half{
-    background:#fef3c7;
-    color:#d97706;
-    padding:7px 16px;
-    border-radius:25px;
-    font-weight:700;
-    display:inline-block;
-}
-
-/* =========================
-   SUMMARY CARDS
-========================= */
-
-.summary-card{
-    border-radius:24px;
-    padding:28px 18px;
-    text-align:center;
-    color:white;
-    font-weight:bold;
-    box-shadow:0 12px 28px rgba(0,0,0,0.12);
-    transition:0.35s ease;
-    height:100%;
-}
-
-.summary-card:hover{
-    transform:translateY(-6px);
-}
-
-.summary-card h2{
-    margin-top:10px;
-    font-size:34px;
-    color:white;
-    word-break:break-word;
-}
-
-.present{
-    background:linear-gradient(135deg,#22c55e,#16a34a);
-}
-
-.absent{
-    background:linear-gradient(135deg,#ef4444,#dc2626);
-}
-
-.half{
-    background:linear-gradient(135deg,#f59e0b,#d97706);
-}
-
-.percent{
-    background:linear-gradient(135deg,#6366f1,#4f46e5);
-}
-
-/* =========================
-   BUTTONS
-========================= */
-
-.employee-btn{
-    margin:6px;
-    border-radius:30px;
-    padding:10px 22px;
-    border:none;
-    font-weight:600;
-    transition:0.3s ease;
-    display:inline-block;
-}
-
-.employee-btn:hover{
-    transform:scale(1.05);
-}
-
-.btn-info{
-    background:linear-gradient(135deg,#06b6d4,#3b82f6);
-    color:white !important;
-    border:none;
-}
-
-.btn-dark{
-    background:linear-gradient(135deg,#111827,#374151);
-    color:white !important;
-    border:none;
-}
-
-.btn-primary{
-    border:none;
-    border-radius:14px;
-    padding:12px 18px;
-    background:linear-gradient(135deg,#4f46e5,#7c3aed);
-    font-weight:600;
-    transition:0.3s ease;
-    color:white !important;
-}
-
-.btn-primary:hover{
-    transform:scale(1.03);
-    opacity:0.95;
-}
-
-/* =========================
-   FORM SELECT
-========================= */
-
-.form-select{
-    border-radius:14px;
-    padding:12px;
-    border:1px solid #dbeafe;
-    box-shadow:none !important;
-    font-weight:500;
-}
-
-/* =========================
-   SCROLLBAR
-========================= */
-
-::-webkit-scrollbar{
-    width:8px;
-    height:8px;
-}
-
-::-webkit-scrollbar-thumb{
-    background:linear-gradient(#4f46e5,#06b6d4);
-    border-radius:20px;
-}
-
-::-webkit-scrollbar-track{
-    background:#f1f5f9;
-}
-
-/* =========================
-   TABLET RESPONSIVE
-========================= */
-
-@media(max-width:992px){
-
-    .sidebar{
-        min-height:auto;
-        position:relative;
-    }
-
-    .dashboard-title{
-        font-size:34px;
-    }
-
-    .dashboard-title span{
-        font-size:20px;
-    }
-
-    .main-content{
-        padding:20px;
-    }
-
-    .summary-card{
-        margin-bottom:20px;
-    }
-
-    .table-card{
-        padding:20px;
-    }
-}
-
-/* =========================
-   MOBILE RESPONSIVE
-========================= */
-
-@media(max-width:768px){
-
-    body{
-        overflow-x:hidden;
-    }
-
-    .sidebar{
-        height:auto;
-        padding-bottom:20px;
-    }
-
-    .dashboard-title{
-        font-size:28px;
-    }
-
-    .dashboard-title span{
-        font-size:18px;
-    }
-
-    .sidebar a{
-        font-size:14px;
-        padding:12px 14px;
-    }
-
-    .main-content{
-        padding:14px;
-    }
-
-    .page-title{
-        padding:18px;
-        border-radius:20px;
-    }
-
-    .table-card{
-        padding:15px;
-        border-radius:18px;
-    }
-
-    .summary-card{
-        padding:22px 15px;
-        margin-bottom:15px;
-        border-radius:18px;
-    }
-
-    .summary-card h2{
-        font-size:28px;
-    }
-
-    .employee-btn{
-        width:100%;
-        text-align:center;
-        margin:6px 0;
-    }
-
-    .btn-primary{
-        width:100%;
-    }
-
-    .form-select{
-        margin-bottom:12px;
-    }
-
-    table{
-        min-width:500px;
-    }
-
-    thead th,
-    tbody td{
-        font-size:13px;
-        padding:10px !important;
-    }
-}
-
-/* =========================
-   EXTRA SMALL DEVICES
-========================= */
-
-@media(max-width:480px){
-
-    .dashboard-title{
-        font-size:24px;
-    }
-
-    .dashboard-title span{
-        font-size:16px;
-    }
-
-    .main-content{
-        padding:10px;
-    }
-
-    .table-card{
-        padding:12px;
-    }
-
-    .summary-card{
-        padding:18px 12px;
-    }
-
-    .summary-card h2{
-        font-size:24px;
-    }
-
-    h2{
-        font-size:22px;
-    }
-
-    table{
-        min-width:450px;
-    }
-}</style>
+</style>
 </head>
 
-<!-- BODY START -->
 <body>
 
-<div class="container-fluid">
-<div class="row">
+<input type="checkbox" id="sidebarToggle" hidden>
+<label class="sidebar-overlay" for="sidebarToggle"></label>
 
-    <!-- SIDEBAR -->
+<div class="wrapper">
 
-   <div class="col-md-3 col-lg-2 sidebar p-0">
-<div class="text-center py-3 border-bottom border-light">
-    <a href="{% url 'dashboard' %}" class="dashboard-title">
-        EMS <br>
-        <span>Dashboard</span>
-    </a>
-</div>
+    <div class="sidebar">
+        <h4 class="text-center py-3 border-bottom border-light px-3">
+            <a href="{% url 'dashboard' %}" style="color:white;text-decoration:none;">
+                EMS Dashboard
+            </a>
+        </h4>
+        <a href="{% url 'add_dep' %}">Add Department</a>
+        <a href="{% url 'add_emp' %}">Add Employee</a>
+        <a href="{% url 'all_dep' %}">Show All Dept</a>
+        <a href="{% url 'all_emp' %}">Show All Emp</a>
+        <a href="{% url 'show_query' %}">Show Emp Query</a>
+        <a href="{% url 'mark_attendance' %}">Mark Attendance</a>
+        <a href="{% url 'show_attendance' %}" style="background:rgba(255,255,255,0.20);">Show Attendance</a>
+        <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+    </div>
 
-    <a href="{% url 'add_dep' %}">Add Department</a>
+    <div class="main-content">
 
-    <a href="{% url 'add_emp' %}">Add Employee</a>
-
-    <a href="{% url 'all_dep' %}">Show All Dept</a>
-
-    <a href="{% url 'all_emp' %}">Show All Emp</a>
-
-    <a href="{% url 'show_query' %}">Show Emp Query</a>
-
-    <a href="{% url 'mark_attendance' %}">Mark Attendance</a>
-
-    <a href="{% url 'show_attendance' %}">Show Attendance</a>
-
-    <!-- <div class="text-center mt-4"> -->
-        <a href="{% url 'logout' %}" class="btn btn-primary btn-sm">
-            Logout
-        </a>
-    <!-- </div> -->
-
-</div>
-    <!-- MAIN CONTENT -->
-
-    <div class="col-md-10 col-lg-10">
-
-        <!-- PURA PURANA CODE YAHA SE START HOGA -->
-
-        <div class="container mt-5">
-
-            <!-- SUMMARY -->
-
-            <div class="row mb-4">
-
-                <div class="col-md-3">
-                    <div class="summary-card present">
-                        <h4>Present</h4>
-                        <h2>{{ total_present }}</h2>
-                    </div>
+        <div class="topbar">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <label for="sidebarToggle" class="menu-btn">☰</label>
+                <div>
+                    <h2>Show Attendance</h2>
+                    <p>Track and manage employee attendance records</p>
                 </div>
-
-                <div class="col-md-3">
-                    <div class="summary-card absent">
-                        <h4>Absent</h4>
-                        <h2>{{ total_absent }}</h2>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="summary-card half">
-                        <h4>Half Day</h4>
-                        <h2>{{ total_half }}</h2>
-                    </div>
-                </div>
-
-                <div class="col-md-3">
-                    <div class="summary-card percent">
-                        <h4>Attendance %</h4>
-                        <h2>{{ percentage }}%</h2>
-                    </div>
-                </div>
-
             </div>
+            <!-- Sirf mobile/tablet par dikhega, laptop par nahi -->
+            <a href="{% url 'logout' %}" class="btn btn-danger btn-sm topbar-logout">Logout</a>
+        </div>
 
-            <!-- MONTH FILTER -->
-<div class="table-card mb-4">
+        <div class="summary-row">
+            <div class="summary-card sc-present">
+                <h4>Present</h4>
+                <h2>{{ total_present }}</h2>
+            </div>
+            <div class="summary-card sc-absent">
+                <h4>Absent</h4>
+                <h2>{{ total_absent }}</h2>
+            </div>
+            <div class="summary-card sc-half">
+                <h4>Half Day</h4>
+                <h2>{{ total_half }}</h2>
+            </div>
+            <div class="summary-card sc-percent">
+                <h4>Attendance %</h4>
+                <h2>{{ percentage }}%</h2>
+            </div>
+        </div>
 
-<form method="GET">
+        <div class="card p-4">
+            <form method="GET">
+                <div class="filter-grid">
+                    <div>
+                        <label class="form-label">Search Employee</label>
+                        <input type="text" name="search" value="{{ search }}"
+                               placeholder="Employee name..." class="form-control">
+                    </div>
+                    <div>
+                        <label class="form-label">Filter by Date</label>
+                        <input type="date" name="date" value="{{ date_filter }}" class="form-control">
+                    </div>
+                    <div>
+                        <label class="form-label">Filter by Month</label>
+                        <select name="month" class="form-select">
+                            <option value="1"  {% if month == 1  %}selected{% endif %}>January</option>
+                            <option value="2"  {% if month == 2  %}selected{% endif %}>February</option>
+                            <option value="3"  {% if month == 3  %}selected{% endif %}>March</option>
+                            <option value="4"  {% if month == 4  %}selected{% endif %}>April</option>
+                            <option value="5"  {% if month == 5  %}selected{% endif %}>May</option>
+                            <option value="6"  {% if month == 6  %}selected{% endif %}>June</option>
+                            <option value="7"  {% if month == 7  %}selected{% endif %}>July</option>
+                            <option value="8"  {% if month == 8  %}selected{% endif %}>August</option>
+                            <option value="9"  {% if month == 9  %}selected{% endif %}>September</option>
+                            <option value="10" {% if month == 10 %}selected{% endif %}>October</option>
+                            <option value="11" {% if month == 11 %}selected{% endif %}>November</option>
+                            <option value="12" {% if month == 12 %}selected{% endif %}>December</option>
+                        </select>
+                    </div>
+                    <div class="filter-btn-cell" style="display:flex;align-items:flex-end;">
+                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                    </div>
+                </div>
+            </form>
+        </div>
 
-    <!-- SEARCH -->
-    <input type="text"
-           name="search"
-           value="{{ search }}"
-           placeholder="Search employee name"
-           class="form-control mb-2">
-
-    <!-- DATE -->
-    <input type="date"
-           name="date"
-           value="{{ date_filter }}"
-           class="form-control mb-2">
-
-    MONTH
-    <select name="month" class="form-select mb-2">
-        <option value="1" {% if month == 1 %}selected{% endif %}>January</option>
-        <option value="2" {% if month == 2 %}selected{% endif %}>February</option>
-        <option value="3" {% if month == 3 %}selected{% endif %}>March</option>
-        <option value="4" {% if month == 4 %}selected{% endif %}>April</option>
-        <option value="5" {% if month == 5 %}selected{% endif %}>May</option>
-        <option value="6" {% if month == 6 %}selected{% endif %}>June</option>
-        <option value="7" {% if month == 7 %}selected{% endif %}>July</option>
-        <option value="8" {% if month == 8 %}selected{% endif %}>August</option>
-        <option value="9" {% if month == 9 %}selected{% endif %}>September</option>
-        <option value="10" {% if month == 10 %}selected{% endif %}>October</option>
-        <option value="11" {% if month == 11 %}selected{% endif %}>November</option>
-        <option value="12" {% if month == 12 %}selected{% endif %}>December</option>
-    </select>
-
-    <!-- BUTTON -->
-    <button class="btn btn-primary w-100">
-        Apply Filters
-    </button>
-
-</form>
-
-</div>
-           
-
-            <!-- EMPLOYEE BUTTONS -->
-
-            <div class="table-card mb-4">
-
-                <h5 class="mb-3 fw-bold">
-                    Employees
-                </h5>
-
-                <a href="?month={{ month }}"
-                   class="btn btn-dark employee-btn">
-                    All
-                </a>
-
+        <div class="card p-4">
+            <h5 class="fw-bold mb-3">Filter by Employee</h5>
+            <div class="emp-wrap">
+                <a href="?month={{ month }}" class="emp-btn btn-dark">All</a>
                 {% for e in employees %}
-
-                <a href="?month={{ month }}&emp={{ e.employee__id }}"
-                   class="btn btn-info employee-btn">
-
+                <a href="?month={{ month }}&emp={{ e.employee__id }}" class="emp-btn btn-info">
                     {{ e.employee__name }}
-
                 </a>
-
                 {% endfor %}
-
             </div>
+        </div>
 
-            <!-- TABLE -->
-
-            <div class="table-card">
-
-                <h2 class="text-center mb-4">
-                    Attendance Records
-                </h2>
-
-                <div class="alert alert-success fw-bold text-center">
-
-    Total Salary This Month :
-    
-    ₹{{ total_salary }}
-
-</div>
-
+        <div class="card p-4">
+            <h3 class="text-center fw-bold mb-3">Attendance Records</h3>
+            <div class="salary-alert">Total Salary This Month: ₹{{ total_salary }}</div>
+            <div class="table-responsive">
                 <table class="table table-bordered table-hover text-center">
-
-                    <thead class="table-dark">
-
+                    <thead>
                         <tr>
                             <th>Name</th>
                             <th>Date</th>
                             <th>Status</th>
-                            
                             <th>Check In</th>
-<th>Fine</th>
-<th>Final Salary</th>
-<th>PDF</th>
-                            
+                            <th>Fine</th>
+                            <th>Final Salary</th>
+                            <th>PDF</th>
                         </tr>
-
                     </thead>
-
                     <tbody>
-
                         {% for i in attendance %}
-
                         <tr>
-
                             <td>{{ i.employee.name }}</td>
-
                             <td>{{ i.date }}</td>
-
                             <td>
-
                                 {% if i.status == "Present" %}
-
-                                    <span class="status-present">
-                                        Present
-                                    </span>
-
+                                    <span class="status-present">Present</span>
                                 {% elif i.status == "Absent" %}
-
-                                    <span class="status-absent">
-                                        Absent
-                                    </span>
-
+                                    <span class="status-absent">Absent</span>
                                 {% else %}
-
-                                    <span class="status-half">
-                                        Half Day
-                                    </span>
-
+                                    <span class="status-half">Half Day</span>
                                 {% endif %}
-                                
-
                             </td>
-
-                                <td>
-        {{ i.check_in_time }}
-    </td>
-    <td>
-    {% if i.late_fine > 0 %}
-        ₹{{ i.late_fine }}
-    {% else %}
-        No Fine
-    {% endif %}
-</td>
-<td>
-    ₹{{ i.final_salary }}
-</td>
-
-<td>
-    <a href="{% url 'attendance_pdf' i.employee.id %}"
-       class="btn btn-danger btn-sm">
-
-       Download PDF
-
-    </a>
-</td>
-
+                            <td>{{ i.check_in_time }}</td>
+                            <td>{% if i.late_fine > 0 %}₹{{ i.late_fine }}{% else %}No Fine{% endif %}</td>
+                            <td>₹{{ i.final_salary }}</td>
+                            <td>
+                                <a href="{% url 'attendance_pdf' i.employee.id %}" class="btn btn-danger btn-sm">
+                                    Download PDF
+                                </a>
+                            </td>
                         </tr>
-
                         {% endfor %}
-
                     </tbody>
-
                 </table>
-
             </div>
-
         </div>
 
-        <!-- PURANA CODE END -->
-
     </div>
-
-</div>
 </div>
 
 </body>
-<!-- BODY END --></html>
+</html>
