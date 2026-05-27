@@ -234,6 +234,21 @@ tbody tr:hover td { background:#f8fafc !important; }
     .filter-grid .filter-btn-cell { grid-column:1; }
     .topbar h2 { font-size:16px; }
     .topbar p  { font-size:12px; }
+    .topbar{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 999;
+    border-radius: 0;
+    margin-bottom: 0;
+    padding: 12px 15px;
+    
+}
+
+.main-content{
+    padding-top: 85px !important;
+}
 }
 
 @media(max-width:480px) {
@@ -263,7 +278,7 @@ tbody tr:hover td { background:#f8fafc !important; }
         <a href="{% url 'show_query' %}">Show Emp Query</a>
         <a href="{% url 'mark_attendance' %}">Mark Attendance</a>
         <a href="{% url 'show_attendance' %}" style="background:rgba(255,255,255,0.20);">Show Attendance</a>
-        <a href="{% url 'logout' %}" class="logout-link">Logout</a>
+        <!-- <a href="{% url 'logout' %}" class="logout-link">Logout</a> -->
     </div>
 
     <div class="main-content">
@@ -280,67 +295,51 @@ tbody tr:hover td { background:#f8fafc !important; }
             <a href="{% url 'logout' %}" class="btn btn-danger btn-sm topbar-logout">Logout</a>
         </div>
 
-        <div class="summary-row">
-            <div class="summary-card sc-present">
-                <h4>Present</h4>
-                <h2>{{ total_present }}</h2>
-            </div>
-            <div class="summary-card sc-absent">
-                <h4>Absent</h4>
-                <h2>{{ total_absent }}</h2>
-            </div>
-            <div class="summary-card sc-half">
-                <h4>Half Day</h4>
-                <h2>{{ total_half }}</h2>
-            </div>
-            <div class="summary-card sc-percent">
-                <h4>Attendance %</h4>
-                <h2>{{ percentage }}%</h2>
-            </div>
-        </div>
-
-        <div class="card p-4">
-            <form method="GET">
-                <div class="filter-grid">
-                    <div>
-                        <label class="form-label">Search Employee</label>
-                        <input type="text" name="search" value="{{ search }}"
-                               placeholder="Employee name..." class="form-control">
-                    </div>
-                    <div>
-                        <label class="form-label">Filter by Date</label>
-                        <input type="date" name="date" value="{{ date_filter }}" class="form-control">
-                    </div>
-                    <div>
-                        <label class="form-label">Filter by Month</label>
-                        <select name="month" class="form-select">
-                            <option value="1"  {% if month == 1  %}selected{% endif %}>January</option>
-                            <option value="2"  {% if month == 2  %}selected{% endif %}>February</option>
-                            <option value="3"  {% if month == 3  %}selected{% endif %}>March</option>
-                            <option value="4"  {% if month == 4  %}selected{% endif %}>April</option>
-                            <option value="5"  {% if month == 5  %}selected{% endif %}>May</option>
-                            <option value="6"  {% if month == 6  %}selected{% endif %}>June</option>
-                            <option value="7"  {% if month == 7  %}selected{% endif %}>July</option>
-                            <option value="8"  {% if month == 8  %}selected{% endif %}>August</option>
-                            <option value="9"  {% if month == 9  %}selected{% endif %}>September</option>
-                            <option value="10" {% if month == 10 %}selected{% endif %}>October</option>
-                            <option value="11" {% if month == 11 %}selected{% endif %}>November</option>
-                            <option value="12" {% if month == 12 %}selected{% endif %}>December</option>
-                        </select>
-                    </div>
-                    <div class="filter-btn-cell" style="display:flex;align-items:flex-end;">
-                        <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
        <div class="card p-4">
-    <h5 class="fw-bold mb-3">Filter by Employee</h5>
+    <form method="GET">
+        <div class="filter-grid">
+            <div>
+                <label class="form-label">Search Employee</label>
+                <input type="text" name="search" value="{{ search }}"
+                       placeholder="Employee name..." class="form-control">
+            </div>
 
-    <a href="?month={{ month }}" class="btn btn-dark btn-sm">
-        All
-    </a>
+            <div>
+                <label class="form-label">Filter by Date</label>
+                <input type="date" name="date" value="{{ date_filter }}" class="form-control">
+            </div>
+
+            <div>
+                <label class="form-label">Filter by Month</label>
+                <select name="month" class="form-select">
+                    <option value="1"  {% if month == 1  %}selected{% endif %}>January</option>
+                    <option value="2"  {% if month == 2  %}selected{% endif %}>February</option>
+                    <option value="3"  {% if month == 3  %}selected{% endif %}>March</option>
+                    <option value="4"  {% if month == 4  %}selected{% endif %}>April</option>
+                    <option value="5"  {% if month == 5  %}selected{% endif %}>May</option>
+                    <option value="6"  {% if month == 6  %}selected{% endif %}>June</option>
+                    <option value="7"  {% if month == 7  %}selected{% endif %}>July</option>
+                    <option value="8"  {% if month == 8  %}selected{% endif %}>August</option>
+                    <option value="9"  {% if month == 9  %}selected{% endif %}>September</option>
+                    <option value="10" {% if month == 10 %}selected{% endif %}>October</option>
+                    <option value="11" {% if month == 11 %}selected{% endif %}>November</option>
+                    <option value="12" {% if month == 12 %}selected{% endif %}>December</option>
+                </select>
+            </div>
+
+            <div class="filter-btn-cell" style="display:flex;align-items:flex-end;gap:8px;">
+                
+                <button type="submit" class="btn btn-primary">
+                    Apply Filters
+                </button>
+
+                <a href="?month={{ month }}" class="btn btn-dark btn-lg">
+                    Reset
+                </a>
+
+            </div>
+        </div>
+    </form>
 </div>
         <div class="card p-4">
             <h3 class="text-center fw-bold mb-3">Attendance Records</h3>
