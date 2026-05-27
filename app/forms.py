@@ -15,6 +15,18 @@ class AttendanceForm(forms.ModelForm):
 
         widgets = {
 
+            'employee': forms.Select(
+                attrs={
+                    'class': 'form-control employee-select'
+                }
+            ),
+
+            'status': forms.Select(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
+
             'check_in_time': forms.TimeInput(
                 attrs={
                     'type': 'time',
