@@ -186,3 +186,23 @@ def final_salary(self):
 
     # ABSENT
     return 0
+
+# models.py ke sabse niche ye code paste karo:
+
+class Task(models.Model):
+    STATUS_CHOICES = [
+        ('TODO', 'To Do'),
+        ('IN_PROGRESS', 'In Progress'),
+        ('DONE', 'Done'),
+    ]
+    
+    title = models.CharField(max_length=200)
+    description = models.TextField()
+    # Kis employee ko task mila (Tumhare AddEmployee model se connect kiya)
+    assigned_to = models.ForeignKey(AddEmployee, on_delete=models.CASCADE, related_name='tasks')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='TODO')
+    created_at = models.DateTimeField(auto_now_add=True)
+    due_date = models.DateField()
+
+    def __str__(self):
+        return f"{self.title} - {self.status}"

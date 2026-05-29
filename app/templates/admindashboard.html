@@ -336,6 +336,7 @@ form textarea {
         <a href="{% url 'show_query' %}">Show Emp Query</a>
         <a href="{% url 'mark_attendance' %}">Mark Attendance</a>
         <a href="{% url 'show_attendance' %}">Show Attendance</a>
+        <a href="{% url 'assign_task' %}">Jira Task Management</a>
         
 
         <!-- <div class="text-center mt-4">
@@ -875,6 +876,92 @@ form textarea {
 {% endif %}
 
 <!-- ATTENDANCE SECTION END -->
+
+ <!-- thee -->
+
+ <!-- JIRA TASK MANAGEMENT START -->
+{% if assign_task_page %}
+{% if message %}<div class="alert alert-success mt-3">{{ message }}</div>{% endif %}
+
+<div class="container mt-5">
+  <div class="row g-4">
+    <!-- Task Creation Form -->
+    <div class="col-md-4">
+      <div class="card shadow p-4" style="background: white;">
+        <h4 class="mb-3 text-center fw-bold text-primary">Create Jira Task</h4>
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label class="form-label">Task Title</label>
+            <input type="text" class="form-control" name="title" required placeholder="e.g. Code Review / Bug Fix">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" name="description" rows="3" required placeholder="Describe the task..."></textarea>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Assign To Employee</label>
+            <select class="form-control" name="employee_id" required>
+              <option value="">-- Select Employee --</option>
+              {% for emp in employees %}
+                <option value="{{ emp.id }}">{{ emp.name }} ({{ emp.department }})</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Due Date</label>
+            <input type="date" class="form-control" name="due_date" required>
+          </div>
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary"> Assign Task</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Active Tasks Board -->
+    <div class="col-md-8">
+      <div class="card shadow p-4" style="background: white;">
+        <h4 class="mb-3 text-center fw-bold text-dark">📋 All Live Tasks (Jira Status)</h4>
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover text-center align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th>Task Details</th>
+                <th>Assigned To</th>
+                <th>Due Date</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for t in tasks %}
+              <tr>
+                <td class="text-start"><strong>{{ t.title }}</strong><br><small class="text-muted">{{ t.description }}</small></td>
+                <td>{{ t.assigned_to.name }}</td>
+                <td>{{ t.due_date }}</td>
+                <td>
+                  {% if t.status == 'TODO' %}
+                    <span class="badge bg-secondary">To Do</span>
+                  {% elif t.status == 'IN_PROGRESS' %}
+                    <span class="badge bg-warning text-dark">In Progress</span>
+                  {% else %}
+                    <span class="badge bg-success">Done</span>
+                  {% endif %}
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="4" class="text-muted py-3">No tasks added yet.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+<!-- JIRA TASK MANAGEMENT END -->
+  <!-- thee -->
 
 <!-- SHOW ATTENDANCE -->
 

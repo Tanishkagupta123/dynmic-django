@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Employee ,Department as dep,AddEmployee as new
+from .models import Employee ,Department as dep,AddEmployee as new ,Task
 from django.http import HttpResponse
 from django.core.mail import send_mail
 from .models import Query
@@ -171,27 +171,29 @@ def dashboard(req):
     if req.session.get('admin', None):
         data = req.session.get('admin')
         
-        # 🔥 YAHA HUMNE REAL DATA COUNT ADD KAR DIYA HAI
         total_emp = new.objects.count()
         total_dep = dep.objects.count()
         total_query = Query.objects.count()
+        total_tasks = Task.objects.count() # 🔥 Naya task count
         
         today = date.today()
         today_attendance = Attendance.objects.filter(date=today).count()
         
-        # Purane 'data' ke sath-sath ab ye saare variables bhi template me jayenge
         return render(req, 'admindashboard.html', {
             'data': data,
             'total_emp': total_emp,
             'total_dep': total_dep,
             'total_query': total_query,
-            'today_attendance': today_attendance
+            'today_attendance': today_attendance,
+            'total_tasks': total_tasks # 🔥 Template me bheja
         })
     
     elif req.session.get('user_id', None):    
         id = req.session['user_id']
         userdata = new.objects.get(id=id)
-        return render(req, 'userdashboard.html', {'data': userdata})
+        # Employee ke apne saare tasks userdashboard par dikhane ke liye
+        my_tasks = Task.objects.filter(assigned_to=userdata).order_by('-created_at')
+        return render(req, 'userdashboard.html', {'data': userdata, 'my_tasks': my_tasks})
         
     else:
         return redirect('login')
@@ -1097,3 +1099,50 @@ def attendance_pdf(request, emp_id):
     pisa.CreatePDF(html, dest=response)
 
     return response
+
+# views.py ke ekdum last me paste karo:
+
+def assign_task(req):
+    if 'admin' not in req.session:
+        return redirect('login')
+        
+    admin_data = req.session.get('admin')
+    all_emp = new.objects.all()
+    all_tasks = Task.objects.all().order_by('-created_at')
+    
+    if req.method == 'POST':
+        title = req.POST.get('title')
+        desc = req.POST.get('description')
+        emp_id = req.POST.get('employee_id')
+        due_date = req.POST.get('due_date')
+        
+        employee = new.objects.get(id=emp_id)
+        
+        Task.objects.create(
+            title=title,
+            description=desc,
+            assigned_to=employee,
+            due_date=due_date
+        )
+        req.session['task_msg'] = "Task Assigned Successfully!"
+        return redirect('assign_task')
+        
+    msg = req.session.pop('task_msg', None)
+    return render(req, 'admindashboard.html', {
+        'assign_task_page': True,
+        'employees': all_emp,
+        'tasks': all_tasks,
+        'message': msg,
+        'data': admin_data
+    })
+
+def update_task_status(req, pk):
+    if 'user_id' not in req.session:
+        return redirect('login')
+        
+    task = Task.objects.get(id=pk)
+    if req.method == 'POST':
+        new_status = req.POST.get('status')
+        task.status = new_status
+        task.save()
+    return redirect('dashboard')

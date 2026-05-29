@@ -59,6 +59,9 @@ urlpatterns = [
     path('show_attendance/', show_attendance, name='show_attendance'),
     path('my_attendance/', my_attendance, name='my_attendance'),
     path('attendance-pdf/<int:emp_id>/',attendance_pdf, name='attendance_pdf'),
+    # urls.py me 'attendance_pdf' ke niche ye do lines add karo:
+    path('assign-task/', assign_task, name='assign_task'),
+    path('update-task-status/<int:pk>/', update_task_status, name='update_task_status'),
 
 
 

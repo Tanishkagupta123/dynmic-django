@@ -244,6 +244,7 @@ table { white-space:nowrap; }
         <a href="{% url 'query_status' %}" class="{% if section == 'query_status' %}active{% endif %}">Query Status</a>
         <a href="{% url 'my_attendance' %}" class="{% if section == 'attendance' %}active{% endif %}">Attendance</a>
         <a href="{% url 'all_query' %}" class="{% if section == 'all-query' %}active{% endif %}">All Query</a>
+        <a href="{% url 'dashboard' %}" class="{% if my_tasks %}active{% endif %}">📋 My Jira Tasks</a>
 
         <div class="sidebar-logout">
             <form method="post" action="{% url 'logout' %}">
@@ -548,6 +549,63 @@ table { white-space:nowrap; }
             </div>
         </div>
         {% endif %}
+
+        {% if my_tasks %}
+        <div id="jira_tasks" class="mt-4">
+            <div class="glass shadow-lg p-4">
+                <h3 class="mb-4 fw-bold text-primary"> My Assigned Jira Tasks</h3>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover text-center align-middle" style="background:rgba(255,255,255,0.55); backdrop-filter:blur(12px); border-radius:14px; overflow:hidden;">
+                        <thead class="table-dark" style="background:linear-gradient(135deg,#03161e,#15596d);">
+                            <tr>
+                                <th>Task Info</th>
+                                <th>Deadline</th>
+                                <th>Current Status</th>
+                                <th>Change Status (Action)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for t in my_tasks %}
+                            <tr style="background:rgba(255,255,255,0.7);">
+                                <td class="text-start" style="padding:12px; color:#000 !important;">
+                                    <strong>{{ t.title }}</strong><br>
+                                    <small class="text-muted">{{ t.description }}</small>
+                                </td>
+                                <td style="color:#000 !important;"><span class="badge bg-light text-dark p-2">{{ t.due_date }}</span></td>
+                                <td style="color:#000 !important;">
+                                    {% if t.status == 'TODO' %}
+                                        <span class="badge bg-secondary px-3 py-2">To Do</span>
+                                    {% elif t.status == 'IN_PROGRESS' %}
+                                        <span class="badge bg-warning text-dark px-3 py-2">In Progress</span>
+                                    {% else %}
+                                        <span class="badge bg-success px-3 py-2">Done</span>
+                                    {% endif %}
+                                </td>
+                                <td style="padding:10px;">
+                                    <form action="{% url 'update_task_status' t.id %}" method="post" class="d-inline-flex gap-2 justify-content-center align-items-center">
+                                        {% csrf_token %}
+                                        <select name="status" class="form-select form-select-sm" style="width: auto !important; padding: 5px; border-radius: 8px; color:#000;">
+                                            <option value="TODO" {% if t.status == 'TODO' %}selected{% endif %}>To Do</option>
+                                            <option value="IN_PROGRESS" {% if t.status == 'IN_PROGRESS' %}selected{% endif %}>In Progress</option>
+                                            <option value="DONE" {% if t.status == 'DONE' %}selected{% endif %}>Done</option>
+                                        </select>
+                                        <button type="submit" class="btn btn-sm btn-success px-2 py-1" style="border-radius: 8px; font-size:12px;">Update</button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-muted py-4" style="color:#000 !important;">No tasks pending for you. Great job!</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+        </div>
+     </div>
 
     </div>
 </div>
