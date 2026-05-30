@@ -286,6 +286,24 @@ form textarea {
     }
 
 }
+  .sidebar a {
+      padding: 12px 18px !important;   /* Text ke aas-paas ka space thoda badhaye */
+      margin: 8px 12px !important;     /* Do links ke beech ka vertical gap badhaye */
+      font-size: 16px !important;      /* Text ka size thoda bada kiya */
+  }
+  .sidebar h4 {
+      padding-top: 20px !important;    /* Upar dashboard header ka gap perfect kiya */
+      padding-bottom: 20px !important;
+  }
+  .sidebar a {
+      padding: 11px 18px !important;   /* Padding ekdum balanced */
+      margin: 5px 12px !important;     /* Gap ko thoda kam kiya (6px se 5px) taaki perfect space bane */
+      font-size: 16px !important;      /* Text ka size bada hi rahega */
+  }
+  .sidebar h4 {
+      padding-top: 18px !important;    /* Header ka space bhi thoda set kiya */
+      padding-bottom: 18px !important;
+  }
 </style>
 
 </head>
@@ -336,8 +354,7 @@ form textarea {
         <a href="{% url 'show_query' %}">Show Emp Query</a>
         <a href="{% url 'mark_attendance' %}">Mark Attendance</a>
         <a href="{% url 'show_attendance' %}">Show Attendance</a>
-        <a href="{% url 'assign_task' %}">Jira Task Management</a>
-        
+<a href="{% url 'assign_task' %}">Task Workflow Management</a>        
 
         <!-- <div class="text-center mt-4">
           <a href="{% url 'logout' %}" class="btn btn-primary btn-sm">Logout</a>
@@ -907,7 +924,7 @@ form textarea {
     <!-- Task Creation Form -->
     <div class="col-md-4">
       <div class="card shadow p-4" style="background: white;">
-        <h4 class="mb-3 text-center fw-bold text-primary">Create Jira Task</h4>
+<h4 class="mb-3 text-center fw-bold text-primary">Create & Assign Task</h4>
         <form method="post">
           {% csrf_token %}
           <div class="mb-3">
@@ -941,7 +958,7 @@ form textarea {
     <!-- Active Tasks Board -->
     <div class="col-md-8">
       <div class="card shadow p-4" style="background: white;">
-        <h4 class="mb-3 text-center fw-bold text-dark">📋 All Live Tasks (Jira Status)</h4>
+<h4 class="mb-3 text-center fw-bold text-dark">Active Project Workflows</h4>
         <div class="table-responsive">
           <table class="table table-bordered table-hover text-center align-middle">
             <thead class="table-dark">

@@ -255,6 +255,36 @@ tbody tr:hover td { background:#f8fafc !important; }
     .summary-card h2 { font-size:22px; }
     .main-content { padding:10px; }
 }
+
+.sidebar a {
+      padding: 11px 18px !important;   
+      margin: 5px 12px !important;     
+      font-size: 16px !important;      
+  }
+  .sidebar h4 {
+      padding-top: 18px !important;    
+      padding-bottom: 18px !important;
+  }
+
+  /* Filters grid design upgrade to look premium */
+  .filter-grid {
+      background: rgba(255, 255, 255, 0.55) !important;
+      backdrop-filter: blur(12px) !important;
+      border-radius: 14px !important;
+      padding: 15px !important;
+  }
+
+  /* Form controls styling match */
+  .form-control, .form-select {
+      background: #f1f5f9 !important;
+      border-radius: 12px !important;
+      font-weight: 500 !important;
+  }
+
+  /* Heading consistency */
+  .card h3 {
+      font-weight: 700 !important;
+      color: #030e1e !important;}
 </style>
 </head>
 
@@ -279,7 +309,9 @@ tbody tr:hover td { background:#f8fafc !important; }
         <a href="{% url 'mark_attendance' %}">Mark Attendance</a>
         <a href="{% url 'show_attendance' %}" style="background:rgba(255,255,255,0.20);">Show Attendance</a>
         <!-- <a href="{% url 'logout' %}" class="logout-link">Logout</a> -->
-         
+        <a href="{% url 'assign_task' %}">Jira Task Management</a>
+
+
     </div>
 
     <div class="main-content">
