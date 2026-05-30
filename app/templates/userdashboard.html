@@ -203,6 +203,14 @@ table { white-space:nowrap; }
     .main-content { padding:8px; }
     .topbar-title { font-size:14px; }
 }
+
+/* --- Isko style tag ke andar sabse neeche paste kar do --- */
+
+#jira_tasks table tbody td:nth-child(1) {
+    white-space: normal !important;
+    max-width: 280px !important;
+    word-break: break-word !important;
+}
 </style>
 </head>
 
@@ -244,7 +252,7 @@ table { white-space:nowrap; }
         <a href="{% url 'query_status' %}" class="{% if section == 'query_status' %}active{% endif %}">Query Status</a>
         <a href="{% url 'my_attendance' %}" class="{% if section == 'attendance' %}active{% endif %}">Attendance</a>
         <a href="{% url 'all_query' %}" class="{% if section == 'all-query' %}active{% endif %}">All Query</a>
-        <a href="{% url 'dashboard' %}" class="{% if my_tasks %}active{% endif %}">📋 My Jira Tasks</a>
+        <a href="{% url 'dashboard' %}" class="{% if my_tasks %}active{% endif %}"> My Active Tasks</a>
 
         <div class="sidebar-logout">
             <form method="post" action="{% url 'logout' %}">

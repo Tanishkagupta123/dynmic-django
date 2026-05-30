@@ -1074,7 +1074,6 @@ def my_attendance(request):
     )
 
 
-
 def attendance_pdf(request, emp_id):
 
     employee = new.objects.get(id=emp_id)
@@ -1149,7 +1148,8 @@ def assign_task(req):
         'employees': all_emp,
         'tasks': all_tasks,
         'message': msg,
-        'data': admin_data
+        'data': admin_data,
+        'today': date.today() 
     })
 
 def update_task_status(req, pk):

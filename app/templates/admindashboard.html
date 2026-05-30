@@ -354,11 +354,10 @@ form textarea {
         <a href="{% url 'show_query' %}">Show Emp Query</a>
         <a href="{% url 'mark_attendance' %}">Mark Attendance</a>
         <a href="{% url 'show_attendance' %}">Show Attendance</a>
-<a href="{% url 'assign_task' %}">Task Workflow Management</a>        
+        <a href="{% url 'assign_task' %}">Task Workflow Management</a>        
 
         <!-- <div class="text-center mt-4">
           <a href="{% url 'logout' %}" class="btn btn-primary btn-sm">Logout</a>
-
         </div> -->
       </div>
 
@@ -1107,6 +1106,54 @@ form textarea {
       </div>
     </div>
   </div>
+
+  <style>
+  .table td:nth-child(3) { 
+      color: #334155 !important; 
+  }
+</style>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+      // Aaj ki live date ko standard format me liya
+      let dStr = "{{ today|date:'Y-m-d' }}";
+      if (!dStr) {
+          let d = new Date();
+          dStr = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+      }
+      let todayObj = new Date(dStr);
+      todayObj.setHours(0,0,0,0); // Time reset kiya taaki sirf date compare ho
+
+      let rows = document.querySelectorAll("table tbody tr");
+      rows.forEach(row => {
+          let dateCell = row.cells[2];   // Due Date column (3rd number par)
+          let statusCell = row.cells[3]; // Status column (4th number par)
+          
+          if(dateCell && statusCell) {
+              let dueDateText = dateCell.innerText.trim();
+              let status = statusCell.innerText.trim();
+              
+              
+              let dueDateObj = new Date(dueDateText);
+              
+    
+              if(!isNaN(dueDateObj.getTime()) && status !== "✓ Done" && status !== "Done" && status !== "Finished") {
+                  dueDateObj.setHours(0,0,0,0);
+                  
+    
+                  if(dueDateObj < todayObj) {
+                      // Purani date text ko bina chhede uske niche red badge chipkao
+                      dateCell.innerHTML = dueDateText + `<br><span class="badge bg-danger text-white mt-1" style="font-size: 11px; padding: 4px 8px;">🚨 OVERDUE (Delayed)</span>`;
+                      
+                      if(status === "To Do" || status === "TODO") {
+                          statusCell.innerHTML = `<span class="badge bg-secondary px-3 py-2">To Do</span><br><span class="text-danger fw-bold d-block mt-1" style="font-size: 11px;">⚠️ Action Needed</span>`;
+                      }
+                  }
+              }
+          }
+      });
+  });
+</script>
 
 </body>
 

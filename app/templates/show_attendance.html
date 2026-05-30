@@ -285,6 +285,20 @@ tbody tr:hover td { background:#f8fafc !important; }
   .card h3 {
       font-weight: 700 !important;
       color: #030e1e !important;}
+
+      table thead tr th {
+      background: linear-gradient(90deg, #4f46e5, #7c3aed) !important;
+      color: white !important;
+      border: none !important;
+  }
+  
+  /* Table layout ko thoda aur saaf aur professional dikhane ke liye */
+  .table {
+      border-collapse: separate !important;
+      border-spacing: 0 !important;
+      border-radius: 14px !important;
+      overflow: hidden !important;
+  }
 </style>
 </head>
 
@@ -309,7 +323,7 @@ tbody tr:hover td { background:#f8fafc !important; }
         <a href="{% url 'mark_attendance' %}">Mark Attendance</a>
         <a href="{% url 'show_attendance' %}" style="background:rgba(255,255,255,0.20);">Show Attendance</a>
         <!-- <a href="{% url 'logout' %}" class="logout-link">Logout</a> -->
-        <a href="{% url 'assign_task' %}">Jira Task Management</a>
+        <a href="{% url 'assign_task' %}">Task Workflow Management</a>        
 
 
     </div>
