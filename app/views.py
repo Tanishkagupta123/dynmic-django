@@ -442,12 +442,28 @@ def all_dep(req):
 def all_emp(req):
     if 'admin' not in req.session:
         return redirect('login')
+        
+    # Aapka purana code line 1 aur 2 (waise ka waise hi hai)
     data = req.session.get('admin')
     employees = new.objects.all()
+    
+    # 🔥 YE NAYA CODE HAI: Jo aapke purane code ke sath jud rha hai
+    search_value = req.POST.get('search', '').strip()
+    if search_value:
+        employees = employees.filter(
+            Q(name__icontains=search_value) |
+            Q(email__icontains=search_value) |
+            Q(contact__icontains=search_value) |
+            Q(department__icontains=search_value)
+        )
+    # 🔥 NAYE CODE KA KHATAM
+    
+    # Aapka purana return statement (bas isme search_query ko extra bheja hai)
     return render(req,'admindashboard.html', {
         'data': data,
         'all_emp': True,
-        'employees': employees
+        'employees': employees,
+        'search_query': search_value  # Taaki search ke baad naam box me hi rahe
     })
     
     

@@ -653,6 +653,25 @@ form textarea {
             <div class="card shadow p-4">
               <h3 class="mb-4 text-center">All Employees</h3>
 
+              <form action="{% url 'all_emp' %}" method="POST" class="mb-4">
+    {% csrf_token %}
+    <div class="d-flex align-items-center gap-2">
+        <input type="text" 
+               name="search" 
+               class="form-control form-control-sm w-50" 
+               placeholder="Search by Name, Email, Contact, or Department..."
+               value="{{ search_query }}">
+
+        <button type="submit" class="btn btn-primary btn-sm px-4">
+            🔍 Search
+        </button>
+
+        <a href="{% url 'all_emp' %}" class="btn btn-warning btn-sm px-4 text-dark" style="text-decoration:none;">
+            🔄 Reset
+        </a>
+    </div>
+</form>
+
             <div class="table-responsive">
 
 <table class="table table-bordered table-hover text-center align-middle">
