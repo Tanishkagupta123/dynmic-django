@@ -589,28 +589,28 @@ table { white-space:nowrap; }
                                         <span class="badge bg-success px-3 py-2">Done</span>
                                     {% endif %}
                                 </td>
-                                <td style="padding:10px; min-width: 280px;">
-    <!-- Humne class ko d-flex flex-column kiya taaki format box ke neeche dropdown-button ekdum professional tarike se set ho jayein -->
+
+                              <td style="padding:10px; min-width: 280px;">
     <form action="{% url 'update_task_status' t.id %}" method="post" class="d-flex flex-column gap-2 align-items-stretch">
         {% csrf_token %}
         
-        <!-- 📊 YEH NAYA TEXTAREA BOX HAI JO FORMAT KE LIYE ADD HUA HAI -->
-        <div class="text-start mb-1 w-100">
-            <label class="form-label mb-1 fw-bold text-primary" style="font-size: 11px;">📊 Task Progress Report (Strict Format):</label>
-            <textarea name="progress_note" class="form-control" rows="4" style="font-size: 12px; background: #fff !important; border: 1px solid #cbd5e1 !important; line-height: 1.4; color: #334155; width: 100% !important;" required>[PROGRESS REPORT]
----------------------------------
-📌 ACCOMPLISHED (Kya kaam hua):
-- 
-
-⏳ REMAINING (Kitna bacha hai):
-- 
-
-⚠️ ISSUES/BLOCKERS (Dikkat):
-- None
----------------------------------</textarea>
+        <div class="w-100 d-flex flex-column gap-2 text-start mb-2">
+            <div>
+                <label class="form-label mb-0 fw-bold text-success" style="font-size: 11px;">📌 Tasks Completed:</label>
+                <input type="text" name="completed_tasks" class="form-control form-control-sm" style="font-size: 12px; background: #fff !important; border: 1px solid #cbd5e1 !important; color: #000;" placeholder="List your completed items..." required>
+            </div>
+            
+            <div>
+                <label class="form-label mb-0 fw-bold text-warning text-dark" style="font-size: 11px;">⏳ Tasks Pending:</label>
+                <input type="text" name="pending_tasks" class="form-control form-control-sm" style="font-size: 12px; background: #fff !important; border: 1px solid #cbd5e1 !important; color: #000;" placeholder="List your remaining items..." required>
+            </div>
+            
+            <div>
+                <label class="form-label mb-0 fw-bold text-danger" style="font-size: 11px;">⚠️ Blockers / Issues:</label>
+                <input type="text" name="issues_tasks" class="form-control form-control-sm" style="font-size: 12px; background: #fff !important; border: 1px solid #cbd5e1 !important; color: #000;" value="None" placeholder="Any technical blockers?" required>
+            </div>
         </div>
 
-        <!-- Yahan par tumhara purana dropdown aur button surakshit neeche chalega -->
         <div class="d-flex gap-2 align-items-center justify-content-between mt-1">
             <select name="status" class="form-select form-select-sm" style="width: auto !important; padding: 5px; border-radius: 8px; color:#000; font-size: 12px;">
                 <option value="TODO" {% if t.status == 'TODO' %}selected{% endif %}>To Do</option>

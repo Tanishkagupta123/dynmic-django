@@ -1152,13 +1152,29 @@ def assign_task(req):
         'today': date.today() 
     })
 
+
 def update_task_status(req, pk):
     if 'user_id' not in req.session:
         return redirect('login')
         
     task = Task.objects.get(id=pk)
     if req.method == 'POST':
+        # 1. Tumhara purana dropdown status pakadne ka logic (Waise ka waisa hi)
         new_status = req.POST.get('status')
+        
+        # 2. Teeno naye clean corporate boxes se data uthaya
+        completed = req.POST.get('completed_tasks', '').strip()
+        pending = req.POST.get('pending_tasks', '').strip()
+        issues = req.POST.get('issues_tasks', '').strip()
+        
+        # 3. In teeno ko automatic ekdam mast professional layout me jodha
+        formatted_note = f"Tasks Completed:\n- {completed}\n\nTasks Pending:\n- {pending}\n\nBlockers / Issues:\n- {issues}"
+        
+        # 4. Purane status aur naye report note ko database fields me set kiya
         task.status = new_status
+        task.progress_note = formatted_note
+        
+        # 5. Tumhara purana save() function (Waise ka waisa hi)
         task.save()
+        
     return redirect('dashboard')

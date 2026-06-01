@@ -976,10 +976,20 @@ form textarea {
               </tr>
             </thead>
             <tbody>
-              {% for t in tasks %}
-              <tr>
-                <td class="text-start"><strong>{{ t.title }}</strong><br><small class="text-muted">{{ t.description }}</small></td>
-                <td>{{ t.assigned_to.name }}</td>
+  {% for t in tasks %}
+  <tr>
+    <td class="text-start" style="padding:12px;">
+        <strong>{{ t.title }}</strong><br>
+        <small class="text-muted">{{ t.description }}</small>
+
+        <!-- 🔥 YEH NAYA FORMAT BOX DESCRIPTIONS KE NEECHE JOD DIYA HAI -->
+        {% if t.progress_note %}
+        <div class="mt-2 p-2 rounded text-start shadow-sm" style="border-left: 4px solid #2563eb; background-color: #f8fafc; font-size: 12px; font-family: monospace; white-space: pre-line; color: #1e293b; line-height: 1.5;">
+            <strong class="text-primary d-block mb-1" style="font-family: 'Manrope', sans-serif; font-size: 11px;">📢 Employee Progress Report:</strong>{{ t.progress_note }}
+        </div>
+        {% endif %}
+    </td>
+    <td>{{ t.assigned_to.name }}</td>
                 <td>{{ t.due_date }}</td>
                 <td>
                   {% if t.status == 'TODO' %}
