@@ -1124,34 +1124,46 @@ def assign_task(req):
     admin_data = req.session.get('admin')
     all_emp = new.objects.all()
     all_tasks = Task.objects.all().order_by('-created_at')
+    task_search_value = ""
     
     if req.method == 'POST':
-        title = req.POST.get('title')
-        desc = req.POST.get('description')
-        emp_id = req.POST.get('employee_id')
-        due_date = req.POST.get('due_date')
+        if 'task_search' in req.POST:
+            task_search_value = req.POST.get('task_search', '').strip()
+            if task_search_value:
+                all_tasks = all_tasks.filter(
+                    Q(title__icontains=task_search_value) |
+                    Q(description__icontains=task_search_value) |
+                    Q(assigned_to__name__icontains=task_search_value) |
+                    Q(status__icontains=task_search_value)
+                )
+        else:
+            # 📝 Tumhara purana task assignment logic pure safe hai (Kuch change nahi hua)
+            title = req.POST.get('title')
+            desc = req.POST.get('description')
+            emp_id = req.POST.get('employee_id')
+            due_date = req.POST.get('due_date')
+            
+            employee = new.objects.get(id=emp_id)
+            
+            Task.objects.create(
+                title=title,
+                description=desc,
+                assigned_to=employee,
+                due_date=due_date
+            )
+            
+            # Django ka standard flash message system use kar rhe hain taaki single message aaye
+            messages.success(req, "Task Assigned Successfully!")
+            return redirect('assign_task')
         
-        employee = new.objects.get(id=emp_id)
-        
-        Task.objects.create(
-            title=title,
-            description=desc,
-            assigned_to=employee,
-            due_date=due_date
-        )
-        req.session['task_msg'] = "Task Assigned Successfully!"
-        return redirect('assign_task')
-        
-    msg = req.session.pop('task_msg', None)
     return render(req, 'admindashboard.html', {
         'assign_task_page': True,
         'employees': all_emp,
         'tasks': all_tasks,
-        'message': msg,
         'data': admin_data,
-        'today': date.today() 
+        'today': date.today(),
+        'task_search_query': task_search_value 
     })
-
 
 def update_task_status(req, pk):
     if 'user_id' not in req.session:
