@@ -1137,7 +1137,6 @@ def assign_task(req):
                     Q(status__icontains=task_search_value)
                 )
         else:
-            # 📝 Tumhara purana task assignment logic pure safe hai (Kuch change nahi hua)
             title = req.POST.get('title')
             desc = req.POST.get('description')
             emp_id = req.POST.get('employee_id')
@@ -1152,7 +1151,6 @@ def assign_task(req):
                 due_date=due_date
             )
             
-            # Django ka standard flash message system use kar rhe hain taaki single message aaye
             messages.success(req, "Task Assigned Successfully!")
             return redirect('assign_task')
         
@@ -1171,25 +1169,91 @@ def update_task_status(req, pk):
         
     task = Task.objects.get(id=pk)
     if req.method == 'POST':
-        # 📝 Tumhara purana dropdown status pakadne ka logic (Waise ka waisa hi)
         new_status = req.POST.get('status')
         
-        # 📝 Teeno naye clean corporate boxes se data uthaya (Waise ka waisa hi)
         completed = req.POST.get('completed_tasks', '').strip()
         pending = req.POST.get('pending_tasks', '').strip()
         issues = req.POST.get('issues_tasks', '').strip()
-        
-        # 📝 In teeno ko automatic ekdam mast professional layout me jodha (Waise ka waisa hi)
+    
         formatted_note = f"Tasks Completed:\n- {completed}\n\nTasks Pending:\n- {pending}\n\nBlockers / Issues:\n- {issues}"
-        
-        # 📝 Purane status aur naye report note ko database fields me set kiya (Waise ka waisa hi)
+
         task.status = new_status
         task.progress_note = formatted_note
-        
-        # 📝 Tumhara purana save() function (Waise ka waisa hi)
         task.save()
-        
-        # ✅ BAs YEH 1 LINE EXTRA JODI HAIN: Isse message chala jayega aur purana kaam safe rahega
         messages.success(req, "Task status and progress report updated successfully!")
         
     return redirect('dashboard')
+
+
+def mark_bulk_attendance(req):
+    if 'admin' not in req.session:
+        return redirect('login')
+        
+    admin_data = req.session.get('admin')
+    today = date.today()
+    
+    # 1. Database se saare employees ki list nikalenge
+    employees_list = new.objects.all().order_by('name')
+    
+    if req.method == 'POST':
+        from datetime import time
+        
+        # 2. Loop chalakar har ek employee ka submitted data check karenge
+        for emp in employees_list:
+            status = req.POST.get(f'status_{emp.id}')
+            check_in_str = req.POST.get(f'check_in_{emp.id}')
+            
+            # Agar us employee ke inputs form se mile hain
+            if status:
+                # get_or_create use karenge taaki agar aaj ki attendance pehle se bani ho toh error na aaye, update ho jaye
+                attendance, created = Attendance.objects.get_or_create(
+                    employee=emp,
+                    date=today,
+                    defaults={'status': status, 'late_fine': 0, 'final_salary': 0}
+                )
+                
+                # Status set kiya
+                attendance.status = status
+                
+                # Monthly salary se 1 day salary nikalne ka logic
+                emp_salary = emp.salary if emp.salary else 0
+                per_day_salary = emp_salary / 30
+                attendance.final_salary = per_day_salary
+                attendance.late_fine = 0
+                
+                # Check-in time parse aur late fine calculations
+                if check_in_str:
+                    try:
+                        t_parts = check_in_str.split(':')
+                        attendance.check_in_time = time(int(t_parts[0]), int(t_parts[1]))
+                        
+                        office_time = time(9, 30)
+                        late_limit = time(10, 0)
+                        
+                        # 9:30 se 10:00 ke beech me ₹50 fine
+                        if attendance.check_in_time > office_time and attendance.check_in_time <= late_limit:
+                            attendance.late_fine = 50
+                            attendance.final_salary = per_day_salary - 50
+                        # 10:00 baje ke baad Half Day
+                        elif attendance.check_in_time > late_limit:
+                            attendance.status = "Half Day"
+                            attendance.late_fine = per_day_salary / 2
+                            attendance.final_salary = per_day_salary / 2
+                    except ValueError:
+                        pass
+                
+                # Absent hone par salary 0
+                if attendance.status == "Absent":
+                    attendance.final_salary = 0
+                    
+                attendance.save()
+                
+        messages.success(req, "Bulk attendance processed successfully for today!")
+        return redirect('show_attendance')
+
+    return render(req, 'admindashboard.html', {
+        'bulk_attendance_page': True,
+        'employees_list': employees_list,
+        'today': today,
+        'data': admin_data
+    })
