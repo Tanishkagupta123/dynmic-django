@@ -583,11 +583,20 @@ table { white-space:nowrap; }
                         </thead>
                         <tbody>
                             {% for t in my_tasks %}
-                            <tr style="background:rgba(255,255,255,0.7);">
-                                <td class="text-start" style="padding:12px; color:#000 !important;">
-                                    <strong>{{ t.title }}</strong><br>
-                                    <small class="text-muted">{{ t.description }}</small>
-                                </td>
+                           <!-- 🟢 AUR USI JAGAH PAR YEH LOGIC DALO: -->
+<tr style="background:rgba(255,255,255,0.7);">
+    <td class="text-start" style="padding:12px; color:#000 !important;">
+        <strong>{{ t.title }}</strong><br>
+        <small class="text-muted">{{ t.description }}</small>
+
+        <!-- ⏳ SCROLLABLE TIMELINE: Employee ko apni saari date-wise history scrollbar ke sath dikhegi -->
+        {% if t.progress_note %}
+        <div class="mt-2 p-2.5 text-start" style="border-left: 3px solid #2563eb; background-color: rgba(255,255,255,0.6); border-radius: 8px; max-height: 150px; overflow-y: auto;">
+            <strong class="text-primary d-block mb-1" style="font-size: 11px;">📋 YOUR PROGRESS LOGS HISTORY:</strong>
+            <div style="font-size: 12px; font-family: monospace; white-space: pre-line; color: #000; line-height: 1.5;">{{ t.progress_note }}</div>
+        </div>
+        {% endif %}
+    </td>
                                 <td style="color:#000 !important;"><span class="badge bg-light text-dark p-2">{{ t.due_date }}</span></td>
                                 <td style="color:#000 !important;">
                                     {% if t.status == 'TODO' %}

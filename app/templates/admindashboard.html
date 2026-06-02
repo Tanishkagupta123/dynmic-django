@@ -997,7 +997,6 @@ form textarea {
 <!-- JIRA TASK MANAGEMENT START -->
 {% if assign_task_page %}
 
-<!-- System Flash Messages -->
 {% if messages %}
 <div class="container-fluid mt-3 px-4">
   {% for message in messages %}
@@ -1090,19 +1089,17 @@ form textarea {
               {% for t in tasks %}
               <tr style="border-bottom: 1px solid #edf2f7;">
                 
+                <!-- 🟢 ISSE REPLACE KAR DO (Tumhara baaki saara code 100% safe rahega): -->
                 <!-- Task Info & Description -->
                 <td class="text-start py-3 px-3">
                   <div class="fw-bold text-dark mb-1" style="font-size: 14px;">{{ t.title }}</div>
                   <div class="text-secondary mb-2" style="font-size: 12px; max-width: 340px; white-space: normal; line-height: 1.4;">{{ t.description }}</div>
 
-                  <!-- Corporate Embedded Progress Box -->
+                  <!-- 📋 ADMIN SCROLLABLE TIMELINE: Har din ka progress report line-by-line dekhne ke liye -->
                   {% if t.progress_note %}
-                  <div class="mt-2 p-3 shadow-none text-start" style="border-left: 3px solid #2563eb; background-color: #f8fafc; border-radius: 6px;">
-                    <div class="d-flex align-items-center gap-2 mb-1.5">
-                      <span style="font-size: 11px;">📢</span>
-                      <strong style="font-size: 11px; color: #2563eb; letter-spacing: 0.3px;">EMPLOYEE PROGRESS REPORT:</strong>
-                    </div>
-                    <div style="font-size: 12px; font-family: monospace; white-space: pre-line; color: #334155; line-height: 1.5;">{{ t.progress_note }}</div>
+                  <div class="mt-2 p-3 text-start shadow-sm" style="border-left: 4px solid #2563eb; background-color: #f8fafc; border-radius: 8px; max-height: 180px; overflow-y: auto;">
+                    <strong class="text-primary d-block mb-2" style="font-size: 11px; letter-spacing: 0.5px;">📢 REAL-TIME WORKFLOW LOGS HISTORY:</strong>
+                    <div style="font-size: 12px; font-family: monospace; white-space: pre-line; color: #1e293b; line-height: 1.6;">{{ t.progress_note }}</div>
                   </div>
                   {% endif %}
                 </td>

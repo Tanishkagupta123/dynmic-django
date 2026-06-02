@@ -1169,21 +1169,33 @@ def update_task_status(req, pk):
         
     task = Task.objects.get(id=pk)
     if req.method == 'POST':
+        # 1. Tumhara purana dropdown status pakadne ka logic (Waise ka waisa hi)
         new_status = req.POST.get('status')
         
+        # 2. Teeno boxes se data uthaya (Waise ka waisa hi)
         completed = req.POST.get('completed_tasks', '').strip()
         pending = req.POST.get('pending_tasks', '').strip()
         issues = req.POST.get('issues_tasks', '').strip()
-    
-        formatted_note = f"Tasks Completed:\n- {completed}\n\nTasks Pending:\n- {pending}\n\nBlockers / Issues:\n- {issues}"
+        
+        # 3. Aaj ki live Date aur Time nikalenge string format me
+        from datetime import datetime
+        current_time = datetime.now().strftime("%d %b %Y | %I:%M %p")
+        
+        # 4. Naya report layout taiyar kiya
+        new_report = f"📅 REPORT DATE: {current_time}\nStatus: {new_status}\n- Done: {completed}\n- Pending: {pending}\n- Blockers: {issues}"
+        
+        # 🔥 SAFEST REVERSE LOG: Naya report sabse upar dikhega, aur purana data uske NEECHE automatic khisakh jayega (Kuch delete nahi hoga)
+        if task.progress_note:
+            task.progress_note = f"{new_report}\n\n---------------------------------------\n\n{task.progress_note}"
+        else:
+            task.progress_note = new_report
 
         task.status = new_status
-        task.progress_note = formatted_note
         task.save()
+        
         messages.success(req, "Task status and progress report updated successfully!")
         
     return redirect('dashboard')
-
 
 def mark_bulk_attendance(req):
     if 'admin' not in req.session:
