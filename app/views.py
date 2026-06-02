@@ -1171,22 +1171,25 @@ def update_task_status(req, pk):
         
     task = Task.objects.get(id=pk)
     if req.method == 'POST':
-        # 1. Tumhara purana dropdown status pakadne ka logic (Waise ka waisa hi)
+        # 📝 Tumhara purana dropdown status pakadne ka logic (Waise ka waisa hi)
         new_status = req.POST.get('status')
         
-        # 2. Teeno naye clean corporate boxes se data uthaya
+        # 📝 Teeno naye clean corporate boxes se data uthaya (Waise ka waisa hi)
         completed = req.POST.get('completed_tasks', '').strip()
         pending = req.POST.get('pending_tasks', '').strip()
         issues = req.POST.get('issues_tasks', '').strip()
         
-        # 3. In teeno ko automatic ekdam mast professional layout me jodha
+        # 📝 In teeno ko automatic ekdam mast professional layout me jodha (Waise ka waisa hi)
         formatted_note = f"Tasks Completed:\n- {completed}\n\nTasks Pending:\n- {pending}\n\nBlockers / Issues:\n- {issues}"
         
-        # 4. Purane status aur naye report note ko database fields me set kiya
+        # 📝 Purane status aur naye report note ko database fields me set kiya (Waise ka waisa hi)
         task.status = new_status
         task.progress_note = formatted_note
         
-        # 5. Tumhara purana save() function (Waise ka waisa hi)
+        # 📝 Tumhara purana save() function (Waise ka waisa hi)
         task.save()
+        
+        # ✅ BAs YEH 1 LINE EXTRA JODI HAIN: Isse message chala jayega aur purana kaam safe rahega
+        messages.success(req, "Task status and progress report updated successfully!")
         
     return redirect('dashboard')

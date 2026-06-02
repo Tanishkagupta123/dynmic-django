@@ -558,8 +558,17 @@ table { white-space:nowrap; }
         </div>
         {% endif %}
 
-        {% if my_tasks %}
+       {% if my_tasks %}
         <div id="jira_tasks" class="mt-4">
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-success text-center fw-bold shadow-sm mb-3" style="border-radius: 12px; font-size: 14px; background: rgba(255, 255, 255, 0.5) !important; backdrop-filter: blur(10px); color: #02225a; border: 1px solid #a6b8a8;">
+                        🎉 {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
             <div class="glass shadow-lg p-4">
                 <h3 class="mb-4 fw-bold text-primary"> My Assigned Jira Tasks</h3>
                 <div class="table-responsive">
