@@ -362,7 +362,8 @@ form textarea {
         <a href="{% url 'mark_attendance' %}">Mark Attendance</a>
         <a href="{% url 'show_attendance' %}">Show Attendance</a>
         <a href="{% url 'bulk_attendance' %}">Bulk Attendance (Mass)</a>
-        <a href="{% url 'assign_task' %}">Task Workflow Management</a>        
+        <a href="{% url 'assign_task' %}">Task Workflow Management</a>    
+        <a href="{% url 'manage_teams' %}">Project Workspace & Teams</a>    
 
         <!-- <div class="text-center mt-4">
           <a href="{% url 'logout' %}" class="btn btn-primary btn-sm">Logout</a>
@@ -1148,6 +1149,76 @@ form textarea {
 </div>
 {% endif %}
 <!-- JIRA TASK MANAGEMENT END -->  <!-- thee -->
+
+{% if manage_teams_page %}
+<div class="container-fluid mt-4">
+    <div class="row g-4">
+        <div class="col-xl-5">
+            <div class="card p-4 shadow-sm">
+                <form method="POST" action="{% url 'manage_teams' %}">
+                    {% csrf_token %}
+                    <h5 class="mb-3 fw-bold">Create Project Team</h5>
+                    
+                    <div class="mb-3">
+                        <label class="fw-bold small">Team Name</label>
+                        <input type="text" name="project_name" class="form-control" required>
+                    </div>
+
+                    <div class="mb-4 p-2 border rounded">
+                        <label class="small fw-bold text-primary">Assign Team Leader</label>
+                        <div class="d-flex gap-1 mb-2">
+                            <input type="text" name="search_leader" class="form-control" value="{{ leader_search_query }}" placeholder="Leader name...">
+                            <button type="submit" name="search_leader_btn" class="btn btn-primary btn-sm">🔍</button>
+                        </div>
+                        <select name="team_leader_id" class="form-select form-control" required>
+                            <option value="">Select Leader...</option>
+                            {% for emp in leader_employees %}
+                                <option value="{{ emp.id }}">{{ emp.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-4 p-2 border rounded">
+                        <label class="small fw-bold text-success">Add Team Members</label>
+                        <div class="d-flex gap-1 mb-2">
+                            <input type="text" name="search_member" class="form-control" value="{{ member_search_query }}" placeholder="Member name...">
+                            <button type="submit" name="search_member_btn" class="btn btn-success btn-sm text-white">🔍</button>
+                        </div>
+                        <div style="height: 150px; overflow-y: auto;" class="border p-2">
+                            {% for emp in member_employees %}
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="member_ids" value="{{ emp.id }}">
+                                    <label>{{ emp.name }}</label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <button type="submit" name="launch_team_btn" class="btn btn-primary w-100 fw-bold">🚀 Launch Team</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-xl-7">
+            <div class="card p-4 shadow-sm">
+                <h5>Active Teams</h5>
+                <table class="table">
+                    <thead><tr><th>Team</th><th>Leader</th><th>Members</th></tr></thead>
+                    <tbody>
+                        {% for group in groups %}
+                        <tr>
+                            <td>{{ group.project_name }}</td>
+                            <td>{{ group.team_leader.name }}</td>
+                            <td>{% for m in group.members.all %}{{ m.name }}, {% endfor %}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 
 <!-- SHOW ATTENDANCE -->
 

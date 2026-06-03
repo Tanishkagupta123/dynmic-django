@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Employee ,Department as dep,AddEmployee as new ,Task
+from .models import Employee ,Department as dep,AddEmployee as new ,Task,ProjectGroup
 from django.http import HttpResponse
 from django.core.mail import send_mail
 from .models import Query
@@ -1267,5 +1267,59 @@ def mark_bulk_attendance(req):
         'bulk_attendance_page': True,
         'employees_list': employees_list,
         'today': today,
+        'data': admin_data
+    })
+
+from django.db.models import Q
+
+from django.db.models import Q
+from django.contrib import messages
+
+def manage_teams(req):
+    if 'admin' not in req.session:
+        return redirect('login')
+        
+    admin_data = req.session.get('admin')
+    all_groups = ProjectGroup.objects.all().order_by('-created_at')
+    
+    # Initial state
+    leader_employees = new.objects.all().order_by('name')
+    member_employees = new.objects.all().order_by('name')
+    leader_search = ""
+    member_search = ""
+    
+    if req.method == 'POST':
+        # LEADER FILTER
+        if 'search_leader_btn' in req.POST:
+            leader_search = req.POST.get('search_leader', '').strip()
+            leader_employees = leader_employees.filter(name__icontains=leader_search)
+            
+        # MEMBER FILTER
+        elif 'search_member_btn' in req.POST:
+            member_search = req.POST.get('search_member', '').strip()
+            member_employees = member_employees.filter(name__icontains=member_search)
+            
+        # FINAL LAUNCH
+        elif 'launch_team_btn' in req.POST:
+            p_name = req.POST.get('project_name')
+            leader_id = req.POST.get('team_leader_id')
+            member_ids = req.POST.getlist('member_ids')
+            
+            if p_name and leader_id:
+                leader_emp = new.objects.get(id=leader_id)
+                new_group = ProjectGroup.objects.create(project_name=p_name, team_leader=leader_emp)
+                for m_id in member_ids:
+                    member_emp = new.objects.get(id=m_id)
+                    new_group.members.add(member_emp)
+                messages.success(req, "Team Created Successfully!")
+                return redirect('manage_teams')
+            
+    return render(req, 'admindashboard.html', {
+        'manage_teams_page': True,
+        'leader_employees': leader_employees,
+        'member_employees': member_employees,
+        'groups': all_groups,
+        'leader_search_query': leader_search,
+        'member_search_query': member_search,
         'data': admin_data
     })

@@ -67,6 +67,8 @@ class AddEmployee(models.Model):
     joining_date = models.DateField(null=True, blank=True)
 
     salary = models.IntegerField(null=True, blank=True)
+    is_team_leader = models.BooleanField(default=False)
+    reporting_to = models.ForeignKey('self', on_delete=models.SET_NULL, null=True, blank=True, related_name='team_members')
 
     
 
@@ -207,3 +209,17 @@ class Task(models.Model):
 
     def __str__(self):
         return f"{self.title} - {self.status}"
+class ProjectGroup(models.Model):
+    project_name = models.CharField(max_length=150)
+    description = models.TextField(blank=True, null=True)
+    
+    # Is group ka main captain/leader kaun hai
+    team_leader = models.ForeignKey(AddEmployee, on_delete=models.CASCADE, related_name='led_projects')
+    
+    # Is team ke under kaun-kaun se members kaam karenge
+    members = models.ManyToManyField(AddEmployee, related_name='assigned_projects')
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.project_name} (Leader: {self.team_leader.name})"

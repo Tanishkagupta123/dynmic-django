@@ -63,9 +63,7 @@ urlpatterns = [
     path('assign-task/', assign_task, name='assign_task'),
     path('update-task-status/<int:pk>/', update_task_status, name='update_task_status'),
     path('bulk-attendance/', mark_bulk_attendance, name='bulk_attendance'),
-
-
-
+    path('manage-teams/',manage_teams, name='manage_teams'),
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
