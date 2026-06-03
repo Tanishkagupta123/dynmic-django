@@ -127,6 +127,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = 'tanishkagupta241@gmail.com'
-EMAIL_HOST_PASSWORD = 'tzabzofzfjsmqvfd'
+EMAIL_HOST_PASSWORD = 'lahipvuvbyvuppto'
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
