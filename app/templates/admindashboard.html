@@ -1153,73 +1153,84 @@ form textarea {
 {% if manage_teams_page %}
 <div class="container-fluid mt-4">
     <div class="row g-4">
-        <div class="col-xl-5">
-            <div class="card p-4 shadow-sm">
+        <div class="col-12">
+            <div class="card p-4 shadow-sm border-0">
                 <form method="POST" action="{% url 'manage_teams' %}">
                     {% csrf_token %}
-                    <h5 class="mb-3 fw-bold">Create Project Team</h5>
+                    <h5 class="mb-4 fw-bold">Create Project Team</h5>
                     
-                    <div class="mb-3">
-                        <label class="fw-bold small">Team Name</label>
-                        <input type="text" name="project_name" class="form-control" required>
-                    </div>
-
-                    <div class="mb-4 p-2 border rounded">
-                        <label class="small fw-bold text-primary">Assign Team Leader</label>
-                        <div class="d-flex gap-1 mb-2">
-                            <input type="text" name="search_leader" class="form-control" value="{{ leader_search_query }}" placeholder="Leader name...">
-                            <button type="submit" name="search_leader_btn" class="btn btn-primary btn-sm">🔍</button>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label class="fw-bold small">Team Name</label>
+                            <input type="text" name="project_name" class="form-control" required>
                         </div>
-                        <select name="team_leader_id" class="form-select form-control" required>
-                            <option value="">Select Leader...</option>
-                            {% for emp in leader_employees %}
-                                <option value="{{ emp.id }}">{{ emp.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
 
-                    <div class="mb-4 p-2 border rounded">
-                        <label class="small fw-bold text-success">Add Team Members</label>
-                        <div class="d-flex gap-1 mb-2">
-                            <input type="text" name="search_member" class="form-control" value="{{ member_search_query }}" placeholder="Member name...">
-                            <button type="submit" name="search_member_btn" class="btn btn-success btn-sm text-white">🔍</button>
-                        </div>
-                        <div style="height: 150px; overflow-y: auto;" class="border p-2">
-                            {% for emp in member_employees %}
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="member_ids" value="{{ emp.id }}">
-                                    <label>{{ emp.name }}</label>
+                        <div class="col-md-6 mb-3">
+                            <div class="p-2 border rounded">
+                                <label class="small fw-bold text-primary">Search & Assign Leader</label>
+                                <div class="d-flex gap-1 mb-2">
+                                    <input type="text" name="search_leader" class="form-control" value="{{ leader_search_query }}" placeholder="Leader name...">
+                                    <button type="submit" name="search_leader_btn" formnovalidate class="btn btn-primary btn-sm">🔍</button>
+                                    <a href="{% url 'manage_teams' %}" class="btn btn-warning btn-sm">🔄</a>
                                 </div>
-                            {% endfor %}
+                                <select name="team_leader_id" class="form-select form-control" required>
+                                    <option value="">Select Leader...</option>
+                                    {% for emp in leader_employees %}
+                                        <option value="{{ emp.id }}">{{ emp.name }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <div class="p-2 border rounded">
+                                <label class="small fw-bold text-success">Search & Add Members</label>
+                                <div class="d-flex gap-1 mb-2">
+                                    <input type="text" name="search_member" class="form-control" value="{{ member_search_query }}" placeholder="Member name...">
+                                    <button type="submit" name="search_member_btn" formnovalidate class="btn btn-success btn-sm text-white">🔍</button>
+                                    <a href="{% url 'manage_teams' %}" class="btn btn-warning btn-sm">🔄</a>
+                                </div>
+                                <div style="height: 120px; overflow-y: auto;" class="border p-2 bg-light">
+                                    {% for emp in member_employees %}
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="member_ids" value="{{ emp.id }}">
+                                            <label>{{ emp.name }}</label>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
                         </div>
                     </div>
 
-                    <button type="submit" name="launch_team_btn" class="btn btn-primary w-100 fw-bold">🚀 Launch Team</button>
+                    <button type="submit" name="launch_team_btn" class="btn btn-primary w-100 fw-bold py-2 mt-2">Launch Team Workspace</button>
                 </form>
             </div>
         </div>
 
-        <div class="col-xl-7">
-            <div class="card p-4 shadow-sm">
-                <h5>Active Teams</h5>
-                <table class="table">
-                    <thead><tr><th>Team</th><th>Leader</th><th>Members</th></tr></thead>
-                    <tbody>
-                        {% for group in groups %}
-                        <tr>
-                            <td>{{ group.project_name }}</td>
-                            <td>{{ group.team_leader.name }}</td>
-                            <td>{% for m in group.members.all %}{{ m.name }}, {% endfor %}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+        <div class="col-12">
+            <div class="card p-4 shadow-sm border-0">
+                <h5 class="fw-bold mb-3">Active Teams</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr><th>Team Name</th><th>Team Leader</th><th>Members</th></tr>
+                        </thead>
+                        <tbody>
+                            {% for group in groups %}
+                            <tr>
+                                <td><strong>{{ group.project_name }}</strong></td>
+                                <td>{{ group.team_leader.name }}</td>
+                                <td>{% for m in group.members.all %}{{ m.name }}, {% endfor %}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
 {% endif %}
-
 <!-- SHOW ATTENDANCE -->
 
 {% if show_attendance %}

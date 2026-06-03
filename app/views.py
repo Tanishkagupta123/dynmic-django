@@ -1321,5 +1321,7 @@ def manage_teams(req):
         'groups': all_groups,
         'leader_search_query': leader_search,
         'member_search_query': member_search,
-        'data': admin_data
+        'data': admin_data,
+        'leader_search_query': leader_search,  # Ye tumhara letter wapas box mein bhejega
+        'member_search_query': member_search,
     })
