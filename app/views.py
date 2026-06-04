@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect
-from .models import Employee ,Department as dep,AddEmployee as new ,Task,ProjectGroup
+from .models import Employee ,Department as dep,AddEmployee as new ,Task,ProjectGroup, New
 from django.http import HttpResponse
 from django.core.mail import send_mail
 from .models import Query
@@ -1270,7 +1270,6 @@ def mark_bulk_attendance(req):
         'data': admin_data
     })
 
-from django.db.models import Q
 
 from django.db.models import Q
 from django.contrib import messages
@@ -1280,8 +1279,19 @@ def manage_teams(req):
         return redirect('login')
         
     admin_data = req.session.get('admin')
+    
+    # 1. Groups fetch karo
     all_groups = ProjectGroup.objects.all().order_by('-created_at')
     
+    # 🔥 PROGRESS CALCULATION LOGIC
+    for group in all_groups:
+        tasks = Task.objects.filter(assigned_team=group)
+        total = tasks.count()
+        done = tasks.filter(status='DONE').count()
+        group.progress = (done / total * 100) if total > 0 else 0
+        # Members ke updates bhi fetch karo
+        group.recent_updates = tasks.exclude(progress_note__isnull=True).exclude(progress_note='').order_by('-created_at')[:3]
+
     # Initial state
     leader_employees = new.objects.all().order_by('name')
     member_employees = new.objects.all().order_by('name')
@@ -1322,6 +1332,42 @@ def manage_teams(req):
         'leader_search_query': leader_search,
         'member_search_query': member_search,
         'data': admin_data,
-        'leader_search_query': leader_search,
-        'member_search_query': member_search,
     })
+
+
+def user_team_workspace(req):
+    if 'user_id' not in req.session:
+        return redirect('login')
+    
+    # User fetch karo
+    user = New.objects.filter(id=req.session['user_id']).first()
+    if not user:
+        return redirect('login')
+
+    # Team fetch karo (User kis team mein hai)
+    my_team = ProjectGroup.objects.filter(members=user).first()
+    
+    # Task fetch karo (Sirf wo tasks jo us user ko assign hain)
+    my_tasks = Task.objects.filter(assigned_to=user)
+
+    return render(req, 'user_team_workspace.html', {
+        'my_team': my_team, 
+        'data': user, 
+        'my_tasks': my_tasks, # Ye user ke tasks dikhayega
+        'section': 'team_workspace'
+    })
+
+from django.shortcuts import render, redirect
+
+def notifications_view(req):
+    if 'user_id' not in req.session:
+        return redirect('login')
+    
+    user = New.objects.get(id=req.session['user_id'])
+    # Sabhi notifications fetch karo
+    notifications = Notification.objects.filter(user=user).order_by('-created_at')
+    
+    # Notifications ko 'read' mark kar do (taki bell par number 0 ho jaye)
+    notifications.update(is_read=True)
+    
+    return render(req, 'notifications.html', {'notifications': notifications})

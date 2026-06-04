@@ -200,15 +200,17 @@ class Task(models.Model):
     
     title = models.CharField(max_length=200)
     description = models.TextField()
-    # Kis employee ko task mila (Tumhare AddEmployee model se connect kiya)
+    assigned_team = models.ForeignKey('ProjectGroup', on_delete=models.CASCADE, null=True, blank=True, related_name='team_tasks')
     assigned_to = models.ForeignKey(AddEmployee, on_delete=models.CASCADE, related_name='tasks')
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='TODO')
     created_at = models.DateTimeField(auto_now_add=True)
     due_date = models.DateField()
     progress_note = models.TextField(null=True, blank=True)
+    
 
     def __str__(self):
         return f"{self.title} - {self.status}"
+    
 class ProjectGroup(models.Model):
     project_name = models.CharField(max_length=150)
     description = models.TextField(blank=True, null=True)
@@ -223,3 +225,15 @@ class ProjectGroup(models.Model):
 
     def __str__(self):
         return f"{self.project_name} (Leader: {self.team_leader.name})"
+    
+class New(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    # ... baki fields ...
+
+# Ab Notification model add karo
+class Notification(models.Model):
+    user = models.ForeignKey(New, on_delete=models.CASCADE) 
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)

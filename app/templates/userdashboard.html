@@ -252,6 +252,7 @@ table { white-space:nowrap; }
         <a href="{% url 'query_status' %}" class="{% if section == 'query_status' %}active{% endif %}">Query Status</a>
         <a href="{% url 'my_attendance' %}" class="{% if section == 'attendance' %}active{% endif %}">Attendance</a>
         <a href="{% url 'all_query' %}" class="{% if section == 'all-query' %}active{% endif %}">All Query</a>
+        <a href="{% url 'user_team_workspace' %}" class="{% if section == 'team_workspace' %}active{% endif %}">Team Workspace</a>
         <a href="{% url 'dashboard' %}" class="{% if my_tasks %}active{% endif %}"> My Active Tasks</a>
 
         <div class="sidebar-logout">
@@ -264,6 +265,9 @@ table { white-space:nowrap; }
 
     <!-- MAIN CONTENT -->
     <div class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h3>Dashboard</h3>
+        </div>
 
         {% if not section %}
         <div class="glass shadow-lg p-5 text-center">
