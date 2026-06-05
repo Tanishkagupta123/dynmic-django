@@ -1336,38 +1336,38 @@ def manage_teams(req):
 
 
 def user_team_workspace(req):
+    # Agar login nahi hai toh login pe bhejo
     if 'user_id' not in req.session:
         return redirect('login')
     
-    # User fetch karo
+    # User object nikalo
     user = New.objects.filter(id=req.session['user_id']).first()
     if not user:
         return redirect('login')
 
-    # Team fetch karo (User kis team mein hai)
+    # Team nikalo
     my_team = ProjectGroup.objects.filter(members=user).first()
     
-    # Task fetch karo (Sirf wo tasks jo us user ko assign hain)
+    # User ke apne tasks
     my_tasks = Task.objects.filter(assigned_to=user)
 
     return render(req, 'user_team_workspace.html', {
         'my_team': my_team, 
         'data': user, 
-        'my_tasks': my_tasks, # Ye user ke tasks dikhayega
+        'my_tasks': my_tasks, 
         'section': 'team_workspace'
     })
 
-from django.shortcuts import render, redirect
-
-def notifications_view(req):
-    if 'user_id' not in req.session:
-        return redirect('login')
-    
-    user = New.objects.get(id=req.session['user_id'])
-    # Sabhi notifications fetch karo
-    notifications = Notification.objects.filter(user=user).order_by('-created_at')
-    
-    # Notifications ko 'read' mark kar do (taki bell par number 0 ho jaye)
-    notifications.update(is_read=True)
-    
-    return render(req, 'notifications.html', {'notifications': notifications})
+def update_task_status(req, task_id):
+    # Try block ka use karo taaki error na aaye
+    try:
+        task = Task.objects.get(id=task_id)
+        if req.method == 'POST':
+            task.progress_note = req.POST.get('progress_note')
+            task.status = req.POST.get('status')
+            task.save()
+            messages.success(req, "Task update ho gaya!")
+    except Task.DoesNotExist:
+        messages.error(req, "Task nahi mila!")
+        
+    return redirect('user_team_workspace')

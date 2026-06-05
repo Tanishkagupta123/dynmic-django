@@ -230,10 +230,3 @@ class New(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
     # ... baki fields ...
-
-# Ab Notification model add karo
-class Notification(models.Model):
-    user = models.ForeignKey(New, on_delete=models.CASCADE) 
-    message = models.TextField()
-    is_read = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)
