@@ -229,4 +229,3 @@ class ProjectGroup(models.Model):
 class New(models.Model):
     name = models.CharField(max_length=100)
     email = models.EmailField()
-    # ... baki fields ...

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Team Workspace</title>
+</head>
+<body>
+
+<h1>My Team Workspace</h1>
+
+<h3>Welcome {{ data.name }}</h3>
+
+{% if my_team %}
+
+    <h2>Project Name</h2>
+    <p>{{ my_team.project_name }}</p>
+
+    <h2>Team Leader</h2>
+    <p>{{ leader.name }}</p>
+
+    <h2>Team Members</h2>
+
+    <ul>
+        {% for member in team_members %}
+            <li>{{ member.name }}</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <h2>My Tasks</h2>
+
+    {% for task in my_tasks %}
+
+        <div style="border:1px solid black;padding:10px;margin:10px;">
+
+            <h3>{{ task.title }}</h3>
+
+            <p>{{ task.description }}</p>
+
+            <p>
+                Status:
+                <b>{{ task.status }}</b>
+            </p>
+
+            <p>
+                Due Date:
+                {{ task.due_date }}
+            </p>
+
+            <form method="POST"
+                  action="{% url 'update_task_status' task.id %}">
+                {% csrf_token %}
+
+                <textarea
+                    name="progress_note"
+                    placeholder="Progress Update"
+                >{{ task.progress_note }}</textarea>
+
+                <br><br>
+
+                <select name="status">
+                    <option value="TODO">TODO</option>
+                    <option value="IN_PROGRESS">IN PROGRESS</option>
+                    <option value="DONE">DONE</option>
+                </select>
+
+                <br><br>
+
+                <button type="submit">
+                    Update Task
+                </button>
+
+            </form>
+
+        </div>
+
+    {% empty %}
+
+        <p>No Tasks Assigned</p>
+
+    {% endfor %}
+
+{% else %}
+
+    <h2>You are not assigned to any team yet.</h2>
+
+{% endif %}
+
+</body>
+</html>
