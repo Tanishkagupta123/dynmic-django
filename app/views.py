@@ -1271,103 +1271,103 @@ def mark_bulk_attendance(req):
     })
 
 
-from django.db.models import Q
-from django.contrib import messages
+# from django.db.models import Q
+# from django.contrib import messages
 
-def manage_teams(req):
-    if 'admin' not in req.session:
-        return redirect('login')
+# def manage_teams(req):
+#     if 'admin' not in req.session:
+#         return redirect('login')
         
-    admin_data = req.session.get('admin')
+#     admin_data = req.session.get('admin')
     
-    # 1. Groups fetch karo
-    all_groups = ProjectGroup.objects.all().order_by('-created_at')
+#     # 1. Groups fetch karo
+#     all_groups = ProjectGroup.objects.all().order_by('-created_at')
     
-    # 🔥 PROGRESS CALCULATION LOGIC
-    for group in all_groups:
-        tasks = Task.objects.filter(assigned_team=group)
-        total = tasks.count()
-        done = tasks.filter(status='DONE').count()
-        group.progress = (done / total * 100) if total > 0 else 0
-        # Members ke updates bhi fetch karo
-        group.recent_updates = tasks.exclude(progress_note__isnull=True).exclude(progress_note='').order_by('-created_at')[:3]
+#     # 🔥 PROGRESS CALCULATION LOGIC
+#     for group in all_groups:
+#         tasks = Task.objects.filter(assigned_team=group)
+#         total = tasks.count()
+#         done = tasks.filter(status='DONE').count()
+#         group.progress = (done / total * 100) if total > 0 else 0
+#         # Members ke updates bhi fetch karo
+#         group.recent_updates = tasks.exclude(progress_note__isnull=True).exclude(progress_note='').order_by('-created_at')[:3]
 
-    # Initial state
-    leader_employees = new.objects.all().order_by('name')
-    member_employees = new.objects.all().order_by('name')
-    leader_search = ""
-    member_search = ""
+#     # Initial state
+#     leader_employees = new.objects.all().order_by('name')
+#     member_employees = new.objects.all().order_by('name')
+#     leader_search = ""
+#     member_search = ""
     
-    if req.method == 'POST':
-        # LEADER FILTER
-        if 'search_leader_btn' in req.POST:
-            leader_search = req.POST.get('search_leader', '').strip()
-            leader_employees = leader_employees.filter(name__icontains=leader_search)
+#     if req.method == 'POST':
+#         # LEADER FILTER
+#         if 'search_leader_btn' in req.POST:
+#             leader_search = req.POST.get('search_leader', '').strip()
+#             leader_employees = leader_employees.filter(name__icontains=leader_search)
             
-        # MEMBER FILTER
-        elif 'search_member_btn' in req.POST:
-            member_search = req.POST.get('search_member', '').strip()
-            member_employees = member_employees.filter(name__icontains=member_search)
+#         # MEMBER FILTER
+#         elif 'search_member_btn' in req.POST:
+#             member_search = req.POST.get('search_member', '').strip()
+#             member_employees = member_employees.filter(name__icontains=member_search)
             
-        # FINAL LAUNCH
-        elif 'launch_team_btn' in req.POST:
-            p_name = req.POST.get('project_name')
-            leader_id = req.POST.get('team_leader_id')
-            member_ids = req.POST.getlist('member_ids')
+#         # FINAL LAUNCH
+#         elif 'launch_team_btn' in req.POST:
+#             p_name = req.POST.get('project_name')
+#             leader_id = req.POST.get('team_leader_id')
+#             member_ids = req.POST.getlist('member_ids')
             
-            if p_name and leader_id:
-                leader_emp = new.objects.get(id=leader_id)
-                new_group = ProjectGroup.objects.create(project_name=p_name, team_leader=leader_emp)
-                for m_id in member_ids:
-                    member_emp = new.objects.get(id=m_id)
-                    new_group.members.add(member_emp)
-                messages.success(req, "Team Created Successfully!")
-                return redirect('manage_teams')
+#             if p_name and leader_id:
+#                 leader_emp = new.objects.get(id=leader_id)
+#                 new_group = ProjectGroup.objects.create(project_name=p_name, team_leader=leader_emp)
+#                 for m_id in member_ids:
+#                     member_emp = new.objects.get(id=m_id)
+#                     new_group.members.add(member_emp)
+#                 messages.success(req, "Team Created Successfully!")
+#                 return redirect('manage_teams')
             
-    return render(req, 'admindashboard.html', {
-        'manage_teams_page': True,
-        'leader_employees': leader_employees,
-        'member_employees': member_employees,
-        'groups': all_groups,
-        'leader_search_query': leader_search,
-        'member_search_query': member_search,
-        'data': admin_data,
-    })
+#     return render(req, 'admindashboard.html', {
+#         'manage_teams_page': True,
+#         'leader_employees': leader_employees,
+#         'member_employees': member_employees,
+#         'groups': all_groups,
+#         'leader_search_query': leader_search,
+#         'member_search_query': member_search,
+#         'data': admin_data,
+#     })
 
 
-def user_team_workspace(req):
-    # Agar login nahi hai toh login pe bhejo
-    if 'user_id' not in req.session:
-        return redirect('login')
+# def user_team_workspace(req):
+#     # Agar login nahi hai toh login pe bhejo
+#     if 'user_id' not in req.session:
+#         return redirect('login')
     
-    # User object nikalo
-    user = New.objects.filter(id=req.session['user_id']).first()
-    if not user:
-        return redirect('login')
+#     # User object nikalo
+#     user = New.objects.filter(id=req.session['user_id']).first()
+#     if not user:
+#         return redirect('login')
 
-    # Team nikalo
-    my_team = ProjectGroup.objects.filter(members=user).first()
+#     # Team nikalo
+#     my_team = ProjectGroup.objects.filter(members=user).first()
     
-    # User ke apne tasks
-    my_tasks = Task.objects.filter(assigned_to=user)
+#     # User ke apne tasks
+#     my_tasks = Task.objects.filter(assigned_to=user)
 
-    return render(req, 'user_team_workspace.html', {
-        'my_team': my_team, 
-        'data': user, 
-        'my_tasks': my_tasks, 
-        'section': 'team_workspace'
-    })
+#     return render(req, 'user_team_workspace.html', {
+#         'my_team': my_team, 
+#         'data': user, 
+#         'my_tasks': my_tasks, 
+#         'section': 'team_workspace'
+#     })
 
-def update_task_status(req, task_id):
-    # Try block ka use karo taaki error na aaye
-    try:
-        task = Task.objects.get(id=task_id)
-        if req.method == 'POST':
-            task.progress_note = req.POST.get('progress_note')
-            task.status = req.POST.get('status')
-            task.save()
-            messages.success(req, "Task update ho gaya!")
-    except Task.DoesNotExist:
-        messages.error(req, "Task nahi mila!")
+# def update_task_status(req, task_id):
+#     # Try block ka use karo taaki error na aaye
+#     try:
+#         task = Task.objects.get(id=task_id)
+#         if req.method == 'POST':
+#             task.progress_note = req.POST.get('progress_note')
+#             task.status = req.POST.get('status')
+#             task.save()
+#             messages.success(req, "Task update ho gaya!")
+#     except Task.DoesNotExist:
+#         messages.error(req, "Task nahi mila!")
         
-    return redirect('user_team_workspace')
+#     return redirect('user_team_workspace')

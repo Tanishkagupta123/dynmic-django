@@ -63,9 +63,9 @@ urlpatterns = [
     path('assign-task/', assign_task, name='assign_task'),
     path('update-task-status/<int:pk>/', update_task_status, name='update_task_status'),
     path('bulk-attendance/', mark_bulk_attendance, name='bulk_attendance'),
-    path('manage-teams/',manage_teams, name='manage_teams'),
-    path('team-workspace/', user_team_workspace, name='user_team_workspace'),
-    path('update-task/<int:task_id>/', update_task_status, name='update_task_status'),
+    # path('manage-teams/',manage_teams, name='manage_teams'),
+    # path('team-workspace/', user_team_workspace, name='user_team_workspace'),
+    # path('update-task/<int:task_id>/', update_task_status, name='update_task_status'),
     
 
 
