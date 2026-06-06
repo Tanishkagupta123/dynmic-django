@@ -66,8 +66,7 @@ urlpatterns = [
     # path('manage-teams/',manage_teams, name='manage_teams'),
     # path('team-workspace/', user_team_workspace, name='user_team_workspace'),
     # path('update-task/<int:task_id>/', update_task_status, name='update_task_status'),
-    
-
-
+    path('mark-attendance/', mark_attendance_page, name='mark_my_attendance_page'),
+    path('submit-attendance/',submit_attendance, name='submit_attendance'),
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

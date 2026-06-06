@@ -250,9 +250,8 @@ table { white-space:nowrap; }
         <a href="{% url 'profile' %}" class="{% if section == 'profile' %}active{% endif %}">Profile</a>
         <a href="{% url 'query' %}" class="{% if section == 'query' %}active{% endif %}">Query</a>
         <a href="{% url 'query_status' %}" class="{% if section == 'query_status' %}active{% endif %}">Query Status</a>
-        <a href="{% url 'my_attendance' %}" class="{% if section == 'attendance' %}active{% endif %}">Attendance</a>
+<a href="{% url 'mark_my_attendance_page' %}" class="{% if section == 'mark_attendance' %}active{% endif %}">Mark Attendance</a>        <a href="{% url 'my_attendance' %}" class="{% if section == 'attendance' %}active{% endif %}">Attendance</a>
         <a href="{% url 'all_query' %}" class="{% if section == 'all-query' %}active{% endif %}">All Query</a>
-        <a href="{% url 'user_team_workspace' %}" class="{% if section == 'team_workspace' %}active{% endif %}">Team Workspace</a>
         <a href="{% url 'dashboard' %}" class="{% if my_tasks %}active{% endif %}"> My Active Tasks</a>
 
         <div class="sidebar-logout">
@@ -408,6 +407,8 @@ table { white-space:nowrap; }
         <div id="attendance" class="section">
             <div class="glass shadow-lg p-4">
                 <h3 class="mb-4">My Attendance</h3>
+
+                
                 <div class="row text-center mb-4">
                     <div class="col-6 col-md-3 mb-3">
                         <div class="glass p-3">
@@ -526,6 +527,40 @@ table { white-space:nowrap; }
             </div>
         </div>
 
+        {% if section == 'mark_attendance' %}
+<div class="glass shadow-lg p-5 text-center mt-4" style="background: rgba(255,255,255,0.7); border-radius: 20px;">
+    <h3>📍 Mark Today's Attendance</h3>
+    <p class="text-muted">Office ke 30 meter radius mein attendance lagegi.</p>
+    
+    <button type="button" class="btn btn-primary btn-lg shadow" onclick="getLocation()">
+        Verify & Mark Attendance
+    </button>
+    
+    <p id="loc-status" class="mt-3 text-primary fw-bold"></p>
+
+    <form id="attendanceForm" method="POST" action="{% url 'submit_attendance' %}" hidden>
+        {% csrf_token %}
+        <input type="hidden" name="latitude" id="lat">
+        <input type="hidden" name="longitude" id="lon">
+    </form>
+</div>
+
+<script>
+function getLocation() {
+    document.getElementById('loc-status').innerText = "Location verify ho rahi hai...";
+    navigator.geolocation.getCurrentPosition(
+        (pos) => {
+            document.getElementById('lat').value = pos.coords.latitude;
+            document.getElementById('lon').value = pos.coords.longitude;
+            document.getElementById('attendanceForm').submit();
+        },
+        () => { alert("Location access on karein!"); },
+        { enableHighAccuracy: true }
+    );
+}
+</script>
+{% endif %}
+
         <!-- EDIT QUERY FORM -->
         {% elif e_query %}
         <div id="query" class="section">
@@ -562,99 +597,74 @@ table { white-space:nowrap; }
         </div>
         {% endif %}
 
-       {% if my_tasks %}
-        <div id="jira_tasks" class="mt-4">
-            
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="alert alert-success text-center fw-bold shadow-sm mb-3" style="border-radius: 12px; font-size: 14px; background: rgba(255, 255, 255, 0.5) !important; backdrop-filter: blur(10px); color: #02225a; border: 1px solid #a6b8a8;">
-                        🎉 {{ message }}
+      <div id="jira_tasks" class="mt-4">
+    {% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-success text-center shadow-sm mb-4" style="border-radius: 12px; border: none; background: #dcfce7; color: #166534;">
+            <strong> {{ message }}</strong>
+        </div>
+    {% endfor %}
+    {% endif %}
+
+    <h3 class="mb-4 fw-bold" style="color: #02225a;">📋 My Assigned Tasks</h3>
+
+    {% for t in my_tasks %}
+    <div class="glass shadow-sm p-4 mb-4" style="background: rgba(255, 255, 255, 0.7); border-radius: 16px; border-left: 6px solid #2563eb;">
+        <div class="row align-items-center">
+            <div class="col-md-4">
+                <h5 class="fw-bold mb-1" style="color: #02225a;">{{ t.title }}</h5>
+                <p class="text-muted small mb-2">{{ t.description }}</p>
+                <span class="badge bg-light text-dark border">Deadline: {{ t.due_date }}</span>
+            </div>
+
+            <div class="col-md-2 text-center">
+                <span class="badge {% if t.status == 'DONE' %}bg-success{% elif t.status == 'IN_PROGRESS' %}bg-warning text-dark{% else %}bg-secondary{% endif %} px-3 py-2">
+                    {{ t.status }}
+                </span>
+            </div>
+
+            <div class="col-md-6">
+                <form action="{% url 'update_task_status' t.id %}" method="post">
+                    {% csrf_token %}
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input type="text" name="completed_tasks" class="form-control form-control-sm" placeholder="Completed..." required>
+                        </div>
+                        <div class="col-md-4">
+                            <input type="text" name="pending_tasks" class="form-control form-control-sm" placeholder="Pending..." required>
+                        </div>
+                        <div class="col-md-4">
+                            <select name="status" class="form-select form-select-sm">
+                                <option value="TODO" {% if t.status == 'TODO' %}selected{% endif %}>To Do</option>
+                                <option value="IN_PROGRESS" {% if t.status == 'IN_PROGRESS' %}selected{% endif %}>In Progress</option>
+                                <option value="DONE" {% if t.status == 'DONE' %}selected{% endif %}>Done</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <input type="text" name="issues_tasks" class="form-control form-control-sm" value="None" placeholder="Blockers/Issues (Optional)">
+                        </div>
+                        <div class="col-md-12 mt-2">
+                            <button type="submit" class="btn btn-primary btn-sm w-100 fw-bold">Update Daily Progress</button>
+                        </div>
                     </div>
-                {% endfor %}
-            {% endif %}
+                </form>
+            </div>
+        </div>
 
-            <div class="glass shadow-lg p-4">
-                <h3 class="mb-4 fw-bold text-primary"> My Assigned Tasks</h3>
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover text-center align-middle" style="background:rgba(255,255,255,0.55); backdrop-filter:blur(12px); border-radius:14px; overflow:hidden;">
-                        <thead class="table-dark" style="background:linear-gradient(135deg,#03161e,#15596d);">
-                            <tr>
-                                <th>Task Info</th>
-                                <th>Deadline</th>
-                                <th>Current Status</th>
-                                <th>Change Status (Action)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for t in my_tasks %}
-                           <!-- 🟢 AUR USI JAGAH PAR YEH LOGIC DALO: -->
-<tr style="background:rgba(255,255,255,0.7);">
-    <td class="text-start" style="padding:12px; color:#000 !important;">
-        <strong>{{ t.title }}</strong><br>
-        <small class="text-muted">{{ t.description }}</small>
-
-        <!-- ⏳ SCROLLABLE TIMELINE: Employee ko apni saari date-wise history scrollbar ke sath dikhegi -->
         {% if t.progress_note %}
-        <div class="mt-2 p-2.5 text-start" style="border-left: 3px solid #2563eb; background-color: rgba(255,255,255,0.6); border-radius: 8px; max-height: 150px; overflow-y: auto;">
-            <strong class="text-primary d-block mb-1" style="font-size: 11px;">📋 YOUR PROGRESS LOGS HISTORY:</strong>
-            <div style="font-size: 12px; font-family: monospace; white-space: pre-line; color: #000; line-height: 1.5;">{{ t.progress_note }}</div>
+        <div class="mt-3 p-3 bg-white rounded border" style="font-size: 13px; max-height: 120px; overflow-y: auto; color: #334155;">
+            <strong class="text-primary d-block mb-1">📋 PROGRESS LOGS HISTORY:</strong>
+            <pre style="font-family: inherit; margin: 0; white-space: pre-line;">{{ t.progress_note }}</pre>
         </div>
         {% endif %}
-    </td>
-                                <td style="color:#000 !important;"><span class="badge bg-light text-dark p-2">{{ t.due_date }}</span></td>
-                                <td style="color:#000 !important;">
-                                    {% if t.status == 'TODO' %}
-                                        <span class="badge bg-secondary px-3 py-2">To Do</span>
-                                    {% elif t.status == 'IN_PROGRESS' %}
-                                        <span class="badge bg-warning text-dark px-3 py-2">In Progress</span>
-                                    {% else %}
-                                        <span class="badge bg-success px-3 py-2">Done</span>
-                                    {% endif %}
-                                </td>
-
-                              <td style="padding:10px; min-width: 280px;">
-    <form action="{% url 'update_task_status' t.id %}" method="post" class="d-flex flex-column gap-2 align-items-stretch">
-        {% csrf_token %}
+    </div>
+    {% empty %}
+    <div class="glass p-5 text-center text-muted">
+        <h5>No tasks assigned yet. Enjoy your day!</h5>
+    </div>
+    {% endfor %}
+</div>
         
-        <div class="w-100 d-flex flex-column gap-2 text-start mb-2">
-            <div>
-                <label class="form-label mb-0 fw-bold text-success" style="font-size: 11px;">📌 Tasks Completed:</label>
-                <input type="text" name="completed_tasks" class="form-control form-control-sm" style="font-size: 12px; background: #fff !important; border: 1px solid #cbd5e1 !important; color: #000;" placeholder="List your completed items..." required>
-            </div>
-            
-            <div>
-                <label class="form-label mb-0 fw-bold text-warning text-dark" style="font-size: 11px;">⏳ Tasks Pending:</label>
-                <input type="text" name="pending_tasks" class="form-control form-control-sm" style="font-size: 12px; background: #fff !important; border: 1px solid #cbd5e1 !important; color: #000;" placeholder="List your remaining items..." required>
-            </div>
-            
-            <div>
-                <label class="form-label mb-0 fw-bold text-danger" style="font-size: 11px;">⚠️ Blockers / Issues:</label>
-                <input type="text" name="issues_tasks" class="form-control form-control-sm" style="font-size: 12px; background: #fff !important; border: 1px solid #cbd5e1 !important; color: #000;" value="None" placeholder="Any technical blockers?" required>
-            </div>
-        </div>
-
-        <div class="d-flex gap-2 align-items-center justify-content-between mt-1">
-            <select name="status" class="form-select form-select-sm" style="width: auto !important; padding: 5px; border-radius: 8px; color:#000; font-size: 12px;">
-                <option value="TODO" {% if t.status == 'TODO' %}selected{% endif %}>To Do</option>
-                <option value="IN_PROGRESS" {% if t.status == 'IN_PROGRESS' %}selected{% endif %}>In Progress</option>
-                <option value="DONE" {% if t.status == 'DONE' %}selected{% endif %}>Done</option>
-            </select>
-            <button type="submit" class="btn btn-sm btn-success px-2 py-1" style="border-radius: 8px; font-size:12px; font-weight: bold;">Update</button>
-        </div>
-    </form>
-</td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="4" class="text-muted py-4" style="color:#000 !important;">No tasks pending for you. Great job!</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        {% endif %}
         </div>
      </div>
 

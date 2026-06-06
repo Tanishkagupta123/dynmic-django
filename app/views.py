@@ -1115,8 +1115,6 @@ def attendance_pdf(request, emp_id):
 
     return response
 
-# views.py ke ekdum last me paste karo:
-
 def assign_task(req):
     if 'admin' not in req.session:
         return redirect('login')
@@ -1186,7 +1184,7 @@ def update_task_status(req, pk):
         
         # 🔥 SAFEST REVERSE LOG: Naya report sabse upar dikhega, aur purana data uske NEECHE automatic khisakh jayega (Kuch delete nahi hoga)
         if task.progress_note:
-            task.progress_note = f"{new_report}\n\n---------------------------------------\n\n{task.progress_note}"
+            task.progress_note = f"{new_report}\n\n------\n\n{task.progress_note}"
         else:
             task.progress_note = new_report
 
@@ -1371,3 +1369,57 @@ def mark_bulk_attendance(req):
 #         messages.error(req, "Task nahi mila!")
         
 #     return redirect('user_team_workspace')
+
+# new
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.utils import timezone
+from geopy.distance import geodesic
+from .models import Attendance, New
+
+def mark_attendance_page(request):
+    user_id = request.session.get('user_id')
+    
+    # 1. Agar user login nahi hai
+    if not user_id:
+        return redirect('login')
+    
+    # 2. Safety: get() ki jagah filter().first() use karo
+    # Ye crash nahi hoga agar ID nahi mili
+    userdata = New.objects.filter(id=user_id).first()
+    
+    # 3. Agar database mein user nahi hai
+    if not userdata:
+        request.session.flush() # Purani session saaf karo
+        return redirect('login')
+
+    return render(request, 'userdashboard.html', {
+        'section': 'mark_attendance', 
+        'data': userdata
+    })
+
+def submit_attendance(request):
+    if request.method == 'POST':
+        user_id = request.session.get('user_id')
+        try:
+            userdata = New.objects.get(id=user_id)
+            today = timezone.now().date()
+            
+            if Attendance.objects.filter(employee=userdata, date=today).exists():
+                messages.error(request, "Aapki aaj ki attendance pehle hi lag chuki hai!")
+            else:
+                lat = float(request.POST.get('latitude'))
+                lon = float(request.POST.get('longitude'))
+                OFFICE_LOC = (22.7533, 77.7499) 
+                
+                distance = geodesic(OFFICE_LOC, (lat, lon)).meters
+                
+                if distance <= 30:
+                    Attendance.objects.create(employee=userdata, date=today, status="Present")
+                    messages.success(request, f"Success! Attendance marked.")
+                else:
+                    messages.error(request, f"Attendance failed! Office se door hain.")
+        except Exception:
+            messages.error(request, "Error: Location nahi mili.")
+            
+    return redirect('mark_my_attendance_page')
